@@ -56,7 +56,7 @@ PickU’s core is built on a relational schema:
 
 <img width="full" alt="supabase-schema-nrhcfsmopjerjgzmgmjw" src="https://github.com/user-attachments/assets/5ce74c2e-6909-42e7-a832-69bc7cc05d8e" />
 
-> **Note:** The schema includes role validations (`consumer`, `entrepreneur`, `admin`) and order status transitions.
+> **Note:** The schema includes role validations (`consumer`, `entrepreneur`) and order status transitions.
 -----
 
 <br/>
