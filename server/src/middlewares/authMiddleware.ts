@@ -1,0 +1,1 @@
+import { SUPABASE_KEY } from "../config/index.js";
