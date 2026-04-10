@@ -1,10 +1,10 @@
 import { Pool } from 'pg';
-import { DB_HOST, DB_NAME, DB_PASSWORD, DB_PORT, DB_USER } from './index.js';
+import { env } from './index.js';
 
 export const pool = new Pool({
-  host: DB_HOST,
-  port: DB_PORT,
-  database: DB_NAME,
-  user: DB_USER,
-  password: DB_PASSWORD,
+  host: env.DB_HOST,
+  port: env.DB_PORT,
+  database: env.DB_NAME,
+  user: env.DB_USER,
+  password: env.DB_PASSWORD,
 });

@@ -1,15 +1,29 @@
 import dotenv from 'dotenv';
+import { z } from 'zod';
 
 dotenv.config();
 
-export const PORT = process.env.PORT || 3000;
-export const NODE_ENV = process.env.NODE_ENV || 'development';
+const envSchema = z.object({
+  PORT: z.coerce.number().default(3000),
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
 
-export const DB_HOST = process.env.DB_HOST || 'localhost';
-export const DB_PORT = Number(process.env.DB_PORT || 6543);
-export const DB_USER = process.env.DB_USER || 'postgres';
-export const DB_PASSWORD = process.env.DB_PASSWORD || 'password';
-export const DB_NAME = process.env.DB_NAME || 'mydatabase';
+  DB_HOST: z.string().default('localhost'),
+  DB_PORT: z.coerce.number().default(6543),
+  DB_USER: z.string().default('postgres'),
+  DB_PASSWORD: z.string(),
+  DB_NAME: z.string(),
 
-export const SUPABASE_URL = process.env.SUPABASE_URL || '';
-export const SUPABASE_KEY = process.env.SUPABASE_KEY || '';
+  SUPABASE_URL: z.url('The SUPABASE_URL is not a valid URL'),
+  SUPABASE_KEY: z.string().min(10, 'The SUPABASE_KEY is invalid or too short'),
+});
+
+const envConfig = envSchema.safeParse(process.env);
+
+if (!envConfig.success) {
+  console.error('ENV ERROR: ', envConfig.error);
+  process.exit(1);
+}
+
+export const env = envConfig.data;
