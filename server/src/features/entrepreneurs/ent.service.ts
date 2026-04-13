@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
 import { pool } from "../../config/database.js";
+import { ENTREPRENEUR_CATEGORIES } from "./ent.category.js";
 import type {
     Entrepreneur,
     CreateEntrepreneurDTO,
@@ -90,6 +91,13 @@ export const getEntrepreneurByOwnerIdService = async (
 export const createEntrepreneurService = async (
     data: CreateEntrepreneurDTO
 ): Promise<Entrepreneur> => {
+
+    //validate category
+    if (!ENTREPRENEUR_CATEGORIES.includes(data.category)) {
+        throw Boom.badRequest("Invalid entrepreneur category");
+    }
+
+
     const query = `
         INSERT INTO entrepreneurs (
             student_id,
@@ -145,6 +153,14 @@ export const updateEntrepreneurService = async (
     const updatedCategory = data.category ?? currentEntrepreneur.category;
     const updatedLatitude = data.latitude ?? currentEntrepreneur.latitude;
     const updatedLongitude = data.longitude ?? currentEntrepreneur.longitude;
+
+    //validar category
+    if (
+    data.category &&
+    !ENTREPRENEUR_CATEGORIES.includes(data.category)
+    ) {
+        throw Boom.badRequest("Invalid entrepreneur category");
+    }
 
     const query = `
         UPDATE entrepreneurs
