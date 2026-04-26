@@ -17,6 +17,7 @@ const envSchema = z.object({
 
   SUPABASE_URL: z.url('The SUPABASE_URL is not a valid URL'),
   SUPABASE_KEY: z.string().min(10, 'The SUPABASE_KEY is invalid or too short'),
+  GROQ_API_KEY: z.string().min(10).optional(),
 });
 
 const envConfig = envSchema.safeParse(process.env);

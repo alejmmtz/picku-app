@@ -1,7 +1,8 @@
 import express from 'express';
 import cors from 'cors';
-import { PORT, NODE_ENV } from './config/index.js';
+import { env } from './config/index.js';
 import { authRouter } from './features/auth/auth.router.js';
+import { chatbotRouter } from './features/chatbot/chatbot.router.js';
 import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
 
 //Express Configuration
@@ -16,14 +17,15 @@ app.get('/', (req, res) => {
 
 //Features Routes
 app.use('/picku/api/auth', authRouter);
+app.use('/picku/api/chatbot', chatbotRouter);
 
 //Error middleware
 app.use(errorsMiddleware);
 
 //App Env
-if (NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+if (env.NODE_ENV !== 'production') {
+  app.listen(env.PORT, () => {
+    console.log(`Server is running on http://localhost:${env.PORT}`);
   });
 }
 
