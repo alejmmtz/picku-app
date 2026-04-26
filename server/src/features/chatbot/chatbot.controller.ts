@@ -1,21 +1,20 @@
 import type { Request, Response, NextFunction } from 'express';
 import Boom from '@hapi/boom';
 import { sendMessageService, getMessagesService } from './chatbot.service.js';
+import { createMessageSchema } from './chatbot.types.js';
 
 export const sendMessage = async (
   req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
-  const { question } = req.body;
+  const parsedBody = createMessageSchema.safeParse(req.body);
 
-  if (!question || typeof question !== "string" || !question.trim()) {
-    throw Boom.badRequest(
-      "question is required and must be a non-empty string",
-    );
+  if (!parsedBody.success) {
+    throw Boom.badRequest(parsedBody.error.issues[0]?.message ?? 'Invalid body');
   }
 
-  const message = await sendMessageService(question.trim());
+  const message = await sendMessageService(parsedBody.data.question);
   res.status(201).json(message);
 };
 
