@@ -1,66 +1,70 @@
 import Boom from '@hapi/boom';
 import type { Request, Response } from 'express';
-import { authenticateUserService, createUserService } from './auth.service.js';
-import { UserRole } from './auth.types.js';
+import {
+  authenticateUserService,
+  createUserService,
+  deleteUserService,
+  updateAuthenticationService,
+} from './auth.service.js';
+import {
+  authenticateUserSchema,
+  createUserSchema,
+  updateUserSchema,
+} from './auth.types.js';
 
 export const authenticateUserController = async (
   req: Request,
   res: Response
 ) => {
-  if (!req.body) {
-    throw Boom.badRequest('Request body is required');
+  const parsedBody = authenticateUserSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    throw Boom.badRequest(parsedBody.error.issues[0]?.message ?? 'Invalid body');
   }
 
-  const { email, password } = req.body;
-
-  if (email === undefined) {
-    throw Boom.badRequest('Email is required');
-  }
-
-  if (password === undefined) {
-    throw Boom.badRequest('Password is required');
-  }
-
-  const user = await authenticateUserService({ email, password });
+  const user = await authenticateUserService(parsedBody.data);
   return res.json(user);
 };
 
 export const createUserController = async (req: Request, res: Response) => {
-  if (!req.body) {
-    throw Boom.badRequest('Request body is required');
+  const parsedBody = createUserSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    throw Boom.badRequest(parsedBody.error.issues[0]?.message ?? 'Invalid body');
   }
 
-  const { email, password, name, role, phone } = req.body;
-
-  if (email === undefined) {
-    throw Boom.badRequest('Email is required');
-  }
-
-  if (password === undefined) {
-    throw Boom.badRequest('Password is required');
-  }
-
-  if (name === undefined) {
-    throw Boom.badRequest('Name is required');
-  }
-
-  if (!Object.values(UserRole).includes(role)) {
-    throw Boom.badRequest(
-      `Role must be one of: ${Object.values(UserRole).join(', ')}`
-    );
-  }
-
-  if (phone === undefined) {
-    throw Boom.badRequest('Phone is required');
-  }
-
-  const user = await createUserService({
-    email,
-    name,
-    password,
-    role,
-    phone,
-  });
+  const user = await createUserService(parsedBody.data);
 
   return res.status(201).json(user);
+};
+
+export const updateAuthenticationController = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.authUser) {
+    throw Boom.unauthorized('Authenticated user was not found');
+  }
+
+  const parsedBody = updateUserSchema.safeParse(req.body);
+
+  if (!parsedBody.success) {
+    throw Boom.badRequest(parsedBody.error.issues[0]?.message ?? 'Invalid body');
+  }
+
+  const updatedUser = await updateAuthenticationService(
+    req.authUser.id,
+    parsedBody.data
+  );
+
+  return res.json(updatedUser);
+};
+
+export const deleteUserController = async (req: Request, res: Response) => {
+  if (!req.authUser) {
+    throw Boom.unauthorized('Authenticated user was not found');
+  }
+
+  const result = await deleteUserService(req.authUser.id);
+  return res.json(result);
 };

@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import { PORT, NODE_ENV } from './config/index.js';
+import { env } from './config/index.js';
 import { authRouter } from './features/auth/auth.router.js';
 import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
 
@@ -21,9 +21,9 @@ app.use('/picku/api/auth', authRouter);
 app.use(errorsMiddleware);
 
 //App Env
-if (NODE_ENV !== 'production') {
-  app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
+if (env.NODE_ENV !== 'production') {
+  app.listen(env.PORT, () => {
+    console.log(`Server is running on http://localhost:${env.PORT}`);
   });
 }
 
