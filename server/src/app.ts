@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import { env } from './config/index.js';
 import { authRouter } from './features/auth/auth.router.js';
-import { entrepreneurRouter } from './features/entrepreneurs/ent.router.js';
+import { chatbotRouter } from './features/chatbot/chatbot.router.js';
 import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
 import { productRouter } from './features/product/product.router.js';
 
@@ -18,8 +18,7 @@ app.get('/', (req, res) => {
 
 //Features Routes
 app.use('/picku/api/auth', authRouter);
-app.use('/picku/api/entrepreneurs', entrepreneurRouter);
-app.use('/picku/api/products', productRouter);
+app.use('/picku/api/chatbot', chatbotRouter);
 
 //Error middleware
 app.use(errorsMiddleware);
