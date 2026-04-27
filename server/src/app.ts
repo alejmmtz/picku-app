@@ -4,8 +4,9 @@ import { env } from './config/index.js';
 import { authRouter } from './features/auth/auth.router.js';
 import { entrepreneurRouter } from './features/entrepreneurs/ent.router.js';
 import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
+import { productRouter } from './features/product/product.router.js';
 
-//E-xpress Configuration
+//Express Configuration
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -18,6 +19,7 @@ app.get('/', (req, res) => {
 //Features Routes
 app.use('/picku/api/auth', authRouter);
 app.use('/picku/api/entrepreneurs', entrepreneurRouter);
+app.use('/picku/api/products', productRouter);
 
 //Error middleware
 app.use(errorsMiddleware);
