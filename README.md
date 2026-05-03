@@ -100,9 +100,9 @@ npm run dev
 - [x] **Initial Database Schema Design:** Defining entities for Users, Entrepreneurs, Products, and Orders.
 
 ### Phase 2: First Backend Build (Core API)
-- [ ] **Milestone 2.1:** Server scaffolding with Node.js/Express and Supabase connection.
-- [ ] **Milestone 2.2:** Implementation of User and Entrepreneur basic REST endpoints.
-- [ ] **Milestone 2.3:** Core Product CRUD logic (Create, Read, Update, Delete).
+- [x] **Milestone 2.1:** Server scaffolding with Node.js/Express and Supabase connection.
+- [x] **Milestone 2.2:** Implementation of User and Entrepreneur basic REST endpoints.
+- [x] **Milestone 2.3:** Core Product CRUD logic (Create, Read, Update, Delete).
 
 ### Phase 3: Frontend Development (MVP UI)
 - [ ] **Milestone 3.1:** Project initialization with React and Tailwind CSS configuration.
