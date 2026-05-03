@@ -26,7 +26,6 @@
 
 ## ⚙️ How It Works
 
-```text
 User logs in → Role detected
         ↓
 Entrepreneur → Creates business → Adds products
@@ -37,7 +36,7 @@ System → Calculates distance → Sends order to entrepreneur
         ↓
 Real-time updates → Order preparation → Pickup
         ↓
-Order completed → AI recommends new products```
+Order completed → AI recommends new products
 
 ## App Development
 
