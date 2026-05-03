@@ -24,6 +24,20 @@
 <br/>
 <br/>
 
+## ⚙️ How It Works
+
+User logs in → Role detected  
+      ↓
+Entrepreneur → Creates business → Adds products  
+      ↓
+Consumer → Explores → Places order  
+      ↓
+System → Calculates distance → Sends order  
+      ↓
+Real-time updates → Pickup → Order completed  
+      ↓
+AI → Recommends products
+
 ## App Development
 
 | Component | Technology |
