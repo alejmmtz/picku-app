@@ -26,17 +26,18 @@
 
 ## ⚙️ How It Works
 
-User logs in → Role detected  
-      ↓
-Entrepreneur → Creates business → Adds products  
-      ↓
-Consumer → Explores → Places order  
-      ↓
-System → Calculates distance → Sends order  
-      ↓
-Real-time updates → Pickup → Order completed  
-      ↓
-AI → Recommends products
+```text
+User logs in → Role detected
+        ↓
+Entrepreneur → Creates business → Adds products
+        ↓
+Consumer → Explores marketplace → Places order
+        ↓
+System → Calculates distance → Sends order to entrepreneur
+        ↓
+Real-time updates → Order preparation → Pickup
+        ↓
+Order completed → AI recommends new products
 
 ## App Development
 
