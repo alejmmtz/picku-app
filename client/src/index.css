@@ -1,0 +1,47 @@
+@import url("https://use.typekit.net/pdx3kxw.css");
+
+@font-face {
+  font-family: "Gliker";
+  src: url("/css/gliker-regular.woff2") format("woff2");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --color-maroon: #500311;
+  --color-blue: #3fa9f5;
+  --color-orange: #ff702d;
+  --color-yellow: #ffc64a;
+  --color-light-yellow: #fff5d1;
+  --color-white: #fef8f1;
+  --color-black: #1b1b1b;
+
+  --font-gliker: "Gliker", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-sofia: sofia-pro, sans-serif;
+}
+
+@import "tailwindcss";
+
+@utility btn {
+  @apply px-6 py-2 rounded-full font-gliker transition-transform active:scale-95;
+  background-color: var(--color-orange);
+  color: var(--color-white);
+
+  &:hover {
+    background-color: var(--color-maroon);
+  }
+}
+
+:root {
+  font-family: var(--font-sofia);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1 {
+  font-family: var(--font-gliker);
+}
