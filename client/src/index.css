@@ -1,4 +1,4 @@
-@import url("https://use.typekit.net/pdx3kxw.css");
+@import url("https://use.typekit.net/ghy7xhe.css");
 
 @font-face {
   font-family: "Gliker";
@@ -14,8 +14,8 @@
   --color-orange: #ff702d;
   --color-yellow: #ffc64a;
   --color-light-yellow: #fff5d1;
-  --color-white: #fef8f1;
   --color-black: #1b1b1b;
+    --color-background: #fffaf4;
 
   --font-gliker: "Gliker", system-ui, "Segoe UI", Roboto, sans-serif;
   --font-sofia: sofia-pro, sans-serif;
@@ -42,6 +42,8 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-family: var(--font-gliker);
+body {
+  margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-black);
 }
