@@ -9,8 +9,8 @@ export interface Entrepreneur {
     latitude: number;
     longitude: number;
     is_active: boolean;
+    owner_name?: string;
 }
-
 //Create 
 export interface CreateEntrepreneurDTO {
     student_id: string;
