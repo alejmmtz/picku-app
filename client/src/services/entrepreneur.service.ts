@@ -7,3 +7,14 @@ export const getEntrepreneurs = async (
   const response = await axiosInstance.get("/picku/api/entrepreneurs");
   return response.data;
 };
+
+export const getEntrepreneurById = async (
+  axiosInstance: AxiosInstance,
+  entrepreneurId: string
+): Promise<Entrepreneur> => {
+  const response = await axiosInstance.get(
+    `/picku/api/entrepreneurs/${entrepreneurId}`
+  );
+
+  return response.data;
+};

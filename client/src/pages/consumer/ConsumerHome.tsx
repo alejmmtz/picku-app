@@ -11,6 +11,7 @@ import { useAxios } from "../../providers/AxiosProvider";
 import { getEntrepreneurs } from "../../services/entrepreneur.service"
 import type { Entrepreneur } from "../../types/entrepreneur.types";
 import { filterEntrepreneurs } from "../../utils/filterEntrepreneurs"
+import Loader from "../../components/common/Loader";
 
 const ConsumerHome = () => {
   const axios = useAxios();
@@ -41,7 +42,7 @@ const ConsumerHome = () => {
 
   return (
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-7 pt-16 pb-10">
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-10">
         <header className="flex items-center justify-between mb-7">
           <img src={LogoConsumer} alt="PickU" className="w-[72px]" />
 
@@ -72,6 +73,7 @@ const ConsumerHome = () => {
         onChange={(event) => setSearchTerm(event.target.value)}
         className="
         w-full
+        font-light
         h-[54px]
         rounded-[10px]
         border
@@ -98,9 +100,7 @@ const ConsumerHome = () => {
           <h2 className="text-[20px] font-regular mb-4">Open business</h2>
 
           {loading && (
-        <div className="flex flex-col items-center justify-center py-10">
-            <div className="h-9 w-9 animate-spin rounded-full border-4 border-orange/20 border-t-orange mt-30"/>
-        </div>
+        <Loader message="Finding open businesses..." />
         )}
 
         {!loading && filteredEntrepreneurs.length === 0 && (
