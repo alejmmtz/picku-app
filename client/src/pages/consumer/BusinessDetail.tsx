@@ -117,7 +117,7 @@ const BusinessDetail = () => {
 
           <div className="mb-7">
             <h2 className="text-[17px] font-regular mb-2">About</h2>
-            <p className="text-[16px] leading-tight text-[#707070]">
+            <p className="text-[16px] font-light leading-tight text-[#707070]">
               {entrepreneur.description}
             </p>
           </div>
@@ -171,7 +171,7 @@ const BusinessDetail = () => {
                   <button
                     type="button"
                     onClick={() => navigate(`/consumer/product/${product.id}`)}
-                    className="rounded-full bg-orange px-4 py-2 text-[12px] font-medium text-white"
+                    className="rounded-full bg-orange px-4 py-2 text-[12px] font-regular text-white"
                   >
                     More info
                   </button>
