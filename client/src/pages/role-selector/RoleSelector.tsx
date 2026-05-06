@@ -7,16 +7,16 @@ const RoleSelector = () => {
   const navigate = useNavigate();
 
   return (
-    <main className="min-h-screen flex flex-col justify-center px-13 font-sofia text-black relative">
+    <main className="min-h-screen flex flex-col justify-center px-13 text-black relative">
       <section className="w-full max-w-[430px] mx-auto">
         <div className="mb-10">
-          <h1 className="text-[32px] font-semibold leading-tight mb-2 font-sofia">
+          <h2 className="text-[32px] font-semibold leading-tight mb-2 ">
             Sooo...
-          </h1>
+          </h2>
 
           <div className="flex items-center gap-2">
             <p className="text-[16px] font-light">
-                How would you like to use PickU?
+              How would you like to use PickU?
             </p>
           </div>
         </div>

@@ -1,0 +1,15 @@
+{
+  "name": "picku-app",
+  "private": true,
+  "scripts": {
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "dev": "concurrently \"npm run dev:server\" \"npm run dev:client\"",
+    "test": "npm test --prefix server",
+    "install:all": "npm install --prefix client && npm install --prefix server && npm install",
+    "postinstall": "npm install --prefix client && npm install --prefix server"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}

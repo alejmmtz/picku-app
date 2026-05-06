@@ -1,12 +1,7 @@
 @import url("https://use.typekit.net/ghy7xhe.css");
+@import url("/fonts/gliker/stylesheet.css");
 
-@font-face {
-  font-family: "Gliker";
-  src: url("/css/gliker-regular.woff2") format("woff2");
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
+@import "tailwindcss";
 
 @theme {
   --color-maroon: #500311;
@@ -15,16 +10,14 @@
   --color-yellow: #ffc64a;
   --color-light-yellow: #fff5d1;
   --color-black: #1b1b1b;
-    --color-background: #fffaf4;
+  --color-background: #fffaf4;
 
-  --font-gliker: "Gliker", system-ui, "Segoe UI", Roboto, sans-serif;
+  --font-gliker: "Gliker", sans-serif;
   --font-sofia: sofia-pro, sans-serif;
 }
 
-@import "tailwindcss";
-
 @utility btn {
-  @apply px-6 py-2 rounded-full font-gliker transition-transform active:scale-95;
+  @apply px-6 py-2 rounded-full transition-transform active:scale-95;
   background-color: var(--color-orange);
   color: var(--color-white);
 
@@ -46,4 +39,8 @@ body {
   margin: 0;
   background-color: var(--color-background);
   color: var(--color-black);
+}
+
+h1 {
+  font-family: var(--font-gliker);
 }
