@@ -2,6 +2,7 @@ import { createBrowserRouter } from "react-router-dom";
 import RoleSelector from "../pages/role-selector/RoleSelector";
 import ConsumerHome from "../pages/consumer/ConsumerHome";
 import BusinessDetail from "../pages/consumer/BusinessDetail";
+import ProductDetail from "../pages/consumer/ProductDetail";
 
 const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
   {
   path: "/consumer/business/:id",
   Component: BusinessDetail,
+  },
+  {
+  path: "/consumer/product/:id",
+  Component: ProductDetail, 
   },
 ]);
 
