@@ -86,7 +86,7 @@ const BusinessDetail = () => {
           <button
             type="button"
             onClick={() => navigate("/consumer/home")}
-            className="flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[13px] shadow-sm"
+            className="flex items-center gap-1 rounded-full bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
           >
             <ArrowIcon className="w-3 h-3" />
             <span>Home</span>
@@ -95,7 +95,7 @@ const BusinessDetail = () => {
         </div>
 
       {/* information card */}
-        <section className="-mt-10 relative z-10 min-h-[calc(100vh-220px)] rounded-t-[28px] bg-background px-13 pt-7 pb-10 ">
+        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-13 pt-8 pb-10 ">
           <div className="flex items-start justify-between gap-4 mb-7">
             <div>
               <div className="flex items-center gap-1 mb-5">

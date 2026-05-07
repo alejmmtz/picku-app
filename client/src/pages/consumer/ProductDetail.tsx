@@ -9,7 +9,7 @@ import type { Product } from "../../types/product.types";
 import Button from "../../components/common/Button";
 
 import ArrowIcon from "../../assets/arrow.svg?react";
-import ShoppingCartOrangeIcon from "../../assets/shopping cart orange.svg?react";
+import ShoppingCartWhiteIcon from "../../assets/shopping cart white.svg?react";
 
 const ProductDetail = () => {
   const axios = useAxios();
@@ -67,15 +67,13 @@ const ProductDetail = () => {
 
   //cart :3
   const handleAddToCart = () => {
-    if (!product.is_available) return;
-    addToCart(product);
-  };
+  if (!product.is_available) return;
 
-  const handleBuyNow = () => {
-    if (!product.is_available) return;
-    addToCart(product);
-    navigate("/consumer/cart");
-  };
+  addToCart(product);
+
+  navigate("/consumer/cart");
+};
+
 
   return (
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
@@ -94,7 +92,7 @@ const ProductDetail = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[13px] shadow-sm"
+              className="flex items-center gap-1 rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
             >
               <ArrowIcon className="w-3 h-3" />
               <span>Back</span>
@@ -104,12 +102,12 @@ const ProductDetail = () => {
 
          {/*product information*/}
          
-        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-10 pt-8 pb-10">
+        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-13 pt-8 pb-10">
           <div className="flex items-start justify-between gap-4 mb-8">
             <div>
               <h2 className="text-[21px] font-medium">{product.name}</h2>
 
-              <p className="mt-1 text-[32px] leading-none text-orange">
+              <p className="mt-1 text-[32px] leading-none font-regular text-orange">
                 ${product.price.toLocaleString("es-CO")}
               </p>
             </div>
@@ -137,22 +135,13 @@ const ProductDetail = () => {
 
             {/*add to cart button*/}
             <Button
-            variant="secondary"
-            disabled={!product.is_available}
-            onClick={handleAddToCart}
-            icon={<ShoppingCartOrangeIcon className="w-5 h-5" />}
+              disabled={!product.is_available}
+              onClick={handleAddToCart}
+              icon={<ShoppingCartWhiteIcon className="w-5 h-5" />}
             >
-            Add to cart
+              Add to cart
             </Button>
 
-            {/*buy now button*/}
-            <Button
-            variant="primary"
-            disabled={!product.is_available}
-            onClick={handleBuyNow}
-            >
-            Buy now
-            </Button>
           </div>
         </section>
       </section>
