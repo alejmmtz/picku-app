@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RoleSelector from "../pages/role-selector/RoleSelector";
+import ConsumerLogin from "../pages/consumer-auth/ConsumerLogin";
+import ConsumerSignup from "../pages/consumer-auth/ConsumerSignup";
 
 const router = createBrowserRouter([
   {
@@ -7,9 +9,12 @@ const router = createBrowserRouter([
     Component: RoleSelector,
   },
   {
-    //temporal pq no existe la pantalla
     path: "/consumer/login",
-    element: <div>Consumer Login</div>,
+    Component: ConsumerLogin,
+  },
+  {
+    path: "/consumer/signup",
+    Component: ConsumerSignup,
   },
   {
     //temporal pq no existe la pantalla
