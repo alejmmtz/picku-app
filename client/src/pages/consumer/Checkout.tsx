@@ -67,7 +67,7 @@ const Checkout = () => {
         <button
           type="button"
           onClick={() => navigate("/consumer/cart")}
-          className="mb-4 flex items-center gap-2 text-[17px]"
+          className="mb-4 flex items-center gap-2 font-regular text-[17px]"
         >
           <ArrowIcon className="w-4 h-4" />
           <span>Cart</span>

@@ -86,7 +86,7 @@ const BusinessDetail = () => {
           <button
             type="button"
             onClick={() => navigate("/consumer/home")}
-            className="flex items-center gap-1 rounded-full bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
+            className="flex items-center gap-1 rounded-full font-regular bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
           >
             <ArrowIcon className="w-3 h-3" />
             <span>Home</span>

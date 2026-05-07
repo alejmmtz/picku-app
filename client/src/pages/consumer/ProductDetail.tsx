@@ -92,7 +92,7 @@ const ProductDetail = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
+              className="flex items-center gap-1 font-regular rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
             >
               <ArrowIcon className="w-3 h-3" />
               <span>Back</span>

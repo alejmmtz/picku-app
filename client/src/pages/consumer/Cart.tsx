@@ -24,7 +24,7 @@ const Cart = () => {
         <button
           type="button"
           onClick={() => navigate("/consumer/home")}
-          className="mb-4 flex items-center gap-2 text-[17px]"
+          className="mb-4 flex items-center gap-2 font-regular text-[17px]"
         >
           <ArrowIcon className="w-4 h-4" />
           <span>Home</span>
