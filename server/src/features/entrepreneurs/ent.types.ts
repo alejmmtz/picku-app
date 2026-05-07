@@ -6,9 +6,9 @@ export interface Entrepreneur {
     description: string;
     contact_info: string;
     category: string;
-    latitude: number;
-    longitude: number;
     is_active: boolean;
+    campus_locations?: number;
+    entrepreneur_position?: unknown;
     owner_name?: string;
 }
 //Create 
@@ -19,8 +19,8 @@ export interface CreateEntrepreneurDTO {
     description: string;
     contact_info: string;
     category: string;
-    latitude: number;
-    longitude: number;
+    campus_locations?: number;
+    entrepreneur_position?: unknown;
 }
 
 //Update/edit
@@ -30,8 +30,8 @@ export interface UpdateEntrepreneurDTO {
     description?: string;
     contact_info?: string;
     category?: string;
-    latitude?: number;
-    longitude?: number;
+    campus_locations?: number;
+    entrepreneur_position?: unknown;
 }
 
 //Update status (open/closed)
