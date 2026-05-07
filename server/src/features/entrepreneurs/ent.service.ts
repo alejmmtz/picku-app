@@ -18,12 +18,12 @@ export const getEntrepreneursService = async (): Promise<Entrepreneur[]> => {
       e.description,
       e.contact_info,
       e.category,
-      e.latitude,
-      e.longitude,
+      e.campus_locations,
+      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
-    JOIN users u ON u.id = e.student_id
+    LEFT JOIN users u ON u.id = e.student_id
     ORDER BY e.name ASC
   `;
 
@@ -44,12 +44,12 @@ export const getEntrepreneurByIdService = async (
       e.description,
       e.contact_info,
       e.category,
-      e.latitude,
-      e.longitude,
+      e.campus_locations,
+      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
-    JOIN users u ON u.id = e.student_id
+    LEFT JOIN users u ON u.id = e.student_id
     WHERE e.id = $1
   `;
 
@@ -75,12 +75,12 @@ export const getEntrepreneurByOwnerIdService = async (
       e.description,
       e.contact_info,
       e.category,
-      e.latitude,
-      e.longitude,
+      e.campus_locations,
+      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
-    JOIN users u ON u.id = e.student_id
+    LEFT JOIN users u ON u.id = e.student_id
     WHERE e.student_id = $1
   `;
 
@@ -109,8 +109,8 @@ export const createEntrepreneurService = async (
       description,
       contact_info,
       category,
-      latitude,
-      longitude,
+      campus_locations,
+      entrepreneur_position,
       is_active
     )
     VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
@@ -122,8 +122,8 @@ export const createEntrepreneurService = async (
       description,
       contact_info,
       category,
-      latitude,
-      longitude,
+      campus_locations,
+      entrepreneur_position,
       is_active
   `;
 
@@ -134,8 +134,8 @@ export const createEntrepreneurService = async (
     data.description,
     data.contact_info,
     data.category,
-    data.latitude,
-    data.longitude,
+    data.campus_locations,
+    data.entrepreneur_position,
     true,
   ]);
 
@@ -152,10 +152,13 @@ export const updateEntrepreneurService = async (
   const updatedName = data.name ?? currentEntrepreneur.name;
   const updatedImg = data.img ?? currentEntrepreneur.img;
   const updatedDescription = data.description ?? currentEntrepreneur.description;
-  const updatedContactInfo = data.contact_info ?? currentEntrepreneur.contact_info;
+  const updatedContactInfo =
+    data.contact_info ?? currentEntrepreneur.contact_info;
   const updatedCategory = data.category ?? currentEntrepreneur.category;
-  const updatedLatitude = data.latitude ?? currentEntrepreneur.latitude;
-  const updatedLongitude = data.longitude ?? currentEntrepreneur.longitude;
+  const updatedCampusLocations =
+    data.campus_locations ?? currentEntrepreneur.campus_locations;
+  const updatedEntrepreneurPosition =
+    data.entrepreneur_position ?? currentEntrepreneur.entrepreneur_position;
 
   if (data.category && !ENTREPRENEUR_CATEGORIES.includes(data.category)) {
     throw Boom.badRequest("Invalid entrepreneur category");
@@ -169,8 +172,8 @@ export const updateEntrepreneurService = async (
       description = $3,
       contact_info = $4,
       category = $5,
-      latitude = $6,
-      longitude = $7
+      campus_locations = $6,
+      entrepreneur_position = $7
     WHERE id = $8
     RETURNING
       id,
@@ -180,8 +183,8 @@ export const updateEntrepreneurService = async (
       description,
       contact_info,
       category,
-      latitude,
-      longitude,
+      campus_locations,
+      entrepreneur_position,
       is_active
   `;
 
@@ -191,8 +194,8 @@ export const updateEntrepreneurService = async (
     updatedDescription,
     updatedContactInfo,
     updatedCategory,
-    updatedLatitude,
-    updatedLongitude,
+    updatedCampusLocations,
+    updatedEntrepreneurPosition,
     entrepreneurId,
   ]);
 
@@ -218,8 +221,8 @@ export const updateEntrepreneurStatusService = async (
       description,
       contact_info,
       category,
-      latitude,
-      longitude,
+      campus_locations,
+      entrepreneur_position,
       is_active
   `;
 
