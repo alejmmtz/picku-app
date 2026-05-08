@@ -3,8 +3,6 @@ import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import "./ConsumerAuth.css";
-
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
 const ConsumerSignup = () => {
@@ -24,7 +22,6 @@ const ConsumerSignup = () => {
     setErrorMessage("");
 
     try {
-      // Registrar usuario
       await axios.post(`${API_URL}/picku/api/auth/register`, {
         name,
         phone,
@@ -33,13 +30,11 @@ const ConsumerSignup = () => {
         role: "consumer",
       });
 
-      // Después de registrarse, enviarlo al login
       navigate("/consumer/login", {
         state: {
           message: "Cuenta creada correctamente. Ahora inicia sesión.",
         },
       });
-
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&
@@ -54,27 +49,36 @@ const ConsumerSignup = () => {
   };
 
   return (
-    <main className="auth-shell">
-      <section className="auth-card">
-        <div className="auth-hero auth-hero--signup">
+    <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia">
+      <section className="flex min-h-screen w-full max-w-[430px] flex-col justify-center px-6 pt-5 pb-7">
+        <div className="relative z-[2] mt-[38px] mb-[-104px] flex min-h-[80px] items-center justify-end">
           <img
+            className="h-auto w-[140px]"
             src="/resources/Image-SignUp-Consumer.svg"
             alt="Ilustración de registro"
           />
         </div>
 
         <header>
-          <h1 className="auth-title">Ready to pick?</h1>
-          <p className="auth-subtitle">Join PickU as Consumer</p>
+          <h1 className="mb-[18px] !font-sofia text-[24px] font-semibold leading-[0.3] text-black">
+            Ready to pick?
+          </h1>
+          <p className="mt-2 text-[15px] text-[rgba(27,27,27,0.82)]">
+            Join PickU as Consumer
+          </p>
         </header>
 
-        <form className="auth-form" onSubmit={handleSubmit}>
-          <label className="auth-field">
-            <span className="auth-label">Username</span>
-            <span className="auth-input-wrap">
-              <img className="auth-icon" src="/icons/user.svg" alt="" />
+        <form className="mt-6 mb-[10px] flex flex-col gap-[14px]" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-2">
+            <span className="text-[15px]">Username</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
+              <img
+                className="h-[22px] w-[22px] shrink-0 opacity-35"
+                src="/icons/user.svg"
+                alt=""
+              />
               <input
-                className="auth-input"
+                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="text"
                 placeholder="Enter username"
                 value={name}
@@ -85,12 +89,16 @@ const ConsumerSignup = () => {
             </span>
           </label>
 
-          <label className="auth-field">
-            <span className="auth-label">Phone</span>
-            <span className="auth-input-wrap">
-              <img className="auth-icon" src="/icons/phone.svg" alt="" />
+          <label className="flex flex-col gap-2">
+            <span className="text-[15px]">Phone</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
+              <img
+                className="h-[22px] w-[22px] shrink-0 opacity-35"
+                src="/icons/phone.svg"
+                alt=""
+              />
               <input
-                className="auth-input"
+                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="tel"
                 placeholder="Enter number"
                 value={phone}
@@ -101,12 +109,16 @@ const ConsumerSignup = () => {
             </span>
           </label>
 
-          <label className="auth-field">
-            <span className="auth-label">Email</span>
-            <span className="auth-input-wrap">
-              <img className="auth-icon" src="/icons/mail.svg" alt="" />
+          <label className="flex flex-col gap-2">
+            <span className="text-[15px]">Email</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
+              <img
+                className="h-[22px] w-[22px] shrink-0 opacity-35"
+                src="/icons/mail.svg"
+                alt=""
+              />
               <input
-                className="auth-input"
+                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="email"
                 placeholder="Enter email"
                 value={email}
@@ -117,12 +129,16 @@ const ConsumerSignup = () => {
             </span>
           </label>
 
-          <label className="auth-field">
-            <span className="auth-label">Password</span>
-            <span className="auth-input-wrap">
-              <img className="auth-icon" src="/icons/lock.svg" alt="" />
+          <label className="flex flex-col gap-2">
+            <span className="text-[15px]">Password</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
+              <img
+                className="h-[22px] w-[22px] shrink-0 opacity-35"
+                src="/icons/lock.svg"
+                alt=""
+              />
               <input
-                className="auth-input"
+                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
@@ -132,50 +148,40 @@ const ConsumerSignup = () => {
               />
 
               <button
-                className="auth-toggle"
+                className="inline-flex items-center bg-transparent p-0"
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={
-                  showPassword
-                    ? "Ocultar contraseña"
-                    : "Mostrar contraseña"
+                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                 }
               >
                 <img
-                  className="auth-icon"
-                  src={
-                    showPassword
-                      ? "/icons/eye.svg"
-                      : "/icons/eye-off.svg"
-                  }
+                  className="h-[22px] w-[22px] shrink-0 opacity-35"
+                  src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
                   alt=""
                 />
               </button>
             </span>
           </label>
 
-          <p
-            className={`auth-feedback ${
-              errorMessage ? "auth-feedback--error" : ""
-            }`}
-          >
+          <p className={`m-0 min-h-[18px] text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}>
             {errorMessage}
           </p>
 
           <button
-            className="auth-submit"
+            className="mt-7 min-h-[52px] rounded-[12px] bg-orange text-[16px] text-white transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
-            style={{margin: "28px 0 0"}}
           >
-            {isSubmitting ? "Signing up..." : "Sign up"}
+            {isSubmitting ? "Sign up" : "Sign up"}
           </button>
         </form>
 
-        <p className="auth-switch">
+        <p className="mt-[18px] text-center text-[16px]">
           Already have an account?{" "}
           <button
-            type="button" 
+            className="bg-transparent p-0 font-semibold text-orange"
+            type="button"
             onClick={() => navigate("/consumer/login")}
           >
             Log In
