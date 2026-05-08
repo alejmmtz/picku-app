@@ -127,11 +127,11 @@ const BusinessDetail = () => {
 
             {/* products */}
             {products.length === 0 && (
-              <div className="rounded-[13px] border border-[#DCD6D3] px-5 py-8 text-center">
+              <div className="px-5 py-35 text-center">
                 <p className="text-[15px] font-medium">
-                  No products available
+                  No products available :(
                 </p>
-                <p className="mt-1 text-[13px] text-[#7A716D]">
+                <p className="mt-1 text-[13px] text-[#7A716D] font-light">
                   This business has no products yet.
                 </p>
               </div>

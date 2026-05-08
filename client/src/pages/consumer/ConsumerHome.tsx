@@ -8,15 +8,17 @@ import CheckIcon from "../../assets/check icon.svg?react";
 import SearchIcon from "../../assets/Search.svg?react";
 
 import { useAxios } from "../../providers/AxiosProvider";
-import { getEntrepreneurs } from "../../services/entrepreneur.service"
+import { getEntrepreneurs } from "../../services/entrepreneur.service";
+import { getProducts } from "../../services/product.service";
 import type { Entrepreneur } from "../../types/entrepreneur.types";
-import { filterEntrepreneurs } from "../../utils/filterEntrepreneurs"
+import type { Product } from "../../types/product.types";
+import { filterEntrepreneurs } from "../../utils/filterEntrepreneurs";
 import Loader from "../../components/common/Loader";
 
 const ConsumerHome = () => {
   const axios = useAxios();
   const navigate = useNavigate();
-
+  const [products, setProducts] = useState<Product[]>([]);
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
@@ -24,6 +26,9 @@ const ConsumerHome = () => {
   useEffect(() => {
     const loadEntrepreneurs = async () => {
       try {
+        const productsData = await getProducts(axios);
+        setProducts(productsData);
+
         const data = await getEntrepreneurs(axios);
         setEntrepreneurs(data.filter((entrepreneur) => entrepreneur.is_active));
       } catch (error) {
@@ -37,8 +42,8 @@ const ConsumerHome = () => {
   }, [axios]);
 
   const filteredEntrepreneurs = useMemo(() => {
-    return filterEntrepreneurs(entrepreneurs, searchTerm);
-  }, [entrepreneurs, searchTerm]);
+  return filterEntrepreneurs(entrepreneurs, products, searchTerm);
+}, [entrepreneurs, products, searchTerm]);
 
   return (
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
