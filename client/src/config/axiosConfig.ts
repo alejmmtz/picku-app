@@ -10,6 +10,7 @@ import {
 } from "../utils/storage";
 
 const AxiosContext = createContext<AxiosInstance | null>(null);
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
 let refreshPromise: Promise<AuthData> | null = null;
 
@@ -40,7 +41,7 @@ const getAccessToken = async (baseURL: string): Promise<string | null> => {
     return newAuth.session.access_token;
   } catch {
     removeStoredAuth();
-    globalThis.location.href = "/login";
+    globalThis.location.href = "/consumer/login";
     throw new Error("Session expired");
   } finally {
     refreshPromise = null;
@@ -69,7 +70,7 @@ export const AxiosProvider = ({
   children: ReactNode;
 }) => {
   const instance = useMemo(() => {
-    const baseURL = import.meta.env.VITE_API_URL || "";
+    const baseURL = API_URL;
     const inst = axios.create({ baseURL });
 
     inst.interceptors.request.use((config) => attachAuth(baseURL, config));

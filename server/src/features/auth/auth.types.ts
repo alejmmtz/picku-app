@@ -6,13 +6,12 @@ export enum UserRole {
 }
 
 export type User = {
-  id: number;
+  id: string;
   name: string;
   email: string;
-  password: string;
   phone: string;
   role: UserRole;
-  createdAt: string;
+  created_at: string;
 };
 
 export const authenticateUserSchema = z.object({
