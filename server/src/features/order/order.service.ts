@@ -53,7 +53,7 @@ const fetchOrdersQuery = async (
         'id', e.id, 'name', e.name, 'category', e.category,
         'contact_info', e.contact_info, 'img', e.img,
         'entrepreneur_position', e.entrepreneur_position,
-        'campus_location_id', e.campus_location_id
+        'campus_location_id', e.campus_locations
       ) AS entrepreneur,
       json_build_object(
         'estimated_distance', o.estimated_distance,
@@ -92,8 +92,21 @@ export const getOrdersService = async (
   userId: UUID,
   role: 'consumer' | 'entrepreneur'
 ): Promise<OrderResponseDTO[]> => {
-  const column = role === 'consumer' ? 'consumer_id' : 'entrepreneur_id';
-  return fetchOrdersQuery({ column, value: userId });
+  if (role === 'consumer') {
+    return fetchOrdersQuery({ column: 'consumer_id', value: userId });
+  }
+
+  const result = await pool.query<{ id: UUID }>(
+    'SELECT id FROM entrepreneurs WHERE student_id = $1',
+    [userId]
+  );
+  const entrepreneurId = result.rows[0]?.id;
+
+  if (!entrepreneurId) {
+    return [];
+  }
+
+  return fetchOrdersQuery({ column: 'entrepreneur_id', value: entrepreneurId });
 };
 
 export const getOrderByIdService = async (
@@ -114,6 +127,19 @@ export const createOrderService = async (
 
   try {
     await client.query('BEGIN');
+
+    const { rows: entrepreneurRows } = await client.query(
+      'SELECT is_active FROM entrepreneurs WHERE id = $1',
+      [dto.entrepreneur_id]
+    );
+
+    if (entrepreneurRows.length === 0) {
+      throw Boom.badRequest('Entrepreneur not found');
+    }
+
+    if (entrepreneurRows[0].is_active !== true) {
+      throw Boom.badRequest('This shop is closed and cannot receive orders');
+    }
 
     let calculatedTotal = 0;
     const pickupCode = generatePickupCode();

@@ -65,7 +65,7 @@ export const getEntrepreneurByIdService = async (
 // get entrepreneur by user id
 export const getEntrepreneurByOwnerIdService = async (
   userId: string
-): Promise<Entrepreneur> => {
+): Promise<Entrepreneur | null> => {
   const query = `
     SELECT
       e.id,
@@ -86,18 +86,39 @@ export const getEntrepreneurByOwnerIdService = async (
 
   const result = await pool.query(query, [userId]);
 
-  if (result.rows.length === 0) {
+  return result.rows[0] ?? null;
+};
+
+export const getRequiredEntrepreneurByOwnerIdService = async (
+  userId: string
+): Promise<Entrepreneur> => {
+  const entrepreneur = await getEntrepreneurByOwnerIdService(userId);
+
+  if (!entrepreneur) {
     throw Boom.notFound("Entrepreneur not found for this user");
   }
 
-  return result.rows[0];
+  return entrepreneur;
 };
 
 // create entrepreneur
 export const createEntrepreneurService = async (
   data: CreateEntrepreneurDTO
 ): Promise<Entrepreneur> => {
-  if (!ENTREPRENEUR_CATEGORIES.includes(data.category)) {
+  if (
+    !data.student_id ||
+    !data.name?.trim() ||
+    !data.img?.trim() ||
+    !data.description?.trim() ||
+    !data.contact_info?.trim() ||
+    !data.category?.trim()
+  ) {
+    throw Boom.badRequest("Missing required entrepreneur fields");
+  }
+
+  const category = data.category.trim();
+
+  if (!ENTREPRENEUR_CATEGORIES.includes(category)) {
     throw Boom.badRequest("Invalid entrepreneur category");
   }
 
@@ -109,11 +130,16 @@ export const createEntrepreneurService = async (
       description,
       contact_info,
       category,
-      campus_locations,
-      entrepreneur_position,
       is_active
     )
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+    VALUES ($1, $2, $3, $4, $5, $6, true)
+    ON CONFLICT (student_id)
+    DO UPDATE SET
+      name = EXCLUDED.name,
+      img = EXCLUDED.img,
+      description = EXCLUDED.description,
+      contact_info = EXCLUDED.contact_info,
+      category = EXCLUDED.category
     RETURNING
       id,
       student_id,
@@ -129,14 +155,11 @@ export const createEntrepreneurService = async (
 
   const result = await pool.query(query, [
     data.student_id,
-    data.name,
-    data.img,
-    data.description,
-    data.contact_info,
-    data.category,
-    data.campus_locations,
-    data.entrepreneur_position,
-    true,
+    data.name.trim(),
+    data.img.trim(),
+    data.description.trim(),
+    data.contact_info.trim(),
+    category,
   ]);
 
   return result.rows[0];
