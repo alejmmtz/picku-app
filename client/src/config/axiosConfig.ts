@@ -1,7 +1,6 @@
 import axios from "axios";
-import { createContext } from "preact";
-import { useContext, useMemo } from "preact/hooks";
-import type { ComponentChildren } from "preact";
+import { createContext, createElement, useContext, useMemo } from "react";
+import type { ReactNode } from "react";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 import type { AuthData } from "../types/authData";
 import {
@@ -67,7 +66,7 @@ const extractErrorMessage = (error: unknown): never => {
 export const AxiosProvider = ({
   children,
 }: {
-  children: ComponentChildren;
+  children: ReactNode;
 }) => {
   const instance = useMemo(() => {
     const baseURL = import.meta.env.VITE_API_URL || "";
@@ -79,9 +78,7 @@ export const AxiosProvider = ({
     return inst;
   }, []);
 
-  return (
-    <AxiosContext.Provider value={instance}>{children}</AxiosContext.Provider>
-  );
+  return createElement(AxiosContext.Provider, { value: instance }, children);
 };
 
 export const useAxios = () => {
