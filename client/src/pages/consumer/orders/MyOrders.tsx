@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { fetchOrders } from "./orders.api";
-import { mockOrders } from "./orders.mock";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 
 type OrderTab = "ongoing" | "delivered";
@@ -28,11 +27,16 @@ const statusClassMap: Record<OrderStatus, string> = {
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#78aa38] bg-[#eef8df] px-3 text-[14px] text-[#78aa38]",
 };
 
+const emptyOrdersMessage =
+  "En este momento no tienes pedidos. Si notas algo raro, ya lo estamos arreglando para ti.";
+
 const formatPrice = (price: number) =>
   `$${price.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;
 
 const getOrderImage = (order: ConsumerOrder) =>
-  order.items[0]?.img || order.entrepreneur.img || "/resources/Image-SignUp-Consumer.svg";
+  order.items[0]?.img ||
+  order.entrepreneur.img ||
+  "/resources/Image-SignUp-Consumer.svg";
 
 const getOrderTitle = (order: ConsumerOrder) =>
   order.items[0]?.name || order.entrepreneur.name || "Order";
@@ -53,10 +57,8 @@ const getDistanceLabel = (order: ConsumerOrder) => {
 const MyOrders = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("ongoing");
-  const [orders, setOrders] = useState<ConsumerOrder[]>(mockOrders);
-  const [feedbackMessage, setFeedbackMessage] = useState(
-    "Se muestran los datos de vista previa mientras se verifica el sistema de pedidos.",
-  );
+  const [orders, setOrders] = useState<ConsumerOrder[]>([]);
+  const [feedbackMessage, setFeedbackMessage] = useState(emptyOrdersMessage);
 
   useEffect(() => {
     let isMounted = true;
@@ -67,19 +69,13 @@ const MyOrders = () => {
 
         if (!isMounted) return;
 
-        setOrders(data.length > 0 ? data : mockOrders);
-        setFeedbackMessage(
-          data.length > 0
-            ? ""
-            : "El backend no ha devuelto pedidos aún, por lo tanto se muestran datos de vista previa.",
-        );
+        setOrders(data);
+        setFeedbackMessage(data.length > 0 ? "" : emptyOrdersMessage);
       } catch {
         if (!isMounted) return;
 
-        setOrders(mockOrders);
-        setFeedbackMessage(
-          "No se pudo confirmar el endpoint de pedidos en esta rama, por lo tanto se muestran datos de vista previa.",
-        );
+        setOrders([]);
+        setFeedbackMessage(emptyOrdersMessage);
       }
     };
 

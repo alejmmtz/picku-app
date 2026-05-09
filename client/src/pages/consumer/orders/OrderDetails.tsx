@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
 import { fetchOrderById } from "./orders.api";
-import { mockOrders } from "./orders.mock";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 
 const statusLabelMap: Record<OrderStatus, string> = {
@@ -44,19 +43,14 @@ const OrderDetails = () => {
     "order" in location.state
       ? (location.state.order as ConsumerOrder)
       : null;
-  const fallbackOrder =
-    routedOrder ??
-    (Number.isFinite(orderId)
-      ? (mockOrders.find((item) => item.id === orderId) ?? mockOrders[0])
-      : mockOrders[0]);
 
-  const [order, setOrder] = useState<ConsumerOrder | null>(fallbackOrder);
+  const [order, setOrder] = useState<ConsumerOrder | null>(routedOrder);
   const [feedbackMessage, setFeedbackMessage] = useState(
     routedOrder
       ? ""
       : Number.isFinite(orderId)
-        ? "Se muestran los datos de vista previa mientras se verifica el sistema de detalles del pedido."
-        : "Invalid order id. Preview data is shown.",
+        ? "Todavía no pudimos cargar este pedido. Cuando el backend lo envíe correctamente, se mostrará aquí."
+        : "Este pedido no es válido o todavía no está disponible.",
   );
 
   useEffect(() => {
@@ -77,10 +71,8 @@ const OrderDetails = () => {
       } catch {
         if (!isMounted) return;
 
-        const fallback = mockOrders.find((item) => item.id === orderId) ?? mockOrders[0];
-        setOrder(fallback);
         setFeedbackMessage(
-          "No se pudo confirmar el endpoint de detalles del pedido en esta rama, por lo tanto se muestran datos de vista previa.",
+          "Todavía no pudimos cargar este pedido. Cuando el backend lo envíe correctamente, se mostrará aquí.",
         );
       }
     };
@@ -97,7 +89,31 @@ const OrderDetails = () => {
   const primaryItem = useMemo(() => order?.items[0] ?? null, [order]);
 
   if (!order || !primaryItem) {
-    return null;
+    return (
+      <main className="flex min-h-screen justify-center bg-background font-sofia">
+        <section className="min-h-screen w-full max-w-[430px] bg-background px-[18px] pt-7 pb-9 font-sofia">
+          <img className="mb-[38px] w-16" src="/logos/picku-logo.svg" alt="PickU" />
+
+          <button
+            className="mt-0 inline-flex min-h-10 items-center gap-2 rounded-[14px] bg-[rgba(255,255,255,0.86)] px-4 !font-sofia text-[16px] font-medium"
+            type="button"
+            onClick={() => navigate("/consumer/orders")}
+          >
+            <img className="h-[18px] w-[18px]" src="/icons/arrow-left.svg" alt="" />
+            <span>Orders</span>
+          </button>
+
+          <div className="mt-10 rounded-[24px] border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] p-6">
+            <h1 className="!font-sofia text-[22px] font-semibold text-black">
+              Order details
+            </h1>
+            <p className="mt-3 text-[15px] leading-[1.35] text-[rgba(27,27,27,0.68)]">
+              {feedbackMessage}
+            </p>
+          </div>
+        </section>
+      </main>
+    );
   }
 
   return (
