@@ -8,21 +8,32 @@ export const sendMessage = async (
   res: Response,
   _next: NextFunction,
 ) => {
+  if (!req.authUser) {
+    throw Boom.unauthorized('Authenticated user was not found');
+  }
+
   const parsedBody = createMessageSchema.safeParse(req.body);
 
   if (!parsedBody.success) {
     throw Boom.badRequest(parsedBody.error.issues[0]?.message ?? 'Invalid body');
   }
 
-  const message = await sendMessageService(parsedBody.data.question);
+  const message = await sendMessageService(
+    req.authUser.id,
+    parsedBody.data.question,
+  );
   res.status(201).json(message);
 };
 
 export const getMessages = async (
-  _req: Request,
+  req: Request,
   res: Response,
   _next: NextFunction,
 ) => {
-  const messages = await getMessagesService();
+  if (!req.authUser) {
+    throw Boom.unauthorized('Authenticated user was not found');
+  }
+
+  const messages = await getMessagesService(req.authUser.id);
   res.json(messages);
 };
