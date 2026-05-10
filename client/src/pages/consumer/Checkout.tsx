@@ -16,34 +16,35 @@ const Checkout = () => {
   const [userPosition, setUserPosition] = useState<UserPosition | null>(null);
   const [locationStatus, setLocationStatus] = useState<
     "idle" | "loading" | "success" | "denied" | "error"
-  >("idle");
+  >("loading");
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
+useEffect(() => {
+  if (!navigator.geolocation) {
+    queueMicrotask(() => {
       setLocationStatus("error");
-      return;
-    }
+    });
 
-    setLocationStatus("loading");
+    return;
+  }
 
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        setUserPosition({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        });
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      setUserPosition({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+      });
 
-        setLocationStatus("success");
-      },
-      (error) => {
-        if (error.code === error.PERMISSION_DENIED) {
-          setLocationStatus("denied");
-        } else {
-          setLocationStatus("error");
-        }
+      setLocationStatus("success");
+    },
+    (error) => {
+      if (error.code === error.PERMISSION_DENIED) {
+        setLocationStatus("denied");
+      } else {
+        setLocationStatus("error");
       }
-    );
-  }, []);
+    }
+  );
+}, []);
 
 
   const handlePlaceOrder = () => {
@@ -61,7 +62,7 @@ const Checkout = () => {
 
   return (
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="relative w-full max-w-[430px] min-h-screen px-13 pt-16 pb-32">
+      <section className="relative w-full max-w-[430px] min-h-screen px-13 pt-16 ">
         <img src={LogoConsumer} alt="PickU" className="w-[72px] mt-1.5 mb-8" />
 
         <button
