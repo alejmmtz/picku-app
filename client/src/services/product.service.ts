@@ -19,3 +19,12 @@ export const getProductsByEntrepreneurId = async (
 
   return response.data;
 };
+
+export const getProductById = async (
+  axiosInstance: AxiosInstance,
+  productId: string
+): Promise<Product> => {
+  const response = await axiosInstance.get(`/picku/api/products/${productId}`);
+
+  return response.data;
+};

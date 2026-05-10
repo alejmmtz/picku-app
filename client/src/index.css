@@ -44,3 +44,8 @@ body {
 h1 {
   font-family: var(--font-gliker);
 }
+
+.leaflet-control-attribution {
+  font-size: 8px;
+  opacity: 0.5;
+}

@@ -2,6 +2,9 @@ import { createBrowserRouter } from "react-router-dom";
 import RoleSelector from "../pages/role-selector/RoleSelector";
 import ConsumerHome from "../pages/consumer/ConsumerHome";
 import BusinessDetail from "../pages/consumer/BusinessDetail";
+import ProductDetail from "../pages/consumer/ProductDetail";
+import Cart from "../pages/consumer/Cart";
+import Checkout from "../pages/consumer/Checkout";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +30,18 @@ const router = createBrowserRouter([
   path: "/consumer/business/:id",
   Component: BusinessDetail,
   },
+  {
+  path: "/consumer/product/:id",
+  Component: ProductDetail, 
+  },
+  {
+  path: "/consumer/cart",
+  Component: Cart,
+  },
+  {
+    path: "/consumer/checkout",
+    Component: Checkout,
+  }
 ]);
 
 export default router;

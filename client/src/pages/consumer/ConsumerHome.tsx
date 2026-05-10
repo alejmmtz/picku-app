@@ -49,7 +49,7 @@ const ConsumerHome = () => {
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
       <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-10">
         <header className="flex items-center justify-between mb-7">
-          <img src={LogoConsumer} alt="PickU" className="w-[72px]" />
+          <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
 
           <button
             type="button"
