@@ -1,3 +1,7 @@
 <svg width="9" height="17" viewBox="0 0 9 17" fill="none" xmlns="http://www.w3.org/2000/svg">
+<<<<<<< HEAD
 <path d="M7.45728 15.7084L3.62496 11.8761C2.01385 10.2649 1.20829 9.45939 1.20829 8.45837C1.20829 7.45736 2.01385 6.6518 3.62496 5.04069L7.45728 1.20837" stroke="#1B1B1B" stroke-width="2.41667" stroke-linecap="round" stroke-linejoin="round"/>
+=======
+<path d="M7.45732 15.7083L3.625 11.8759C2.01389 10.2648 1.20833 9.45927 1.20833 8.45825C1.20833 7.45724 2.01389 6.65168 3.625 5.04057L7.45732 1.20825" stroke="#1B1B1B" stroke-width="2.41667" stroke-linecap="round" stroke-linejoin="round"/>
+>>>>>>> origin/develop
 </svg>

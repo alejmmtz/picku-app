@@ -5,6 +5,14 @@ import type {
   UpdateProductDTO,
 } from "../types/product.types";
 
+export const getProducts = async (
+  axiosInstance: AxiosInstance
+): Promise<Product[]> => {
+  const response = await axiosInstance.get("/picku/api/products");
+
+  return response.data;
+};
+
 export const getProductsByEntrepreneurId = async (
   axiosInstance: AxiosInstance,
   entrepreneurId: string
@@ -49,5 +57,6 @@ export const deleteProduct = async (
   productId: string
 ): Promise<Product> => {
   const response = await axiosInstance.delete(`/picku/api/products/${productId}`);
+
   return response.data;
 };
