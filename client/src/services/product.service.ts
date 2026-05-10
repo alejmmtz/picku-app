@@ -1,5 +1,9 @@
 import type { AxiosInstance } from "axios";
-import type { Product } from "../types/product.types";
+import type {
+  Product,
+  CreateProductDTO,
+  UpdateProductDTO,
+} from "../types/product.types";
 
 export const getProducts = async (
   axiosInstance: AxiosInstance
@@ -25,6 +29,34 @@ export const getProductById = async (
   productId: string
 ): Promise<Product> => {
   const response = await axiosInstance.get(`/picku/api/products/${productId}`);
+  return response.data;
+};
+
+export const createProduct = async (
+  axiosInstance: AxiosInstance,
+  productData: CreateProductDTO
+): Promise<Product> => {
+  const response = await axiosInstance.post("/picku/api/products", productData);
+  return response.data;
+};
+
+export const updateProduct = async (
+  axiosInstance: AxiosInstance,
+  productId: string,
+  productData: UpdateProductDTO
+): Promise<Product> => {
+  const response = await axiosInstance.patch(
+    `/picku/api/products/${productId}`,
+    productData
+  );
+  return response.data;
+};
+
+export const deleteProduct = async (
+  axiosInstance: AxiosInstance,
+  productId: string
+): Promise<Product> => {
+  const response = await axiosInstance.delete(`/picku/api/products/${productId}`);
 
   return response.data;
 };
