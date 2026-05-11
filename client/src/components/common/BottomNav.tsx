@@ -97,7 +97,7 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
       <div className={`grid grid-cols-${items.length} gap-1`}>
         {items.map((item) => {
           const isActive = item.matches(pathname);
-          const maskUrl = iconMaskByName[item.icon]; // ← usar el mapa
+          const maskUrl = iconMaskByName[item.icon];
 
           return (
             <button
@@ -114,9 +114,8 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
                 />
               )}
 
-              {/* Ícono con máscara SVG */}
               <span
-                className={`h-6 w-6 ${isActive ? activeBarColor : "bg-[#a7a7a7]"}`}
+                className={`h-6 w-6 ${isActive ? activeBarColor : "bg-black/25"}`}
                 style={{
                   maskImage: `url(${maskUrl})`,
                   WebkitMaskImage: `url(${maskUrl})`,

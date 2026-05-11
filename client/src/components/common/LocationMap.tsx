@@ -39,8 +39,7 @@ declare global {
 }
 
 const MAP_CENTER: [number, number] = [3.339998, -76.529993];
-const LEAFLET_CSS_URL =
-  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+const LEAFLET_CSS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 const LEAFLET_JS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
 const LEAFLET_TILE_URL =
   "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
@@ -111,9 +110,6 @@ const LocationMap = () => {
     <div className="relative mb-6 h-[128px] w-full overflow-hidden rounded-[10px]">
       <div ref={mapRef} className="absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.28))]" />
-      <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-[#5d5854] shadow-sm">
-        Static campus map
-      </div>
     </div>
   );
 };

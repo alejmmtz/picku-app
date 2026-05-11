@@ -6,9 +6,9 @@ export const validate =
   async (req: Request, res: Response, next: NextFunction) => {
     try {
       const parsed = (await schema.parseAsync({
-        body: req.body,
-        query: req.query,
-        params: req.params,
+        body: req.body ?? {},
+        query: req.query ?? {},
+        params: req.params ?? {},
       })) as {
         body: Request['body'];
         query: Request['query'];
