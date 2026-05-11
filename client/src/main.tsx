@@ -6,11 +6,15 @@ import "leaflet/dist/leaflet.css";
 
 import router from "./routes/Router";
 import { AxiosProvider } from "./providers/AxiosProvider";
+import { StrictMode } from "react";
+
 
 createRoot(document.getElementById("root")!).render(
-<AxiosProvider>
-  <CartProvider>
-    <RouterProvider router={router} />
-  </CartProvider>
-</AxiosProvider>
+  <StrictMode>
+    <AxiosProvider>
+      <CartProvider>
+        <RouterProvider router={router} />
+      </CartProvider>
+    </AxiosProvider>
+  </StrictMode>
 );

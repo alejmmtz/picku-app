@@ -9,7 +9,9 @@ import {
   removeStoredAuth,
 } from "../utils/storage";
 
-const AxiosContext = createContext<AxiosInstance | null>(null);
+const axiosConfig = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+});
 
 let refreshPromise: Promise<AuthData> | null = null;
 
@@ -63,9 +65,7 @@ const extractErrorMessage = (error: unknown): never => {
   return Promise.reject(new Error(message)) as never;
 };
 
-const axiosConfig = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
+const AxiosContext = createContext<AxiosInstance | null>(null);
 
 export default axiosConfig;
 
