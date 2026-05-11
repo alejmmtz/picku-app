@@ -14,19 +14,19 @@ import EntrepreneurConfirm from "../pages/entrepreneur/onboarding/EntrepreneurCo
 import EntrepreneurSuccess from "../pages/entrepreneur/onboarding/EntrepreneurSuccess";
 import EntrepreneurHome from "../pages/entrepreneur/home/EntrepreneurHome";
 
-import EntrepreneurProducts from "../pages/entrepreneur/EntrepreneurProducts";
-import EditProduct from "../pages/entrepreneur/EditProduct";
-import AddProduct from "../pages/entrepreneur/AddProduct";
 
-import ConsumerHome from "../pages/consumer/ConsumerHome";
-import BusinessDetail from "../pages/consumer/BusinessDetail";
-import ProductDetail from "../pages/consumer/ProductDetail";
-import Cart from "../pages/consumer/Cart";
-import Checkout from "../pages/consumer/Checkout";
 import Chatbot from "../pages/consumer/chatbot/Chatbot";
 import ConsumerProfile from "../pages/consumer/profile/ConsumerProfile";
 import EntrepreneurProfile from "../pages/entrepreneur/profile/EntrepreneurProfile";
 import ProtectedRoute from "./ProtectedRoute";
+import ConsumerHome from "../pages/consumer/home/ConsumerHome";
+import BusinessDetail from "../pages/consumer/home/BusinessDetail";
+import ProductDetail from "../pages/consumer/home/ProductDetail";
+import Cart from "../pages/consumer/cart/Cart";
+import Checkout from "../pages/consumer/checkout/Checkout";
+import EntrepreneurProducts from "../pages/entrepreneur/products/EntrepreneurProducts";
+import EditProduct from "../pages/entrepreneur/products/EditProduct";
+import AddProduct from "../pages/entrepreneur/products/AddProduct";
 
 const router = createBrowserRouter([
   {

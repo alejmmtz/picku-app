@@ -58,7 +58,7 @@ const ConsumerProfile = () => {
 
   const handleLogout = () => {
     removeStoredAuth();
-    navigate("/consumer/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const displayName = profile?.name ?? fallbackName;

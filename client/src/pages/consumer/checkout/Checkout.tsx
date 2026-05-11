@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useCart } from "../../providers/CartProvider";
-import type { UserPosition } from "../../types/order.types";
+import { useCart } from "../../../providers/CartProvider";
+import type { UserPosition } from "../../../types/order.types";
 
-import LogoConsumer from "../../assets/logo consumer.png";
-import ArrowIcon from "../../assets/arrow.svg?react";
-import LocationMap from "../../components/common/LocationMap";
+import LogoConsumer from "../../../assets/logo consumer.png";
+import ArrowIcon from "../../../assets/arrow.svg?react";
+import LocationMap from "../../../components/common/LocationMap";
 
 const Checkout = () => {
   const navigate = useNavigate();

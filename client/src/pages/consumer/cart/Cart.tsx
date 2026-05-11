@@ -1,9 +1,9 @@
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../providers/CartProvider";
+import { useCart } from "../../../providers/CartProvider";
 
-import LogoConsumer from "../../assets/logo consumer.png";
-import ArrowIcon from "../../assets/arrow.svg?react";
-import TrashIcon from "../../assets/trash.svg?react";
+import LogoConsumer from "../../../assets/logo consumer.png";
+import ArrowIcon from "../../../assets/arrow.svg?react";
+import TrashIcon from "../../../assets/trash.svg?react";
 
 const Cart = () => {
   const navigate = useNavigate();

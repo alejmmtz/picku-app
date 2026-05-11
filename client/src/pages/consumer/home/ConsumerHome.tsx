@@ -1,20 +1,20 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import LogoConsumer from "../../assets/logo consumer.png";
-import ShoppingCartIcon from "../../assets/shopping cart consumer.svg?react";
-import BannerConsumerHome from "../../assets/Banner consumer home.png";
-import CheckIcon from "../../assets/check icon.svg?react";
-import SearchIcon from "../../assets/Search.svg?react";
+import LogoConsumer from "../../../assets/logo consumer.png";
+import ShoppingCartIcon from "../../../assets/shopping cart consumer.svg?react";
+import BannerConsumerHome from "../../../assets/Banner consumer home.png";
+import CheckIcon from "../../../assets/check icon.svg?react";
+import SearchIcon from "../../../assets/Search.svg?react";
 
-import { useAxios } from "../../providers/AxiosProvider";
-import { getEntrepreneurs } from "../../services/entrepreneur.service";
-import { getProducts } from "../../services/product.service";
-import type { Entrepreneur } from "../../types/entrepreneur.types";
-import type { Product } from "../../types/product.types";
-import { filterEntrepreneurs } from "../../utils/filterEntrepreneurs";
-import Loader from "../../components/common/Loader";
-import { getStoredAuth } from "../../utils/storage";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { getEntrepreneurs } from "../../../services/entrepreneur.service";
+import { getProducts } from "../../../services/product.service";
+import type { Entrepreneur } from "../../../types/entrepreneur.types";
+import type { Product } from "../../../types/product.types";
+import { filterEntrepreneurs } from "../../../utils/filterEntrepreneurs";
+import Loader from "../../../components/common/Loader";
+import { getStoredAuth } from "../../../utils/storage";
 
 type UserProfile = {
   name: string;

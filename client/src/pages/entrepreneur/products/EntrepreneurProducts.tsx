@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAxios } from "../../providers/AxiosProvider";
-import { getProductsByEntrepreneurId } from "../../services/product.service";
-import type { Product } from "../../types/product.types";
-import Loader from "../../components/common/LoaderEntrepreneur";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { getProductsByEntrepreneurId } from "../../../services/product.service";
+import type { Product } from "../../../types/product.types";
+import Loader from "../../../components/common/LoaderEntrepreneur";
 
-import Logo from "../../assets/logo entrepeneur color.svg";
-import PlusIcon from "../../assets/plus icon.svg?react";
+import Logo from "../../../assets/logo entrepeneur color.svg";
+import PlusIcon from "../../../assets/plus icon.svg?react";
 
 const EntrepreneurProducts = () => {
   const axios = useAxios();

@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { useAxios } from "../../providers/AxiosProvider";
+import { useAxios } from "../../../providers/AxiosProvider";
 import {
   getProductById,
   updateProduct,
   deleteProduct,
-} from "../../services/product.service";
-import { uploadProductImage } from "../../services/storage.service";
-import ConfirmModal from "../../components/common/ConfirmModal";
+} from "../../../services/product.service";
+import { uploadProductImage } from "../../../services/storage.service";
+import ConfirmModal from "../../../components/common/ConfirmModal";
 
-import Logo from "../../assets/logo entrepeneur color.svg";
-import ArrowIcon from "../../assets/arrow.svg?react";
-import UploadImageIcon from "../../assets/upload image.svg?react";
+import Logo from "../../../assets/logo entrepeneur color.svg";
+import ArrowIcon from "../../../assets/arrow.svg?react";
+import UploadImageIcon from "../../../assets/upload image.svg?react";
 
 const EditProduct = () => {
   const axios = useAxios();

@@ -1,15 +1,15 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
-import Loader from "../../components/common/Loader";
-import { useAxios } from "../../providers/AxiosProvider";
-import { useCart } from "../../providers/CartProvider";
-import { getProductById } from "../../services/product.service";
-import type { Product } from "../../types/product.types";
-import Button from "../../components/common/Button";
+import Loader from "../../../components/common/Loader";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { useCart } from "../../../providers/CartProvider";
+import { getProductById } from "../../../services/product.service";
+import type { Product } from "../../../types/product.types";
+import Button from "../../../components/common/Button";
 
-import ArrowIcon from "../../assets/arrow.svg?react";
-import ShoppingCartWhiteIcon from "../../assets/shopping cart white.svg?react";
+import ArrowIcon from "../../../assets/arrow.svg?react";
+import ShoppingCartWhiteIcon from "../../../assets/shopping cart white.svg?react";
 
 const ProductDetail = () => {
   const axios = useAxios();

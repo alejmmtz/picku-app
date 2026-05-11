@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Loader from "../../components/common/Loader";
+import Loader from "../../../components/common/Loader";
 
-import { useAxios } from "../../providers/AxiosProvider";
-import { getEntrepreneurById } from "../../services/entrepreneur.service";
-import { getProductsByEntrepreneurId } from "../../services/product.service";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { getEntrepreneurById } from "../../../services/entrepreneur.service";
+import { getProductsByEntrepreneurId } from "../../../services/product.service";
 
-import type { Entrepreneur } from "../../types/entrepreneur.types";
-import type { Product } from "../../types/product.types";
+import type { Entrepreneur } from "../../../types/entrepreneur.types";
+import type { Product } from "../../../types/product.types";
 
-import CheckIcon from "../../assets/check icon.svg?react";
-import ArrowIcon from "../../assets/arrow.svg?react";
+import CheckIcon from "../../../assets/check icon.svg?react";
+import ArrowIcon from "../../../assets/arrow.svg?react";
 
 const BusinessDetail = () => {
   const axios = useAxios();

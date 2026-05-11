@@ -1,13 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { useAxios } from "../../providers/AxiosProvider";
-import { createProduct } from "../../services/product.service";
-import { uploadProductImage } from "../../services/storage.service";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { createProduct } from "../../../services/product.service";
+import { uploadProductImage } from "../../../services/storage.service";
 
-import Logo from "../../assets/logo entrepeneur color.svg";
-import ArrowIcon from "../../assets/arrow.svg?react";
-import UploadImageIcon from "../../assets/upload image.svg?react";
+import Logo from "../../../assets/logo entrepeneur color.svg";
+import ArrowIcon from "../../../assets/arrow.svg?react";
+import UploadImageIcon from "../../../assets/upload image.svg?react";
 
 const AddProduct = () => {
   const axios = useAxios();
