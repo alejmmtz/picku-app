@@ -4,7 +4,7 @@ export const BRAND = "#500311";
 export const ACCENT = "#ff702d";
 export const SURFACE = "#fffaf4";
 
-export const MAP_CENTER = { lat: 3.339998, lng: -76.528883 };
+export const MAP_CENTER = { lat: 3.339998, lng: -76.529993 };
 
 export const LEAFLET_CSS_URL =
   "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
@@ -32,7 +32,7 @@ export const CUSTOMER_INFO = [
   { label: "Name:", value: "Alejandro Munoz", accent: false },
 ];
 
-export const DELIVERY_INSTRUCTIONS = "I'm in the cafeteria, i have blue shirt.";
+export const DELIVERY_INSTRUCTIONS = "I'm at the cafeteria, I have blue shirt.";
 
 export const STATUSES = [
   { label: "Accepted", icon: "check-circle" },

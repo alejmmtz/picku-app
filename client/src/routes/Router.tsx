@@ -1,6 +1,8 @@
 import { createBrowserRouter } from "react-router-dom";
 import ConsumerOrder from "../pages/consumer/order/Order";
+import ConsumerOrderReceipt from "../pages/consumer/order-receipt/OrderReceipt";
 import EntrepreneurOrder from "../pages/entrepreneur/order/Order";
+import EntrepreneurOrderReceipt from "../pages/entrepreneur/order-receipt/OrderReceipt";
 import RoleSelector from "../pages/role-selector/RoleSelector";
 
 const router = createBrowserRouter([
@@ -18,6 +20,10 @@ const router = createBrowserRouter([
     Component: ConsumerOrder,
   },
   {
+    path: "/consumer/order-receipt",
+    Component: ConsumerOrderReceipt,
+  },
+  {
     //temporal pq no existe la pantalla
     path: "/entrepreneur/login",
     element: <div>Entrepreneur Login</div>,
@@ -25,6 +31,10 @@ const router = createBrowserRouter([
   {
     path: "/entrepreneur/order",
     Component: EntrepreneurOrder,
+  },
+  {
+    path: "/entrepreneur/order-receipt",
+    Component: EntrepreneurOrderReceipt,
   },
 ]);
 

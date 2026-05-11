@@ -47,7 +47,7 @@ declare global {
 const LEAFLET_SCRIPT_ID = "picku-leaflet-script";
 const LEAFLET_STYLE_ID = "picku-leaflet-style";
 
-export default function OrderMap() {
+function OrderMap() {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMapInstance | null>(null);
 
@@ -80,14 +80,6 @@ export default function OrderMap() {
         })
         .addTo(map);
 
-      window.requestAnimationFrame(() => {
-        const tilePane = mapRef.current?.querySelector(
-          ".leaflet-tile-pane",
-        ) as HTMLElement | null;
-        if (!tilePane) return;
-        tilePane.classList.add(ACTIVE_MAP_STYLE.tileFilterClass);
-      });
-
       mapInstanceRef.current = map;
     };
 
@@ -114,9 +106,10 @@ export default function OrderMap() {
 
   return (
     <>
-      <div ref={mapRef} className="absolute inset-0 z-0" />
+      <div ref={mapRef} className="absolute inset-0 z-0 " />
+
       <div
-        className={`pointer-events-none absolute inset-0 z-[1] ${ACTIVE_MAP_STYLE.overlayClass}`}
+        className={`pointer-events-none absolute inset-0 z-1 ${ACTIVE_MAP_STYLE.overlayClass}`}
       />
     </>
   );
@@ -157,3 +150,5 @@ function loadLeafletScript() {
     document.head.appendChild(script);
   });
 }
+
+export default OrderMap;
