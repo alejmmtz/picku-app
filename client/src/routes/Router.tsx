@@ -23,6 +23,7 @@ import BusinessDetail from "../pages/consumer/BusinessDetail";
 import ProductDetail from "../pages/consumer/ProductDetail";
 import Cart from "../pages/consumer/Cart";
 import Checkout from "../pages/consumer/Checkout";
+import EntrepreneurProfile from "../pages/entrepreneur/profile/EntrepreneurProfile";
 
 const router = createBrowserRouter([
   {
@@ -112,6 +113,14 @@ const router = createBrowserRouter([
   {
     path: "/entrepreneur/onboarding/success",
     Component: EntrepreneurSuccess,
+  },
+  {
+    path: "/entrepreneur/profile",
+    Component: EntrepreneurProfile,
+  },
+  {
+    path: "/entrepreneur/onboarding/category",
+    element: <div className="flex min-h-screen items-center justify-center bg-background px-8 text-center font-sofia text-maroon">Entrepreneur onboarding category</div>,
   },
 ]);
 

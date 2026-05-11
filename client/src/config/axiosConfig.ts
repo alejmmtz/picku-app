@@ -12,6 +12,7 @@ import {
 const axiosConfig = axios.create({
   baseURL: import.meta.env.VITE_API_URL,
 });
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
 let refreshPromise: Promise<AuthData> | null = null;
 
@@ -75,7 +76,7 @@ export const AxiosProvider = ({
   children: ReactNode;
 }) => {
   const instance = useMemo(() => {
-    const baseURL = import.meta.env.VITE_API_URL || "";
+    const baseURL = API_URL;
     const inst = axios.create({ baseURL });
 
     inst.interceptors.request.use((config) => attachAuth(baseURL, config));
