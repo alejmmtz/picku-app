@@ -5,7 +5,6 @@ import {
   LEAFLET_JS_URL,
   MAP_CENTER,
 } from "../orderFlow.constants";
-import AppIcon from "./icons";
 
 type LeafletMapInstance = {
   remove: () => void;
@@ -119,11 +118,6 @@ export default function OrderMap() {
       <div
         className={`pointer-events-none absolute inset-0 z-[1] ${ACTIVE_MAP_STYLE.overlayClass}`}
       />
-
-      <div className="pointer-events-none absolute inset-0 z-10">
-        <RouteOverlay />
-        <MapPins />
-      </div>
     </>
   );
 }
@@ -162,45 +156,4 @@ function loadLeafletScript() {
     script.onerror = () => reject(new Error("Failed to load Leaflet"));
     document.head.appendChild(script);
   });
-}
-
-function RouteOverlay() {
-  return (
-    <>
-      <div className="absolute left-[69px] top-[98px] h-[82px] w-px border-l-2 border-dashed border-maroon" />
-      <div className="absolute left-[68px] top-[178px] h-px w-[74px] border-t-2 border-dashed border-maroon" />
-      <div className="absolute left-[141px] top-[178px] h-[44px] w-px border-l-2 border-dashed border-maroon" />
-    </>
-  );
-}
-
-function MapPins() {
-  return (
-    <>
-      <div className="absolute left-[42px] top-[72px]">
-        <MapPinBadge color="bg-maroon" iconColor="text-white" iconName="smartphone" />
-      </div>
-
-      <div className="absolute left-[109px] top-[148px]">
-        <span className="absolute left-1/2 top-[-18px] -translate-x-1/2 rounded-full bg-orange px-3 py-0.5 text-xs font-medium text-white shadow-[0_4px_10px_rgba(255,112,45,0.35)]">
-          You
-        </span>
-        <MapPinBadge color="bg-orange" iconColor="text-white" iconName="map-pin" />
-      </div>
-    </>
-  );
-}
-
-type MapPinBadgeProps = {
-  color: string;
-  iconColor: string;
-  iconName: "smartphone" | "map-pin";
-};
-
-function MapPinBadge({ color, iconColor, iconName }: MapPinBadgeProps) {
-  return (
-    <div className={`flex h-12 w-12 items-center justify-center rounded-full border-[3px] border-white shadow-[0_10px_22px_rgba(0,0,0,0.14)] ${color}`}>
-      <AppIcon name={iconName} className={`h-5 w-5 ${iconColor}`} />
-    </div>
-  );
 }

@@ -3,17 +3,13 @@ import AppIcon from "./icons";
 
 export default function DeliveryInstructionsCard() {
   return (
-    <div className="mb-7 rounded-2xl border border-black/10 bg-background px-4 py-3">
-      <div className="mb-2 flex items-center gap-2">
-        <div className="flex h-6 w-6 items-center justify-center rounded-full border border-orange/30">
-          <AppIcon name="map-pin" className="h-3.5 w-3.5 text-orange" />
-        </div>
-        <p className="text-[15px] font-medium text-black/85">
-          Delivery Instructions
-        </p>
+    <div className="mb-8 rounded-xl border border-black/25 bg-background px-4 py-4">
+      <div className="flex items-center gap-2">
+        <AppIcon name="map-pin" className="h-5 w-5 text-orange" />
+        <p className="text-lg  text-black">Delivery Instructions</p>
       </div>
 
-      <p className="text-sm leading-5 text-black/55">{DELIVERY_INSTRUCTIONS}</p>
+      <p className="font-light  text-black">{DELIVERY_INSTRUCTIONS}</p>
     </div>
   );
 }

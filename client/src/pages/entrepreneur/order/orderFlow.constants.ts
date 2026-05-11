@@ -32,13 +32,12 @@ export const CUSTOMER_INFO = [
   { label: "Name:", value: "Alejandro Munoz", accent: false },
 ];
 
-export const DELIVERY_INSTRUCTIONS =
-  "I'm in the cafeteria, i have blue shirt.";
+export const DELIVERY_INSTRUCTIONS = "I'm in the cafeteria, i have blue shirt.";
 
 export const STATUSES = [
   { label: "Accepted", icon: "check-circle" },
   { label: "Preparing", icon: "clipboard" },
-  { label: "On the way", icon: "navigation" },
+  { label: "Delivering", icon: "navigation" },
   { label: "Delivered", icon: "thumbs-up" },
 ] satisfies Array<{ label: string; icon: AppIconName }>;
 
