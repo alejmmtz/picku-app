@@ -1,6 +1,9 @@
 import { createBrowserRouter } from "react-router-dom";
+import ConsumerOrder from "../pages/consumer/order/Order";
+import ConsumerOrderReceipt from "../pages/consumer/order-receipt/OrderReceipt";
+import EntrepreneurOrder from "../pages/entrepreneur/order/Order";
+import EntrepreneurOrderReceipt from "../pages/entrepreneur/order-receipt/OrderReceipt";
 import RoleSelector from "../pages/role-selector/RoleSelector";
-import ConsumerLogin from "../pages/consumer-auth/ConsumerLogin";
 import ConsumerSignup from "../pages/consumer-auth/ConsumerSignup";
 import MyOrders from "../pages/consumer/orders/MyOrders";
 import OrderDetails from "../pages/consumer/orders/OrderDetails";
@@ -13,7 +16,6 @@ import EntrepreneurImage from "../pages/entrepreneur/onboarding/EntrepreneurImag
 import EntrepreneurConfirm from "../pages/entrepreneur/onboarding/EntrepreneurConfirm";
 import EntrepreneurSuccess from "../pages/entrepreneur/onboarding/EntrepreneurSuccess";
 import EntrepreneurHome from "../pages/entrepreneur/home/EntrepreneurHome";
-
 
 import Chatbot from "../pages/consumer/chatbot/Chatbot";
 import ConsumerProfile from "../pages/consumer/profile/ConsumerProfile";
@@ -34,15 +36,29 @@ const router = createBrowserRouter([
     Component: RoleSelector,
   },
   {
+    // temporal mientras llega login
     path: "/consumer/login",
-    Component: ConsumerLogin,
+    element: <div>Customer Login</div>,
+  },
+  {
+    path: "/consumer/order",
+    Component: ConsumerOrder,
+  },
+  {
+    path: "/consumer/order-receipt",
+    Component: ConsumerOrderReceipt,
   },
   {
     path: "/consumer/signup",
     Component: ConsumerSignup,
   },
   {
-    element: <ProtectedRoute redirectTo="/consumer/login" allowedRoles={["consumer"]} />,
+    element: (
+      <ProtectedRoute
+        redirectTo="/consumer/login"
+        allowedRoles={["consumer"]}
+      />
+    ),
     children: [
       {
         path: "/consumer/orders",
@@ -91,7 +107,12 @@ const router = createBrowserRouter([
     Component: EntrepreneurSignup,
   },
   {
-    element: <ProtectedRoute redirectTo="/entrepreneur/login" allowedRoles={["entrepreneur"]} />,
+    element: (
+      <ProtectedRoute
+        redirectTo="/entrepreneur/login"
+        allowedRoles={["entrepreneur"]}
+      />
+    ),
     children: [
       {
         path: "/entrepreneur/home",
@@ -138,6 +159,14 @@ const router = createBrowserRouter([
         Component: EntrepreneurProfile,
       },
     ],
+  },
+  {
+    path: "/entrepreneur/order",
+    Component: EntrepreneurOrder,
+  },
+  {
+    path: "/entrepreneur/order-receipt",
+    Component: EntrepreneurOrderReceipt,
   },
 ]);
 

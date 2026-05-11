@@ -2,10 +2,7 @@ import axios from "axios";
 import { createContext, createElement, useContext, useMemo } from "react";
 import type { ReactNode } from "react";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import {
-  getStoredAuth,
-  removeStoredAuth,
-} from "../utils/storage";
+import { getStoredAuth, removeStoredAuth } from "../utils/storage";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
@@ -52,11 +49,7 @@ axiosConfig.interceptors.request.use((config) => attachAuth(config));
 
 export default axiosConfig;
 
-export const AxiosProvider = ({
-  children,
-}: {
-  children: ReactNode;
-}) => {
+export const AxiosProvider = ({ children }: { children: ReactNode }) => {
   const instance = useMemo(() => {
     const baseURL = API_URL;
     const inst = axios.create({ baseURL });
