@@ -6,11 +6,12 @@ import { chatbotRouter } from './features/chatbot/chatbot.router.js';
 import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
 import { productRouter } from './features/product/product.router.js';
 import { entrepreneurRouter } from './features/entrepreneurs/ent.router.js';
+import { orderRouter } from './features/order/order.router.js';
 
 //Express Configuration
 const app = express();
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
 //Main Route
 app.get('/', (req, res) => {
@@ -22,6 +23,7 @@ app.use('/picku/api/auth', authRouter);
 app.use('/picku/api/chatbot', chatbotRouter);
 app.use("/picku/api/products", productRouter);
 app.use("/picku/api/entrepreneurs", entrepreneurRouter);
+app.use("/picku/api/orders", orderRouter);
 
 //Error middleware
 app.use(errorsMiddleware);

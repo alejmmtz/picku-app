@@ -5,6 +5,7 @@ import {
     getEntrepreneursService,
     getEntrepreneurByIdService,
     getEntrepreneurByOwnerIdService,
+    getRequiredEntrepreneurByOwnerIdService,
     updateEntrepreneurService,
     updateEntrepreneurStatusService,
 } from "./ent.service.js";
@@ -22,6 +23,38 @@ export const createEntrepreneurController = async (
 
     const entrepreneur = await createEntrepreneurService(req.body);
     return res.status(201).json(entrepreneur);
+};
+
+export const createMyEntrepreneurController = async (
+    req: Request,
+    res: Response
+) => {
+    if (!req.authUser) {
+        throw Boom.unauthorized("Authenticated user was not found");
+    }
+
+    const entrepreneur = await createEntrepreneurService({
+        student_id: req.authUser.id,
+        name: req.body.name,
+        img: req.body.img,
+        description: req.body.description,
+        contact_info: req.body.contact_info,
+        category: req.body.category,
+    });
+
+    return res.status(201).json(entrepreneur);
+};
+
+export const getMyEntrepreneurController = async (
+    req: Request,
+    res: Response
+) => {
+    if (!req.authUser) {
+        throw Boom.unauthorized("Authenticated user was not found");
+    }
+
+    const entrepreneur = await getRequiredEntrepreneurByOwnerIdService(req.authUser.id);
+    return res.json(entrepreneur);
 };
 
 //get all entrepreneurs
@@ -51,7 +84,7 @@ export const getEntrepreneurByOwnerIdController = async (
 ) => {
     const { userId } = req.params;
 
-    const entrepreneur = await getEntrepreneurByOwnerIdService(userId);
+    const entrepreneur = await getRequiredEntrepreneurByOwnerIdService(userId);
     return res.json(entrepreneur);
 };
 
@@ -83,6 +116,27 @@ export const updateEntrepreneurStatusController = async (
 
     const updatedStatus = await updateEntrepreneurStatusService(
         id,
+        req.body.is_active
+    );
+
+    return res.json(updatedStatus);
+};
+
+export const updateMyEntrepreneurStatusController = async (
+    req: Request,
+    res: Response
+) => {
+    if (!req.authUser) {
+        throw Boom.unauthorized("Authenticated user was not found");
+    }
+
+    if (req.body?.is_active === undefined) {
+        throw Boom.badRequest("is_active is required");
+    }
+
+    const entrepreneur = await getRequiredEntrepreneurByOwnerIdService(req.authUser.id);
+    const updatedStatus = await updateEntrepreneurStatusService(
+        entrepreneur.id,
         req.body.is_active
     );
 

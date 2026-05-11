@@ -6,6 +6,13 @@ import MyOrders from "../pages/consumer/orders/MyOrders";
 import OrderDetails from "../pages/consumer/orders/OrderDetails";
 import EntrepreneurLogin from "../pages/entrepreneur-auth/EntrepreneurLogin";
 import EntrepreneurSignup from "../pages/entrepreneur-auth/EntrepreneurSignup";
+import EntrepreneurOnboardingIntro from "../pages/entrepreneur/onboarding/EntrepreneurOnboardingIntro";
+import EntrepreneurCategory from "../pages/entrepreneur/onboarding/EntrepreneurCategory";
+import EntrepreneurBusinessInfo from "../pages/entrepreneur/onboarding/EntrepreneurBusinessInfo";
+import EntrepreneurImage from "../pages/entrepreneur/onboarding/EntrepreneurImage";
+import EntrepreneurConfirm from "../pages/entrepreneur/onboarding/EntrepreneurConfirm";
+import EntrepreneurSuccess from "../pages/entrepreneur/onboarding/EntrepreneurSuccess";
+import EntrepreneurHome from "../pages/entrepreneur/home/EntrepreneurHome";
 
 import EntrepreneurProducts from "../pages/entrepreneur/EntrepreneurProducts";
 import EditProduct from "../pages/entrepreneur/EditProduct";
@@ -48,7 +55,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/entrepreneur/home",
-    element: <div className="flex min-h-screen items-center justify-center bg-background font-sofia text-maroon">Entrepreneur Home</div>,
+    Component: EntrepreneurHome,
   },
   {
     path: "/entrepreneur/products",
@@ -81,6 +88,30 @@ const router = createBrowserRouter([
   {
     path: "/consumer/checkout",
     Component: Checkout,
+  },
+  {
+    path: "/entrepreneur/onboarding",
+    Component: EntrepreneurOnboardingIntro,
+  },
+  {
+    path: "/entrepreneur/onboarding/category",
+    Component: EntrepreneurCategory,
+  },
+  {
+    path: "/entrepreneur/onboarding/business",
+    Component: EntrepreneurBusinessInfo,
+  },
+  {
+    path: "/entrepreneur/onboarding/image",
+    Component: EntrepreneurImage,
+  },
+  {
+    path: "/entrepreneur/onboarding/confirm",
+    Component: EntrepreneurConfirm,
+  },
+  {
+    path: "/entrepreneur/onboarding/success",
+    Component: EntrepreneurSuccess,
   },
 ]);
 
