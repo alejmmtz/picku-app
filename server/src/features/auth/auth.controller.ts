@@ -4,6 +4,7 @@ import {
   authenticateUserService,
   createUserService,
   deleteUserService,
+  getCurrentUserProfileService,
   updateAuthenticationService,
 } from './auth.service.js';
 import {
@@ -36,6 +37,18 @@ export const createUserController = async (req: Request, res: Response) => {
   const user = await createUserService(parsedBody.data);
 
   return res.status(201).json(user);
+};
+
+export const getCurrentUserProfileController = async (
+  req: Request,
+  res: Response
+) => {
+  if (!req.authUser) {
+    throw Boom.unauthorized('Authenticated user was not found');
+  }
+
+  const profile = await getCurrentUserProfileService(req.authUser.id);
+  return res.json(profile);
 };
 
 export const updateAuthenticationController = async (
