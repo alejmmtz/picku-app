@@ -43,9 +43,21 @@ const attachAuth = async (
 };
 
 const extractErrorMessage = (error: unknown) => {
-  const message: string =
-    (error as { response?: { data?: { message?: string } } }).response?.data
-      ?.message ?? "Ocurrio un error inesperado";
+  const responseData = (error as { response?: { data?: unknown } }).response?.data;
+  const fallbackMessage =
+    error instanceof Error && error.message.trim()
+      ? error.message
+      : "Ocurrio un error inesperado";
+
+  const message =
+    (typeof responseData === "string"
+      ? responseData
+      : responseData &&
+          typeof responseData === "object" &&
+          "message" in responseData &&
+          typeof (responseData as { message?: unknown }).message === "string"
+        ? (responseData as { message: string }).message
+        : null) ?? fallbackMessage;
 
   return Promise.reject(new Error(message));
 };

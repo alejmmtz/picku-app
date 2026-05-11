@@ -1,9 +1,17 @@
-import { CUSTOMER_INFO } from "../orderFlow.constants";
+type OrderInfoRow = {
+  label: string;
+  value: string;
+  accent?: boolean;
+};
 
-export default function OrderInfoRows() {
+type OrderInfoRowsProps = {
+  rows: OrderInfoRow[];
+};
+
+export default function OrderInfoRows({ rows }: OrderInfoRowsProps) {
   return (
     <div className="mb-6">
-      {CUSTOMER_INFO.map(({ label, value, accent }) => (
+      {rows.map(({ label, value, accent }) => (
         <div
           key={label}
           className="flex items-center justify-between border-b border-black/25 py-2"

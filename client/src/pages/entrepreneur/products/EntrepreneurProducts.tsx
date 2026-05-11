@@ -6,6 +6,7 @@ import { getCurrentEntrepreneur } from "../../../services/entrepreneur.service";
 import { getProductsByEntrepreneurId } from "../../../services/product.service";
 import type { Product } from "../../../types/product.types";
 import Loader from "../../../components/common/LoaderEntrepreneur";
+import BottomNav from "../../../components/common/BottomNav";
 
 import Logo from "../../../assets/logo entrepeneur color.svg";
 import PlusIcon from "../../../assets/plus icon.svg?react";
@@ -39,7 +40,7 @@ const EntrepreneurProducts = () => {
 
   return (
     <main className="min-h-screen flex justify-center bg-background text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-20">
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
         <img src={Logo} alt="PickU" className="w-[72px] mb-14" />
 
         <div className="flex items-center justify-between mb-10">
@@ -114,6 +115,8 @@ const EntrepreneurProducts = () => {
           ))}
         </div>
       </section>
+
+      <BottomNav variant="entrepreneur" />
     </main>
   );
 };

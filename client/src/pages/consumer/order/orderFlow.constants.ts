@@ -1,3 +1,4 @@
+import type { OrderStatus } from "../../../types/order.types";
 import type { AppIconName } from "./components/icons";
 
 export const BRAND = "#ff702d";
@@ -22,35 +23,21 @@ export const MAP_STYLE_EXAMPLES = {
     tileFilterClass: "",
     overlayClass: "",
   },
-  maroon: {
-    tileUrl: LEAFLET_TILE_URL,
-    attribution: LEAFLET_TILE_ATTRIBUTION,
-    subdomains: "abcd",
-    tileFilterClass: "",
-    overlayClass: "",
-  },
-  softBlue: {
-    tileUrl: LEAFLET_TILE_URL,
-    attribution: LEAFLET_TILE_ATTRIBUTION,
-    subdomains: "abcd",
-    tileFilterClass: "",
-    overlayClass: "",
-  },
 };
 
 export const ACTIVE_MAP_STYLE = MAP_STYLE_EXAMPLES.current;
 
-export const ORDER_INFO = [
-  { label: "Amount:", value: "$4.000", accent: true },
-  { label: "Name:", value: "Alejandro Muñoz", accent: false },
-  { label: "Estimated time:", value: "3 min", accent: false },
-];
-
 export const STATUSES = [
+  { label: "Requested", icon: "clipboard" },
   { label: "Accepted", icon: "check-circle" },
-  { label: "Preparing", icon: "clipboard" },
   { label: "Delivering", icon: "navigation" },
   { label: "Delivered", icon: "thumbs-up" },
 ] satisfies Array<{ label: string; icon: AppIconName }>;
 
-export const CURRENT_STATUS = 1;
+export const ORDER_STATUS_STEP_INDEX: Record<OrderStatus, number> = {
+  requested: 0,
+  accepted: 1,
+  declined: 0,
+  delivering: 2,
+  delivered: 3,
+};

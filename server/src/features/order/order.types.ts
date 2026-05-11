@@ -1,4 +1,4 @@
-import type { Geolocation, UUID } from '../../shared/storage/shared.types.js';
+import type { UUID } from '../../shared/storage/shared.types.js';
 
 export enum OrderStatus {
   REQUESTED = 'requested',
@@ -7,6 +7,8 @@ export enum OrderStatus {
   DELIVERING = 'delivering',
   DELIVERED = 'delivered',
 }
+
+export type OrderActorRole = 'consumer' | 'entrepreneur';
 
 export type OrderItem = {
   id: number;
@@ -23,14 +25,10 @@ export type Order = {
   status: OrderStatus;
   total_price: number;
   pickup_code: string;
-  estimated_distance: number | null;
-  estimated_time: number | null;
   delivery_notes: string | null;
   cancel_reason: string | null;
   created_at: Date;
   updated_at: Date | null;
-  campus_location_id: number | null;
-  user_position: Geolocation | null;
   items?: OrderItem[];
 };
 
@@ -43,8 +41,6 @@ export interface CreateOrderDTO {
   entrepreneur_id: UUID;
   delivery_notes?: string | null;
   products: CreateOrderProductDTO[];
-  campus_location_id?: number | null;
-  user_position: Geolocation;
 }
 
 export interface UpdateOrderDTO {
@@ -55,6 +51,8 @@ export interface UpdateOrderDTO {
 
 export interface OrderResponseDTO {
   id: number;
+  consumer_id: UUID;
+  entrepreneur_id: UUID;
   status: OrderStatus;
   total_price: number;
   pickup_code: string;
@@ -71,15 +69,6 @@ export interface OrderResponseDTO {
     category: string;
     contact_info: string;
     img: string;
-    entrepreneur_position: Geolocation | null;
-    campus_location_id: number | null;
-  };
-  tracking: {
-    estimated_distance: number | null;
-    estimated_time: number | null;
-    user_position: Geolocation | null;
-    campus_location_id: number | null;
-    location_name: string | null;
   };
   items: {
     id: number;

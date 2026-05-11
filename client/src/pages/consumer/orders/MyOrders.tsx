@@ -1,8 +1,10 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { fetchOrders } from "./orders.api";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
+import BottomNav from "../../../components/common/BottomNav";
 
 type OrderTab = "ongoing" | "delivered";
 
@@ -45,16 +47,11 @@ const getOrderSubtitle = (order: ConsumerOrder) =>
   order.delivery_notes || order.entrepreneur.category || "PickU order";
 
 const getDistanceLabel = (order: ConsumerOrder) => {
-  const distance = order.tracking.estimated_distance;
-
-  if (distance !== null && Number.isFinite(distance)) {
-    return `Near-${Math.round(distance)} mt.`;
-  }
-
-  return "Near-10 mt.";
+  return order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup";
 };
 
 const MyOrders = () => {
+  const api = useAxios();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("ongoing");
   const [orders, setOrders] = useState<ConsumerOrder[]>([]);
@@ -65,7 +62,7 @@ const MyOrders = () => {
 
     const loadOrders = async () => {
       try {
-        const data = await fetchOrders();
+        const data = await getOrders(api);
 
         if (!isMounted) return;
 
@@ -84,14 +81,16 @@ const MyOrders = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [api]);
 
   const filteredOrders = useMemo(() => {
     if (activeTab === "delivered") {
       return orders.filter((order) => order.status === "delivered");
     }
 
-    return orders.filter((order) => order.status !== "delivered");
+    return orders.filter(
+      (order) => order.status !== "delivered" && order.status !== "declined",
+    );
   }, [activeTab, orders]);
 
   return (
@@ -141,11 +140,20 @@ const MyOrders = () => {
               <article
                 key={order.id}
                 className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] p-3"
-                onClick={() =>
+                onClick={() => {
+                  if (
+                    order.status === "requested" ||
+                    order.status === "accepted" ||
+                    order.status === "delivering"
+                  ) {
+                    navigate(`/consumer/order?orderId=${order.id}`);
+                    return;
+                  }
+
                   navigate(`/consumer/orders/${order.id}`, {
                     state: { order },
-                  })
-                }
+                  });
+                }}
               >
                 <img
                   className="h-[94px] w-[102px] rounded-[14px] bg-[#f2e7de] object-cover"
@@ -187,6 +195,8 @@ const MyOrders = () => {
           })}
         </div>
       </section>
+
+      <BottomNav variant="consumer" />
     </main>
   );
 };

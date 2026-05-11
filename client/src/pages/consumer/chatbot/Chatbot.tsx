@@ -3,6 +3,7 @@ import axios from "axios";
 
 import axiosConfig from "../../../config/axiosConfig";
 import { getStoredAuth } from "../../../utils/storage";
+import BottomNav from "../../../components/common/BottomNav";
 
 type ChatMessage = {
   id: string;
@@ -184,7 +185,7 @@ const Chatbot = () => {
 
   return (
     <main className="flex min-h-screen justify-center bg-background font-sofia">
-      <section className="relative min-h-screen w-full max-w-[430px] px-[18px] pt-7 pb-[190px]">
+      <section className="relative min-h-screen w-full max-w-[430px] px-[18px] pt-7 pb-[220px]">
         <img className="mb-[38px] w-16" src="/logos/picku-logo.svg" alt="PickU" />
 
         <div className="flex flex-col gap-[14px]">
@@ -226,7 +227,7 @@ const Chatbot = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="fixed bottom-[80px] left-1/2 w-full max-w-[430px] -translate-x-1/2 bg-[rgba(255,255,255,0.96)] px-[18px] py-6">
+        <div className="fixed bottom-[106px] left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 bg-[rgba(255,255,255,0.96)] px-[18px] py-6">
           <form
             className="flex min-h-[56px] items-center gap-3 rounded-[12px] border border-[#e3d9d1] bg-white px-4"
             onSubmit={handleSubmit}
@@ -250,6 +251,8 @@ const Chatbot = () => {
           </form>
         </div>
       </section>
+
+      <BottomNav variant="consumer" />
     </main>
   );
 };

@@ -5,12 +5,23 @@ import type {
   UpdateProductDTO,
 } from "../types/product.types";
 
+const toNumber = (value: unknown): number => Number(value);
+
+const normalizeProduct = (product: Product): Product => ({
+  ...product,
+  id: toNumber(product.id),
+  price: toNumber(product.price),
+});
+
+const normalizeProducts = (products: Product[]): Product[] =>
+  products.map(normalizeProduct);
+
 export const getProducts = async (
   axiosInstance: AxiosInstance
 ): Promise<Product[]> => {
   const response = await axiosInstance.get("/picku/api/products");
 
-  return response.data;
+  return normalizeProducts(response.data as Product[]);
 };
 
 export const getProductsByEntrepreneurId = async (
@@ -21,7 +32,7 @@ export const getProductsByEntrepreneurId = async (
     `/picku/api/products/entrepreneur/${entrepreneurId}`
   );
 
-  return response.data;
+  return normalizeProducts(response.data as Product[]);
 };
 
 export const getProductById = async (
@@ -29,7 +40,7 @@ export const getProductById = async (
   productId: string
 ): Promise<Product> => {
   const response = await axiosInstance.get(`/picku/api/products/${productId}`);
-  return response.data;
+  return normalizeProduct(response.data as Product);
 };
 
 export const createProduct = async (
@@ -37,7 +48,7 @@ export const createProduct = async (
   productData: CreateProductDTO
 ): Promise<Product> => {
   const response = await axiosInstance.post("/picku/api/products", productData);
-  return response.data;
+  return normalizeProduct(response.data as Product);
 };
 
 export const updateProduct = async (
@@ -49,7 +60,7 @@ export const updateProduct = async (
     `/picku/api/products/${productId}`,
     productData
   );
-  return response.data;
+  return normalizeProduct(response.data as Product);
 };
 
 export const deleteProduct = async (
@@ -58,5 +69,5 @@ export const deleteProduct = async (
 ): Promise<Product> => {
   const response = await axiosInstance.delete(`/picku/api/products/${productId}`);
 
-  return response.data;
+  return normalizeProduct(response.data as Product);
 };

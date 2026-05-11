@@ -1,7 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 
-import { fetchOrderById } from "./orders.api";
+import { useAxios } from "../../../providers/AxiosProvider";
+import { getOrderById } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 
 const statusLabelMap: Record<OrderStatus, string> = {
@@ -33,6 +34,7 @@ const getOrderDescription = (order: ConsumerOrder) =>
   `${order.entrepreneur.category} order prepared by ${order.entrepreneur.name}.`;
 
 const OrderDetails = () => {
+  const api = useAxios();
   const navigate = useNavigate();
   const params = useParams();
   const location = useLocation();
@@ -62,7 +64,7 @@ const OrderDetails = () => {
 
     const loadOrder = async () => {
       try {
-        const data = await fetchOrderById(orderId);
+        const data = await getOrderById(api, orderId);
 
         if (!isMounted) return;
 
@@ -84,7 +86,7 @@ const OrderDetails = () => {
     return () => {
       isMounted = false;
     };
-  }, [orderId, routedOrder]);
+  }, [api, orderId, routedOrder]);
 
   const primaryItem = useMemo(() => order?.items[0] ?? null, [order]);
 

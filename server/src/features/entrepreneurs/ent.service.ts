@@ -18,8 +18,6 @@ export const getEntrepreneursService = async (): Promise<Entrepreneur[]> => {
       e.description,
       e.contact_info,
       e.category,
-      e.campus_locations,
-      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
@@ -44,8 +42,6 @@ export const getEntrepreneurByIdService = async (
       e.description,
       e.contact_info,
       e.category,
-      e.campus_locations,
-      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
@@ -75,8 +71,6 @@ export const getEntrepreneurByOwnerIdService = async (
       e.description,
       e.contact_info,
       e.category,
-      e.campus_locations,
-      e.entrepreneur_position,
       e.is_active,
       u.name AS owner_name
     FROM entrepreneurs e
@@ -148,8 +142,6 @@ export const createEntrepreneurService = async (
       description,
       contact_info,
       category,
-      campus_locations,
-      entrepreneur_position,
       is_active
   `;
 
@@ -178,11 +170,6 @@ export const updateEntrepreneurService = async (
   const updatedContactInfo =
     data.contact_info ?? currentEntrepreneur.contact_info;
   const updatedCategory = data.category ?? currentEntrepreneur.category;
-  const updatedCampusLocations =
-    data.campus_locations ?? currentEntrepreneur.campus_locations;
-  const updatedEntrepreneurPosition =
-    data.entrepreneur_position ?? currentEntrepreneur.entrepreneur_position;
-
   if (data.category && !ENTREPRENEUR_CATEGORIES.includes(data.category)) {
     throw Boom.badRequest("Invalid entrepreneur category");
   }
@@ -194,10 +181,8 @@ export const updateEntrepreneurService = async (
       img = $2,
       description = $3,
       contact_info = $4,
-      category = $5,
-      campus_locations = $6,
-      entrepreneur_position = $7
-    WHERE id = $8
+      category = $5
+    WHERE id = $6
     RETURNING
       id,
       student_id,
@@ -206,8 +191,6 @@ export const updateEntrepreneurService = async (
       description,
       contact_info,
       category,
-      campus_locations,
-      entrepreneur_position,
       is_active
   `;
 
@@ -217,8 +200,6 @@ export const updateEntrepreneurService = async (
     updatedDescription,
     updatedContactInfo,
     updatedCategory,
-    updatedCampusLocations,
-    updatedEntrepreneurPosition,
     entrepreneurId,
   ]);
 
@@ -244,8 +225,6 @@ export const updateEntrepreneurStatusService = async (
       description,
       contact_info,
       category,
-      campus_locations,
-      entrepreneur_position,
       is_active
   `;
 

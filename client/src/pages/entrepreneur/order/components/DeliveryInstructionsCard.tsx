@@ -1,7 +1,12 @@
-import { DELIVERY_INSTRUCTIONS } from "../orderFlow.constants";
 import AppIcon from "./icons";
 
-export default function DeliveryInstructionsCard() {
+type DeliveryInstructionsCardProps = {
+  instructions: string;
+};
+
+export default function DeliveryInstructionsCard({
+  instructions,
+}: DeliveryInstructionsCardProps) {
   return (
     <div className="mb-8 rounded-xl border border-black/25 bg-background px-4 py-4">
       <div className="flex items-center gap-2">
@@ -9,7 +14,7 @@ export default function DeliveryInstructionsCard() {
         <p className="text-lg  text-black">Delivery Instructions</p>
       </div>
 
-      <p className="font-light  text-black">{DELIVERY_INSTRUCTIONS}</p>
+      <p className="font-light  text-black">{instructions}</p>
     </div>
   );
 }

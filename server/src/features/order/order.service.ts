@@ -1,23 +1,50 @@
 import Boom from '@hapi/boom';
+import type { PoolClient } from 'pg';
 import { pool } from '../../config/database.js';
+import type { UUID } from '../../shared/storage/shared.types.js';
 import type {
   CreateOrderDTO,
-  UpdateOrderDTO,
+  OrderActorRole,
   OrderResponseDTO,
+  OrderStatus,
+  UpdateOrderDTO,
 } from './order.types.js';
-import { OrderStatus } from './order.types.js';
-import type { UUID } from '../../shared/storage/shared.types.js';
+import { OrderStatus as OrderStatusEnum } from './order.types.js';
+
+type OrderFilters = {
+  id?: number;
+  consumerId?: UUID;
+  entrepreneurId?: UUID;
+};
+
+type OrderActor = {
+  userId: UUID;
+  role: OrderActorRole;
+};
+
+type EntrepreneurOrderContext = {
+  id: UUID;
+  is_active: boolean;
+  owner_id: UUID;
+};
+
+type ProductRow = {
+  id: number;
+  entrepreneur_id: UUID;
+  price: number;
+  is_available: boolean;
+};
 
 const generatePickupCode = (): string => {
   return Math.random().toString(36).substring(2, 7).toUpperCase();
 };
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
-  [OrderStatus.REQUESTED]: [OrderStatus.ACCEPTED, OrderStatus.DECLINED],
-  [OrderStatus.ACCEPTED]: [OrderStatus.DELIVERING],
-  [OrderStatus.DELIVERING]: [OrderStatus.DELIVERED],
-  [OrderStatus.DECLINED]: [],
-  [OrderStatus.DELIVERED]: [],
+  [OrderStatusEnum.REQUESTED]: [OrderStatusEnum.ACCEPTED, OrderStatusEnum.DECLINED],
+  [OrderStatusEnum.ACCEPTED]: [OrderStatusEnum.DELIVERING],
+  [OrderStatusEnum.DELIVERING]: [OrderStatusEnum.DELIVERED],
+  [OrderStatusEnum.DECLINED]: [],
+  [OrderStatusEnum.DELIVERED]: [],
 };
 
 const validateStatusTransition = (
@@ -34,52 +61,162 @@ const validateStatusTransition = (
   }
 };
 
+const normalizeProducts = (
+  products: CreateOrderDTO['products']
+): Array<{ product_id: number; quantity: number }> => {
+  const quantityMap = new Map<number, number>();
+
+  for (const item of products) {
+    quantityMap.set(
+      item.product_id,
+      (quantityMap.get(item.product_id) ?? 0) + item.quantity
+    );
+  }
+
+  return [...quantityMap.entries()].map(([product_id, quantity]) => ({
+    product_id,
+    quantity,
+  }));
+};
+
+const getEntrepreneurIdByOwnerId = async (
+  userId: UUID,
+  client: Pick<PoolClient, 'query'> = pool
+): Promise<UUID | null> => {
+  const { rows } = await client.query<{ id: UUID }>(
+    'SELECT id FROM entrepreneurs WHERE student_id = $1',
+    [userId]
+  );
+
+  return rows[0]?.id ?? null;
+};
+
+const getRequiredEntrepreneurIdByOwnerId = async (
+  userId: UUID,
+  client: Pick<PoolClient, 'query'> = pool
+): Promise<UUID> => {
+  const entrepreneurId = await getEntrepreneurIdByOwnerId(userId, client);
+
+  if (!entrepreneurId) {
+    throw Boom.notFound('Entrepreneur not found for this user');
+  }
+
+  return entrepreneurId;
+};
+
+const getEntrepreneurOrderContext = async (
+  entrepreneurId: UUID,
+  client: Pick<PoolClient, 'query'> = pool
+): Promise<EntrepreneurOrderContext> => {
+  const { rows } = await client.query<{
+    id: UUID;
+    is_active: boolean;
+    student_id: UUID;
+  }>(
+    `SELECT
+       id,
+       is_active,
+       student_id
+     FROM entrepreneurs
+     WHERE id = $1`,
+    [entrepreneurId]
+  );
+
+  const entrepreneur = rows[0];
+
+  if (!entrepreneur) {
+    throw Boom.badRequest('Entrepreneur not found');
+  }
+
+  return {
+    id: entrepreneur.id,
+    is_active: entrepreneur.is_active,
+    owner_id: entrepreneur.student_id,
+  };
+};
+
+const fetchProductsByIds = async (
+  productIds: number[],
+  client: Pick<PoolClient, 'query'> = pool
+): Promise<Map<number, ProductRow>> => {
+  const { rows } = await client.query<ProductRow>(
+    `SELECT id, entrepreneur_id, price, is_available
+     FROM products
+     WHERE id = ANY($1::bigint[])`,
+    [productIds]
+  );
+
+  return new Map(rows.map((product) => [product.id, product]));
+};
+
 const fetchOrdersQuery = async (
-  filter?:
-    | { column: 'consumer_id' | 'entrepreneur_id'; value: UUID }
-    | { column: 'id'; value: number }
+  filters: OrderFilters = {}
 ): Promise<OrderResponseDTO[]> => {
-  const whereClause = filter ? `WHERE o.${filter.column} = $1` : '';
-  const params = filter ? [filter.value] : [];
+  const conditions: string[] = [];
+  const params: Array<number | UUID> = [];
+
+  if (filters.id !== undefined) {
+    params.push(filters.id);
+    conditions.push(`o.id = $${params.length}`);
+  }
+
+  if (filters.consumerId !== undefined) {
+    params.push(filters.consumerId);
+    conditions.push(`o.consumer_id = $${params.length}`);
+  }
+
+  if (filters.entrepreneurId !== undefined) {
+    params.push(filters.entrepreneurId);
+    conditions.push(`o.entrepreneur_id = $${params.length}`);
+  }
+
+  const whereClause =
+    conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
 
   const query = `
     SELECT
-      o.id, o.status, o.total_price, o.pickup_code,
-      o.delivery_notes, o.cancel_reason, o.created_at, o.updated_at,
+      o.id,
+      o.consumer_id,
+      o.entrepreneur_id,
+      o.status,
+      o.total_price,
+      o.pickup_code,
+      o.delivery_notes,
+      o.cancel_reason,
+      o.created_at,
+      o.updated_at,
       json_build_object(
-        'id', u.id, 'name', u.name, 'phone', u.phone
+        'id', u.id,
+        'name', u.name,
+        'phone', u.phone
       ) AS customer,
       json_build_object(
-        'id', e.id, 'name', e.name, 'category', e.category,
-        'contact_info', e.contact_info, 'img', e.img,
-        'entrepreneur_position', e.entrepreneur_position,
-        'campus_location_id', e.campus_locations
+        'id', e.id,
+        'name', e.name,
+        'category', e.category,
+        'contact_info', e.contact_info,
+        'img', e.img
       ) AS entrepreneur,
-      json_build_object(
-        'estimated_distance', o.estimated_distance,
-        'estimated_time',     o.estimated_time,
-        'user_position',      o.user_position,
-        'campus_location_id', o.campus_location_id,
-        'location_name',      cl.name
-      ) AS tracking,
       COALESCE((
-        SELECT json_agg(json_build_object(
-          'id',         oi.id,
-          'product_id', oi.product_id,
-          'name',       p.name,
-          'quantity',   oi.quantity,
-          'unit_price', oi.unit_price,
-          'subtotal',   oi.quantity * oi.unit_price,
-          'img',        p.img
-        ))
+        SELECT json_agg(
+          json_build_object(
+            'id', oi.id,
+            'product_id', oi.product_id,
+            'name', p.name,
+            'quantity', oi.quantity,
+            'unit_price', oi.unit_price,
+            'subtotal', oi.quantity * oi.unit_price,
+            'img', p.img
+          )
+          ORDER BY oi.id
+        )
         FROM order_items oi
         JOIN products p ON p.id = oi.product_id
         WHERE oi.order_id = o.id
       ), '[]') AS items
     FROM orders o
-    JOIN  users        u  ON o.consumer_id       = u.id
-    JOIN  entrepreneurs e  ON o.entrepreneur_id   = e.id
-    LEFT JOIN campus_locations cl ON o.campus_location_id = cl.id
+    JOIN users u ON o.consumer_id = u.id
+    JOIN entrepreneurs e ON o.entrepreneur_id = e.id
     ${whereClause}
     ORDER BY o.created_at DESC
   `;
@@ -88,33 +225,52 @@ const fetchOrdersQuery = async (
   return rows as OrderResponseDTO[];
 };
 
-export const getOrdersService = async (
-  userId: UUID,
-  role: 'consumer' | 'entrepreneur'
-): Promise<OrderResponseDTO[]> => {
-  if (role === 'consumer') {
-    return fetchOrdersQuery({ column: 'consumer_id', value: userId });
+const resolveOrderFiltersForActor = async (
+  actor: OrderActor,
+  orderId?: number
+): Promise<OrderFilters> => {
+  if (actor.role === 'consumer') {
+    return {
+      ...(orderId !== undefined ? { id: orderId } : {}),
+      consumerId: actor.userId,
+    };
   }
 
-  const result = await pool.query<{ id: UUID }>(
-    'SELECT id FROM entrepreneurs WHERE student_id = $1',
-    [userId]
-  );
-  const entrepreneurId = result.rows[0]?.id;
+  const entrepreneurId = await getRequiredEntrepreneurIdByOwnerId(actor.userId);
+
+  return {
+    ...(orderId !== undefined ? { id: orderId } : {}),
+    entrepreneurId,
+  };
+};
+
+export const getOrdersService = async (
+  userId: UUID,
+  role: OrderActorRole
+): Promise<OrderResponseDTO[]> => {
+  if (role === 'consumer') {
+    return fetchOrdersQuery({ consumerId: userId });
+  }
+
+  const entrepreneurId = await getEntrepreneurIdByOwnerId(userId);
 
   if (!entrepreneurId) {
     return [];
   }
 
-  return fetchOrdersQuery({ column: 'entrepreneur_id', value: entrepreneurId });
+  return fetchOrdersQuery({ entrepreneurId });
 };
 
 export const getOrderByIdService = async (
-  orderId: number
+  orderId: number,
+  actor: OrderActor
 ): Promise<OrderResponseDTO> => {
-  const [order] = await fetchOrdersQuery({ column: 'id', value: orderId });
+  const filters = await resolveOrderFiltersForActor(actor, orderId);
+  const [order] = await fetchOrdersQuery(filters);
 
-  if (!order) throw Boom.notFound('Order not found');
+  if (!order) {
+    throw Boom.notFound('Order not found');
+  }
 
   return order;
 };
@@ -128,55 +284,85 @@ export const createOrderService = async (
   try {
     await client.query('BEGIN');
 
-    const { rows: entrepreneurRows } = await client.query(
-      'SELECT is_active FROM entrepreneurs WHERE id = $1',
-      [dto.entrepreneur_id]
+    const entrepreneur = await getEntrepreneurOrderContext(
+      dto.entrepreneur_id,
+      client
     );
 
-    if (entrepreneurRows.length === 0) {
-      throw Boom.badRequest('Entrepreneur not found');
-    }
-
-    if (entrepreneurRows[0].is_active !== true) {
+    if (!entrepreneur.is_active) {
       throw Boom.badRequest('This shop is closed and cannot receive orders');
     }
 
-    let calculatedTotal = 0;
-    const pickupCode = generatePickupCode();
-    const itemsData = [];
-
-    for (const item of dto.products) {
-      const { rows } = await client.query(
-        'SELECT price FROM products WHERE id = $1',
-        [item.product_id]
-      );
-
-      if (rows.length === 0)
-        throw Boom.badRequest(`Product ${item.product_id} not found`);
-
-      const unitPrice = rows[0].price as number;
-      calculatedTotal += unitPrice * item.quantity;
-      itemsData.push({ ...item, unitPrice });
+    if (entrepreneur.owner_id === consumerId) {
+      throw Boom.badRequest('You cannot place orders in your own shop');
     }
+
+    const normalizedProducts = normalizeProducts(dto.products);
+    const productIds = normalizedProducts.map((item) => item.product_id);
+    const productsById = await fetchProductsByIds(productIds, client);
+
+    if (productsById.size !== productIds.length) {
+      const missingProduct = productIds.find((id) => !productsById.has(id));
+      throw Boom.badRequest(`Product ${missingProduct} not found`);
+    }
+
+    let calculatedTotal = 0;
+    const itemsData = normalizedProducts.map((item) => {
+      const product = productsById.get(item.product_id);
+
+      if (!product) {
+        throw Boom.badRequest(`Product ${item.product_id} not found`);
+      }
+
+      if (product.entrepreneur_id !== dto.entrepreneur_id) {
+        throw Boom.badRequest(
+          `Product ${item.product_id} does not belong to the selected entrepreneur`
+        );
+      }
+
+      if (!product.is_available) {
+        throw Boom.badRequest(
+          `Product ${item.product_id} is not currently available`
+        );
+      }
+
+      calculatedTotal += product.price * item.quantity;
+
+      return {
+        ...item,
+        unitPrice: product.price,
+      };
+    });
+
+    const pickupCode = generatePickupCode();
 
     const {
       rows: [newOrder],
-    } = await client.query(
+    } = await client.query<{ id: number }>(
       `INSERT INTO orders (
-        consumer_id, entrepreneur_id, status, total_price, pickup_code,
-        delivery_notes, campus_location_id, user_position, created_at
-      ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, NOW()) RETURNING id`,
+         consumer_id,
+         entrepreneur_id,
+         status,
+         total_price,
+         pickup_code,
+         delivery_notes,
+         created_at
+       )
+       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+       RETURNING id`,
       [
         consumerId,
         dto.entrepreneur_id,
-        OrderStatus.REQUESTED,
+        OrderStatusEnum.REQUESTED,
         calculatedTotal,
         pickupCode,
-        dto.delivery_notes,
-        dto.campus_location_id,
-        dto.user_position,
+        dto.delivery_notes ?? null,
       ]
     );
+
+    if (!newOrder) {
+      throw Boom.internal('Order could not be created');
+    }
 
     await Promise.all(
       itemsData.map((item) =>
@@ -190,7 +376,10 @@ export const createOrderService = async (
 
     await client.query('COMMIT');
 
-    return getOrderByIdService(newOrder.id);
+    return getOrderByIdService(newOrder.id, {
+      userId: consumerId,
+      role: 'consumer',
+    });
   } catch (error) {
     await client.query('ROLLBACK');
     throw error;
@@ -201,40 +390,64 @@ export const createOrderService = async (
 
 export const updateOrderService = async (
   orderId: number,
-  dto: UpdateOrderDTO
+  dto: UpdateOrderDTO,
+  actor: OrderActor
 ): Promise<OrderResponseDTO> => {
-  const current = await getOrderByIdService(orderId);
+  if (actor.role !== 'entrepreneur') {
+    throw Boom.forbidden('Only entrepreneurs can update orders');
+  }
+
+  const current = await getOrderByIdService(orderId, actor);
+
+  if (dto.pickup_code !== undefined && dto.status !== OrderStatusEnum.DELIVERED) {
+    throw Boom.badRequest(
+      'Pickup code can only be provided when completing an order'
+    );
+  }
+
+  if (dto.cancel_reason !== undefined && dto.status !== OrderStatusEnum.DECLINED) {
+    throw Boom.badRequest(
+      'Cancel reason can only be provided when declining an order'
+    );
+  }
 
   if (dto.status !== undefined) {
     validateStatusTransition(current.status, dto.status);
   }
 
+  if (
+    dto.status === OrderStatusEnum.DELIVERED &&
+    dto.pickup_code?.trim() !== current.pickup_code
+  ) {
+    throw Boom.badRequest('Invalid pickup code');
+  }
+
   const updates: string[] = [];
-  const values: (string | number | null)[] = [];
+  const values: Array<string | number | null> = [];
   let paramIndex = 1;
 
   if (dto.status !== undefined) {
     updates.push(`status = $${paramIndex++}`);
     values.push(dto.status);
   }
-  if (dto.pickup_code !== undefined) {
-    updates.push(`pickup_code = $${paramIndex++}`);
-    values.push(dto.pickup_code);
-  }
-  if (dto.cancel_reason !== undefined) {
+
+  if (dto.status === OrderStatusEnum.DECLINED) {
     updates.push(`cancel_reason = $${paramIndex++}`);
-    values.push(dto.cancel_reason);
+    values.push(dto.cancel_reason ?? null);
   }
 
-  if (updates.length === 0) throw Boom.badRequest('No valid fields to update');
+  if (updates.length === 0) {
+    throw Boom.badRequest('No valid fields to update');
+  }
 
   updates.push(`updated_at = NOW()`);
-  values.push(orderId);
 
   await pool.query(
-    `UPDATE orders SET ${updates.join(', ')} WHERE id = $${paramIndex}`,
-    values
+    `UPDATE orders
+     SET ${updates.join(', ')}
+     WHERE id = $${paramIndex}`,
+    [...values, orderId]
   );
 
-  return getOrderByIdService(orderId);
+  return getOrderByIdService(orderId, actor);
 };
