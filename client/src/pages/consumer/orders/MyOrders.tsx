@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
+import BottomNav from "../../../components/common/BottomNav";
 
 type OrderTab = "ongoing" | "delivered";
 
@@ -194,6 +195,8 @@ const MyOrders = () => {
           })}
         </div>
       </section>
+
+      <BottomNav variant="consumer" />
     </main>
   );
 };

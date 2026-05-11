@@ -14,6 +14,7 @@ import type { Entrepreneur } from "../../../types/entrepreneur.types";
 import type { Product } from "../../../types/product.types";
 import { filterEntrepreneurs } from "../../../utils/filterEntrepreneurs";
 import Loader from "../../../components/common/Loader";
+import BottomNav from "../../../components/common/BottomNav";
 import { getStoredAuth } from "../../../utils/storage";
 
 type UserProfile = {
@@ -61,7 +62,7 @@ const ConsumerHome = () => {
 
   return (
     <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-10">
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
         <header className="flex items-center justify-between mb-7">
           <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
 
@@ -174,6 +175,8 @@ const ConsumerHome = () => {
           </div>
         </section>
       </section>
+
+      <BottomNav variant="consumer" />
     </main>
   );
 };

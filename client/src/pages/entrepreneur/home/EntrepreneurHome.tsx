@@ -5,6 +5,7 @@ import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
 import { getStoredAuth } from "../../../utils/storage";
+import BottomNav from "../../../components/common/BottomNav";
 
 type Entrepreneur = {
   id: string;
@@ -124,7 +125,7 @@ const EntrepreneurHome = () => {
 
   return (
     <main className="flex min-h-screen justify-center bg-background font-sofia text-black">
-      <section className="min-h-screen w-full max-w-[430px] px-[30px] pt-[72px] pb-[64px]">
+      <section className="min-h-screen w-full max-w-[430px] px-[30px] pt-[72px] pb-[144px]">
         <header className="flex items-center justify-between">
           <img className="w-[72px]" src="/logos/picku-logo.svg" alt="PickU" />
           <button
@@ -229,6 +230,8 @@ const EntrepreneurHome = () => {
           </div>
         </section>
       </section>
+
+      <BottomNav variant="entrepreneur" />
     </main>
   );
 };

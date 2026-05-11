@@ -99,6 +99,10 @@ const router = createBrowserRouter([
     Component: EntrepreneurHome,
   },
   {
+    path: "/entrepreneur/orders",
+    Component: EntrepreneurHome,
+  },
+  {
     path: "/entrepreneur/products",
     Component: EntrepreneurProducts,
   },

@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getStoredAuth, removeStoredAuth } from "../../../utils/storage";
+import BottomNav from "../../../components/common/BottomNav";
 
 type UserProfile = {
   id: string;
@@ -157,6 +158,8 @@ const EntrepreneurProfile = () => {
           <p className="m-0 text-[13px] leading-[1.8]">Supporting student entrepreneurs</p>
         </footer>
       </section>
+
+      <BottomNav variant="entrepreneur" />
     </main>
   );
 };
