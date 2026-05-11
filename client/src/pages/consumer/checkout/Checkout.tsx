@@ -1,10 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAxios } from "../../../providers/AxiosProvider";
 import { useCart } from "../../../providers/CartProvider";
 import { createOrder } from "../../../services/order.service";
-import type { UserPosition } from "../../../types/order.types";
+import type { CreateOrderDTO } from "../../../types/order.types";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
 import ArrowIcon from "../../../assets/arrow.svg?react";
@@ -16,60 +16,70 @@ const Checkout = () => {
   const { cartItems, subtotal, clearCart } = useCart();
 
   const [pickupDetails, setPickupDetails] = useState("");
-  const [userPosition, setUserPosition] = useState<UserPosition | null>(null);
-  const [locationStatus, setLocationStatus] = useState<
-    "idle" | "loading" | "success" | "denied" | "error"
-  >("loading");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-
-useEffect(() => {
-  if (!navigator.geolocation) {
-    queueMicrotask(() => {
-      setLocationStatus("error");
-    });
-
-    return;
-  }
-
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      setUserPosition({
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      });
-
-      setLocationStatus("success");
-    },
-    (error) => {
-      if (error.code === error.PERMISSION_DENIED) {
-        setLocationStatus("denied");
-      } else {
-        setLocationStatus("error");
-      }
-    }
-  );
-}, []);
-
 
   const handlePlaceOrder = () => {
     if (cartItems.length === 0 || isSubmitting) {
       return;
     }
 
-    const orderPayload = {
-      items: cartItems,
-      delivery_notes: pickupDetails,
-      user_position: userPosition ?? undefined,
-      total_price: subtotal,
-    };
+    const orderGroups = new Map<string, CreateOrderDTO>();
+
+    for (const item of cartItems) {
+      const entrepreneurId = item.product.entrepreneur_id;
+      const productId = Number(item.product.id);
+      const quantity = Number(item.quantity);
+
+      if (!Number.isFinite(productId) || !Number.isFinite(quantity)) {
+        setErrorMessage(
+          "There is an invalid product in your cart. Please update your cart and try again.",
+        );
+        return;
+      }
+
+      const currentGroup = orderGroups.get(entrepreneurId);
+
+      if (currentGroup) {
+        currentGroup.products.push({
+          product_id: productId,
+          quantity,
+        });
+        continue;
+      }
+
+      orderGroups.set(entrepreneurId, {
+        entrepreneur_id: entrepreneurId,
+        delivery_notes: pickupDetails.trim() ? pickupDetails.trim() : null,
+        products: [
+          {
+            product_id: productId,
+            quantity,
+          },
+        ],
+      });
+    }
 
     const submitOrder = async () => {
       try {
         setIsSubmitting(true);
         setErrorMessage("");
-        await createOrder(api, orderPayload);
+        const createdOrders = [];
+
+        for (const orderPayload of orderGroups.values()) {
+          const order = await createOrder(api, orderPayload);
+          createdOrders.push(order);
+        }
+
         clearCart();
+
+        if (createdOrders.length === 1) {
+          navigate(`/consumer/order?orderId=${createdOrders[0].id}`, {
+            replace: true,
+          });
+          return;
+        }
+
         navigate("/consumer/orders", { replace: true });
       } catch (error) {
         console.error("Error creating order:", error);
@@ -104,35 +114,12 @@ useEffect(() => {
 
         {/* map ui */}
 
-        {userPosition ? (
-        <LocationMap
-          latitude={userPosition.latitude}
-          longitude={userPosition.longitude}
-        />
-        ) : (
-          <div className="mb-6 flex h-[128px] w-full items-center justify-center font-light rounded-[12px] border border-[#DCD6D3] text-[13px] text-[#85827F]">
-            Waiting for location...
-          </div>
-        )}
+        <LocationMap />
 
         <div className="mb-6">
-          {locationStatus === "success" && (
-            <p className="text-[14px] font-light text-[#4FA83D]">
-              Current location enabled.
-            </p>
-          )}
-
-          {locationStatus === "denied" && (
-            <p className="text-[13px] text-orange">
-              Location access denied. Add pickup details manually.
-            </p>
-          )}
-
-          {locationStatus === "error" && (
-            <p className="text-[13px] text-orange">
-              Location unavailable. Add pickup details manually.
-            </p>
-          )}
+          <p className="text-[13px] text-[#85827F]">
+            Static campus map preview for this first delivery.
+          </p>
 
           {errorMessage ? (
             <p className="mt-2 text-[13px] text-[#b4202f]">
@@ -141,7 +128,7 @@ useEffect(() => {
           ) : null}
         </div>
 
-          {/*pick up details*/}
+        {/*pick up details*/}
 
         <div className="mb-24">
           <h2 className="mb-4 text-[20px] font-regular">Pickup Details</h2>

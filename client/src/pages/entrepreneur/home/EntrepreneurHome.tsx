@@ -2,6 +2,8 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
+import { getOrders } from "../../../services/order.service";
+import type { OrderResponse } from "../../../types/order.types";
 import { getStoredAuth } from "../../../utils/storage";
 
 type Entrepreneur = {
@@ -10,25 +12,8 @@ type Entrepreneur = {
   is_active: boolean;
 };
 
-type ApiOrder = {
-  id: number;
-  status: "requested" | "accepted" | "declined" | "delivering" | "delivered";
-  total_price: number;
-  customer: {
-    name: string;
-  };
-  tracking: {
-    estimated_distance: number | null;
-  };
-  items: {
-    name: string;
-    quantity: number;
-    img: string;
-  }[];
-};
-
 type DisplayOrder = {
-  id: string;
+  id: number;
   productName: string;
   customerName: string;
   distance: string;
@@ -43,24 +28,21 @@ const formatCurrency = (value: number) =>
     maximumFractionDigits: 0,
   }).format(value);
 
-const mapStatus = (status: ApiOrder["status"]): DisplayOrder["status"] => {
+const mapStatus = (status: OrderResponse["status"]): DisplayOrder["status"] => {
   if (status === "accepted" || status === "delivering") return "Accepted";
   if (status === "delivered") return "Delivered";
   if (status === "declined") return "Declined";
   return "Pending";
 };
 
-const mapOrder = (order: ApiOrder): DisplayOrder => {
+const mapOrder = (order: OrderResponse): DisplayOrder => {
   const firstItem = order.items[0];
 
   return {
-    id: String(order.id),
+    id: order.id,
     productName: firstItem?.name ?? "Order",
     customerName: order.customer.name,
-    distance:
-      order.tracking.estimated_distance !== null
-        ? `Near-${Math.round(order.tracking.estimated_distance)} mt.`
-        : "Near campus",
+    distance: order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup",
     status: mapStatus(order.status),
     quantity: firstItem?.quantity ?? 1,
     price: order.total_price,
@@ -95,11 +77,11 @@ const EntrepreneurHome = () => {
       try {
         const [entrepreneurResponse, ordersResponse] = await Promise.all([
           api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
-          api.get<ApiOrder[]>("/picku/api/orders"),
+          getOrders(api),
         ]);
 
         setEntrepreneur(entrepreneurResponse.data);
-        setOrders(ordersResponse.data.map(mapOrder));
+        setOrders(ordersResponse.map(mapOrder));
       } catch (error) {
         setOrders([]);
         if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -206,7 +188,8 @@ const EntrepreneurHome = () => {
             {orders.map((order) => (
               <article
                 key={order.id}
-                className="grid min-h-[134px] grid-cols-[112px_minmax(0,1fr)] gap-[14px] rounded-[18px] border border-[#ded8d4] px-[14px] py-[14px]"
+                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[14px] rounded-[18px] border border-[#ded8d4] px-[14px] py-[14px]"
+                onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img
                   className="h-[106px] w-[112px] rounded-[10px] object-cover"

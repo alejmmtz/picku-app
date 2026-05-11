@@ -6,8 +6,6 @@ export interface Entrepreneur {
   description: string;
   contact_info: string;
   category: string;
-  latitude: number;
-  longitude: number;
   is_active: boolean;
   owner_name?: string;
 }

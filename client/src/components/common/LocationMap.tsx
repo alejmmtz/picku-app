@@ -1,17 +1,10 @@
 import { useEffect, useRef } from "react";
-import MarkerIcon from "../../assets/location pin.svg";
-
-interface LocationMapProps {
-  latitude: number;
-  longitude: number;
-}
 
 type LeafletMapInstance = {
   remove: () => void;
-  setView: (center: [number, number], zoom: number) => unknown;
 };
 
-type LocationMapLeafletNamespace = {
+type LeafletNamespace = {
   map: (
     element: HTMLElement,
     options: {
@@ -25,7 +18,9 @@ type LocationMapLeafletNamespace = {
       keyboard: boolean;
       tap?: boolean;
     },
-  ) => LeafletMapInstance;
+  ) => LeafletMapInstance & {
+    setView: (center: [number, number], zoom: number) => unknown;
+  };
   tileLayer: (
     url: string,
     options: {
@@ -35,30 +30,26 @@ type LocationMapLeafletNamespace = {
   ) => {
     addTo: (map: LeafletMapInstance) => unknown;
   };
-  icon: (options: {
-    iconUrl: string;
-    iconSize: [number, number];
-    iconAnchor: [number, number];
-    popupAnchor: [number, number];
-  }) => unknown;
-  marker: (
-    position: [number, number],
-    options: {
-      icon: unknown;
-    },
-  ) => {
-    addTo: (map: LeafletMapInstance) => {
-      bindPopup: (content: string) => unknown;
-    };
-  };
 };
 
-const LEAFLET_CSS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
+declare global {
+  interface Window {
+    L?: LeafletNamespace;
+  }
+}
+
+const MAP_CENTER: [number, number] = [3.339998, -76.529993];
+const LEAFLET_CSS_URL =
+  "https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";
 const LEAFLET_JS_URL = "https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";
+const LEAFLET_TILE_URL =
+  "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png";
+const LEAFLET_TILE_ATTRIBUTION =
+  "&copy; OpenStreetMap contributors &copy; CARTO";
 const LEAFLET_SCRIPT_ID = "picku-leaflet-script";
 const LEAFLET_STYLE_ID = "picku-leaflet-style";
 
-const LocationMap = ({ latitude, longitude }: LocationMapProps) => {
+const LocationMap = () => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMapInstance | null>(null);
 
@@ -66,13 +57,11 @@ const LocationMap = ({ latitude, longitude }: LocationMapProps) => {
     let cancelled = false;
 
     const initMap = () => {
-      const leaflet = window.L as LocationMapLeafletNamespace | undefined;
+      const leaflet = window.L;
 
-      if (!leaflet || !mapRef.current || cancelled) {
+      if (!leaflet || !mapRef.current || cancelled || mapInstanceRef.current) {
         return;
       }
-
-      mapInstanceRef.current?.remove();
 
       const map = leaflet.map(mapRef.current, {
         zoomControl: false,
@@ -85,24 +74,15 @@ const LocationMap = ({ latitude, longitude }: LocationMapProps) => {
         keyboard: true,
       });
 
-      map.setView([latitude, longitude], 17);
+      map.setView(MAP_CENTER, 16);
 
       leaflet
-        .tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "",
+        .tileLayer(LEAFLET_TILE_URL, {
+          attribution: LEAFLET_TILE_ATTRIBUTION,
+          subdomains: "abcd",
         })
         .addTo(map);
 
-      const marker = leaflet.marker([latitude, longitude], {
-        icon: leaflet.icon({
-          iconUrl: MarkerIcon,
-          iconSize: [42, 42],
-          iconAnchor: [21, 42],
-          popupAnchor: [0, -36],
-        }),
-      });
-
-      marker.addTo(map).bindPopup("Pickup location");
       mapInstanceRef.current = map;
     };
 
@@ -125,9 +105,17 @@ const LocationMap = ({ latitude, longitude }: LocationMapProps) => {
       mapInstanceRef.current?.remove();
       mapInstanceRef.current = null;
     };
-  }, [latitude, longitude]);
+  }, []);
 
-  return <div ref={mapRef} className="h-[128px] w-full overflow-hidden rounded-[10px]" />;
+  return (
+    <div className="relative mb-6 h-[128px] w-full overflow-hidden rounded-[10px]">
+      <div ref={mapRef} className="absolute inset-0" />
+      <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.28))]" />
+      <div className="pointer-events-none absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[11px] font-medium text-[#5d5854] shadow-sm">
+        Static campus map
+      </div>
+    </div>
+  );
 };
 
 function ensureLeafletStyles() {

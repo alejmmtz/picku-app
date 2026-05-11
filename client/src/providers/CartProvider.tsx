@@ -33,6 +33,16 @@ interface CartContextType {
 //create cart context!
 const CartContext = createContext<CartContextType | null>(null);
 
+const normalizeCartItem = (item: CartItem): CartItem => ({
+  ...item,
+  quantity: Number(item.quantity),
+  product: {
+    ...item.product,
+    id: Number(item.product.id),
+    price: Number(item.product.price),
+  },
+});
+
 export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   //initialize cart from localStorage
@@ -43,7 +53,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (!storedCart) return [];
 
     try {
-      return JSON.parse(storedCart) as CartItem[];
+      return (JSON.parse(storedCart) as CartItem[]).map(normalizeCartItem);
 
     } catch {
 
@@ -58,18 +68,23 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
   //add product to cart
   const addToCart = (product: Product) => {
+    const normalizedProduct = {
+      ...product,
+      id: Number(product.id),
+      price: Number(product.price),
+    };
 
     setCartItems((prevItems) => {
 
       //check if product already exists
       const existingItem = prevItems.find(
-        (item) => item.product.id === product.id
+        (item) => item.product.id === normalizedProduct.id
       );
 
       //if product exists increase quantity
       if (existingItem) {
         return prevItems.map((item) =>
-          item.product.id === product.id
+          item.product.id === normalizedProduct.id
             ? {
                 ...item,
                 quantity: item.quantity + 1,
@@ -82,7 +97,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       return [
         ...prevItems,
         {
-          product,
+          product: normalizedProduct,
           quantity: 1,
         },
       ];
