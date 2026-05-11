@@ -35,6 +35,14 @@ type ProductRow = {
   is_available: boolean;
 };
 
+const normalizeProductRow = (
+  product: ProductRow & { id: number | string; price: number | string }
+): ProductRow => ({
+  ...product,
+  id: Number(product.id),
+  price: Number(product.price),
+});
+
 const generatePickupCode = (): string => {
   return Math.random().toString(36).substring(2, 7).toUpperCase();
 };
@@ -146,7 +154,15 @@ const fetchProductsByIds = async (
     [productIds]
   );
 
-  return new Map(rows.map((product) => [product.id, product]));
+  return new Map(
+    rows.map((product) => {
+      const normalizedProduct = normalizeProductRow(
+        product as ProductRow & { id: number | string; price: number | string }
+      );
+
+      return [normalizedProduct.id, normalizedProduct] as const;
+    })
+  );
 };
 
 const fetchOrdersQuery = async (

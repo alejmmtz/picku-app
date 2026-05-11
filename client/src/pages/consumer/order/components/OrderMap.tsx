@@ -111,10 +111,6 @@ function OrderMap() {
       <div
         className={`pointer-events-none absolute inset-0 z-1 ${ACTIVE_MAP_STYLE.overlayClass}`}
       />
-
-      <div className="pointer-events-none absolute left-5 top-20 z-10 rounded-full bg-white/92 px-3 py-1 text-[11px] font-medium text-[#5d5854] shadow-sm">
-        Static campus map
-      </div>
     </>
   );
 }
