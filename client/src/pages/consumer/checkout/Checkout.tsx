@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { useAxios } from "../../../providers/AxiosProvider";
 import { useCart } from "../../../providers/CartProvider";
+import { createOrder } from "../../../services/order.service";
 import type { UserPosition } from "../../../types/order.types";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
@@ -9,14 +11,17 @@ import ArrowIcon from "../../../assets/arrow.svg?react";
 import LocationMap from "../../../components/common/LocationMap";
 
 const Checkout = () => {
+  const api = useAxios();
   const navigate = useNavigate();
-  const { cartItems, subtotal } = useCart();
+  const { cartItems, subtotal, clearCart } = useCart();
 
   const [pickupDetails, setPickupDetails] = useState("");
   const [userPosition, setUserPosition] = useState<UserPosition | null>(null);
   const [locationStatus, setLocationStatus] = useState<
     "idle" | "loading" | "success" | "denied" | "error"
   >("loading");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
 useEffect(() => {
   if (!navigator.geolocation) {
@@ -48,6 +53,10 @@ useEffect(() => {
 
 
   const handlePlaceOrder = () => {
+    if (cartItems.length === 0 || isSubmitting) {
+      return;
+    }
+
     const orderPayload = {
       items: cartItems,
       delivery_notes: pickupDetails,
@@ -55,9 +64,26 @@ useEffect(() => {
       total_price: subtotal,
     };
 
-    console.log("Order payload:", orderPayload);
+    const submitOrder = async () => {
+      try {
+        setIsSubmitting(true);
+        setErrorMessage("");
+        await createOrder(api, orderPayload);
+        clearCart();
+        navigate("/consumer/orders", { replace: true });
+      } catch (error) {
+        console.error("Error creating order:", error);
+        setErrorMessage(
+          error instanceof Error
+            ? error.message
+            : "Could not create your order. Please try again.",
+        );
+      } finally {
+        setIsSubmitting(false);
+      }
+    };
 
-    // Luego se conecta await createOrder(axios, orderPayload)
+    void submitOrder();
   };
 
   return (
@@ -107,6 +133,12 @@ useEffect(() => {
               Location unavailable. Add pickup details manually.
             </p>
           )}
+
+          {errorMessage ? (
+            <p className="mt-2 text-[13px] text-[#b4202f]">
+              {errorMessage}
+            </p>
+          ) : null}
         </div>
 
           {/*pick up details*/}
@@ -160,15 +192,15 @@ useEffect(() => {
 
             <button
               type="button"
-              disabled={cartItems.length === 0}
+              disabled={cartItems.length === 0 || isSubmitting}
               onClick={handlePlaceOrder}
               className={`h-[50px] rounded-[10px] px-9 text-[16px] font-light text-white ${
-                cartItems.length === 0
+                cartItems.length === 0 || isSubmitting
                   ? "cursor-not-allowed bg-orange/40"
                   : "bg-orange"
               }`}
             >
-              Checkout
+              {isSubmitting ? "Processing..." : "Checkout"}
             </button>
           </div>
         </div>

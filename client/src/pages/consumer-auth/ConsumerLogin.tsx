@@ -2,10 +2,9 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { API_URL } from "../../config/axiosConfig";
 import type { AuthData } from "../../types/authData";
 import { setStoredAuth } from "../../utils/storage";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
 const ConsumerLogin = () => {
   const navigate = useNavigate();

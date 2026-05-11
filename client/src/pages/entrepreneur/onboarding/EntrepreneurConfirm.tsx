@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAxios } from "../../../providers/AxiosProvider";
 import OnboardingShell from "./OnboardingShell";
 import {
   clearOnboardingData,
   getOnboardingData,
 } from "./onboardingStorage";
 import { getStoredAuth } from "../../../utils/storage";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 const DEFAULT_SHOP_IMAGE = "/resources/img-2-onboarding.svg";
 const MAX_IMAGE_PAYLOAD_LENGTH = 900000;
 const RETRYABLE_NETWORK_PATTERNS = [
@@ -50,6 +49,7 @@ const isRetryableRegistrationError = (error: unknown) => {
 };
 
 const EntrepreneurConfirm = () => {
+  const api = useAxios();
   const navigate = useNavigate();
   const data = getOnboardingData();
   const [errorMessage, setErrorMessage] = useState("");
@@ -78,29 +78,16 @@ const EntrepreneurConfirm = () => {
         category: data.category,
         img: getSafeShopImage(data.img),
       };
-      const requestConfig = {
-        headers: {
-          Authorization: `Bearer ${auth.session.access_token}`,
-        },
-      };
 
       try {
-        await axios.post(
-          `${API_URL}/picku/api/entrepreneurs/me`,
-          payload,
-          requestConfig,
-        );
+        await api.post("/picku/api/entrepreneurs/me", payload);
       } catch (error) {
         if (!isRetryableRegistrationError(error)) {
           throw error;
         }
 
         await wait(700);
-        await axios.post(
-          `${API_URL}/picku/api/entrepreneurs/me`,
-          payload,
-          requestConfig,
-        );
+        await api.post("/picku/api/entrepreneurs/me", payload);
       }
 
       clearOnboardingData();

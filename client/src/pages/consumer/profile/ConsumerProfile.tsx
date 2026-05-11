@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAxios } from "../../../config/axiosConfig";
+import { useAxios } from "../../../providers/AxiosProvider";
 import { getStoredAuth, removeStoredAuth } from "../../../utils/storage";
 
 type UserProfile = {

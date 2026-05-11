@@ -1,7 +1,9 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import { useAxios } from "../../../providers/AxiosProvider";
+import { getCurrentEntrepreneur } from "../../../services/entrepreneur.service";
 import { createProduct } from "../../../services/product.service";
 import { uploadProductImage } from "../../../services/storage.service";
 
@@ -10,10 +12,10 @@ import ArrowIcon from "../../../assets/arrow.svg?react";
 import UploadImageIcon from "../../../assets/upload image.svg?react";
 
 const AddProduct = () => {
-  const axios = useAxios();
+  const api = useAxios();
   const navigate = useNavigate();
 
-  const entrepreneurId = import.meta.env.VITE_TEMP_ENTREPRENEUR_ID;
+  const [entrepreneurId, setEntrepreneurId] = useState<string | null>(null);
 
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
@@ -23,6 +25,28 @@ const AddProduct = () => {
 
   const [error, setError] = useState("");
   const [creating, setCreating] = useState(false);
+  const [loadingEntrepreneur, setLoadingEntrepreneur] = useState(true);
+
+  useEffect(() => {
+    const loadEntrepreneur = async () => {
+      try {
+        const entrepreneur = await getCurrentEntrepreneur(api);
+        setEntrepreneurId(entrepreneur.id);
+      } catch (error) {
+        console.error("Error loading entrepreneur profile:", error);
+
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          navigate("/entrepreneur/onboarding", { replace: true });
+        } else {
+          setError("Could not load your business profile.");
+        }
+      } finally {
+        setLoadingEntrepreneur(false);
+      }
+    };
+
+    void loadEntrepreneur();
+  }, [api, navigate]);
 
   //handle image upload
   const handleImageUpload = (file?: File) => {
@@ -34,7 +58,7 @@ const AddProduct = () => {
 
   //form validation
   const validateForm = () => {
-    if (!entrepreneurId) return "Missing entrepreneur id.";
+    if (!entrepreneurId) return "Complete your business profile first.";
 
     if (!name.trim()) {
       return "Product name is required.";
@@ -72,8 +96,8 @@ const AddProduct = () => {
       const imageUrl = await uploadProductImage(imageFile as File);
 
       //create product in database
-      await createProduct(axios, {
-        entrepreneur_id: entrepreneurId,
+      await createProduct(api, {
+        entrepreneur_id: entrepreneurId as string,
         name: name.trim(),
         price: Number(price),
         description: description.trim(),
@@ -196,13 +220,15 @@ const AddProduct = () => {
         {/* button */}
         <button
           type="button"
-          disabled={creating}
+          disabled={creating || loadingEntrepreneur}
           onClick={handleSubmit}
           className={`mt-26 h-[58px] w-full rounded-[10px] text-[16px] text-white ${
-            creating ? "cursor-not-allowed bg-maroon/50" : "bg-maroon"
+            creating || loadingEntrepreneur
+              ? "cursor-not-allowed bg-maroon/50"
+              : "bg-maroon"
           }`}
         >
-          {creating ? "Creating..." : "Create new product"}
+          {loadingEntrepreneur ? "Loading..." : creating ? "Creating..." : "Create new product"}
         </button>
       </section>
     </main>

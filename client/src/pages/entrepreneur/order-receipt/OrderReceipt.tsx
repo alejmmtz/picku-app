@@ -11,7 +11,7 @@ export default function OrderReceipt() {
           <div className="flex flex-1 flex-col">
             <div className="flex justify-center p-12 ">
               <img
-                src="/images/receipt-guy-entrepreneur.png"
+                src="/resources/receipt-guy-entrepreneur.png"
                 alt="PickU"
                 className="h-auto w-72"
               />

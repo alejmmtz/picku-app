@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
+import { getCurrentEntrepreneur } from "../../../services/entrepreneur.service";
 import { getProductsByEntrepreneurId } from "../../../services/product.service";
 import type { Product } from "../../../types/product.types";
 import Loader from "../../../components/common/LoaderEntrepreneur";
@@ -9,29 +11,31 @@ import Logo from "../../../assets/logo entrepeneur color.svg";
 import PlusIcon from "../../../assets/plus icon.svg?react";
 
 const EntrepreneurProducts = () => {
-  const axios = useAxios();
+  const api = useAxios();
   const navigate = useNavigate();
-
-  //temporal, luego toca cambiarlo con el log in
-  const entrepreneurId = import.meta.env.VITE_TEMP_ENTREPRENEUR_ID;
 
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-  const loadProducts = async () => {
-    try {
-      const data = await getProductsByEntrepreneurId(axios, entrepreneurId);
-      setProducts(data);
-    } catch (error) {
-      console.error("Error loading products:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    const loadProducts = async () => {
+      try {
+        const entrepreneur = await getCurrentEntrepreneur(api);
+        const data = await getProductsByEntrepreneurId(api, entrepreneur.id);
+        setProducts(data);
+      } catch (error) {
+        console.error("Error loading products:", error);
 
-  loadProducts();
-}, [axios, entrepreneurId]);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          navigate("/entrepreneur/onboarding", { replace: true });
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    void loadProducts();
+  }, [api, navigate]);
 
   return (
     <main className="min-h-screen flex justify-center bg-background text-black">

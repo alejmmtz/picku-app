@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAxios } from "../../../providers/AxiosProvider";
 import { getStoredAuth } from "../../../utils/storage";
-
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
 type Entrepreneur = {
   id: string;
@@ -77,6 +76,7 @@ const statusClasses: Record<DisplayOrder["status"], string> = {
 };
 
 const EntrepreneurHome = () => {
+  const api = useAxios();
   const navigate = useNavigate();
   const [entrepreneur, setEntrepreneur] = useState<Entrepreneur | null>(null);
   const [orders, setOrders] = useState<DisplayOrder[]>([]);
@@ -91,15 +91,11 @@ const EntrepreneurHome = () => {
       return;
     }
 
-    const headers = {
-      Authorization: `Bearer ${auth.session.access_token}`,
-    };
-
     const loadHome = async () => {
       try {
         const [entrepreneurResponse, ordersResponse] = await Promise.all([
-          axios.get<Entrepreneur>(`${API_URL}/picku/api/entrepreneurs/me`, { headers }),
-          axios.get<ApiOrder[]>(`${API_URL}/picku/api/orders`, { headers }),
+          api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
+          api.get<ApiOrder[]>("/picku/api/orders"),
         ]);
 
         setEntrepreneur(entrepreneurResponse.data);
@@ -115,7 +111,7 @@ const EntrepreneurHome = () => {
     };
 
     void loadHome();
-  }, [auth, navigate]);
+  }, [api, auth, navigate]);
 
   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
   const incomingCount = orders.filter((order) =>
@@ -132,14 +128,9 @@ const EntrepreneurHome = () => {
     setEntrepreneur({ ...entrepreneur, is_active: nextStatus });
 
     try {
-      const { data } = await axios.patch<Entrepreneur>(
-        `${API_URL}/picku/api/entrepreneurs/me/status`,
+      const { data } = await api.patch<Entrepreneur>(
+        "/picku/api/entrepreneurs/me/status",
         { is_active: nextStatus },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.session.access_token}`,
-          },
-        }
       );
       setEntrepreneur(data);
     } catch {

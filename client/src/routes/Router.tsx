@@ -4,6 +4,7 @@ import ConsumerOrderReceipt from "../pages/consumer/order-receipt/OrderReceipt";
 import EntrepreneurOrder from "../pages/entrepreneur/order/Order";
 import EntrepreneurOrderReceipt from "../pages/entrepreneur/order-receipt/OrderReceipt";
 import RoleSelector from "../pages/role-selector/RoleSelector";
+import ConsumerLogin from "../pages/consumer-auth/ConsumerLogin";
 import ConsumerSignup from "../pages/consumer-auth/ConsumerSignup";
 import MyOrders from "../pages/consumer/orders/MyOrders";
 import OrderDetails from "../pages/consumer/orders/OrderDetails";
@@ -36,9 +37,8 @@ const router = createBrowserRouter([
     Component: RoleSelector,
   },
   {
-    // temporal mientras llega login
     path: "/consumer/login",
-    element: <div>Customer Login</div>,
+    Component: ConsumerLogin,
   },
   {
     path: "/consumer/order",

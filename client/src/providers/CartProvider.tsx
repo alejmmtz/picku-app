@@ -25,6 +25,8 @@ interface CartContextType {
 
   removeFromCart: (productId: number) => void;
 
+  clearCart: () => void;
+
   subtotal: number;
 }
 
@@ -132,6 +134,10 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     );
   };
 
+  const clearCart = () => {
+    setCartItems([]);
+  };
+
   //calculate subtotal 
   const subtotal = useMemo(() => {
 
@@ -151,6 +157,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         increaseQuantity,
         decreaseQuantity,
         removeFromCart,
+        clearCart,
         subtotal,
       }}
     >
