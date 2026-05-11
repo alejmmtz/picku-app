@@ -18,6 +18,14 @@ const ConsumerLogin = () => {
       ? location.state.message
       : "";
 
+  const redirectPath =
+    typeof location.state === "object" &&
+    location.state !== null &&
+    "from" in location.state &&
+    typeof location.state.from === "string"
+      ? location.state.from
+      : null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +49,7 @@ const ConsumerLogin = () => {
       );
 
       setStoredAuth(data);
-      navigate("/consumer/home");
+      navigate(redirectPath ?? "/consumer/home", { replace: true });
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&

@@ -48,7 +48,13 @@ const LEAFLET_TILE_ATTRIBUTION =
 const LEAFLET_SCRIPT_ID = "picku-leaflet-script";
 const LEAFLET_STYLE_ID = "picku-leaflet-style";
 
-const LocationMap = () => {
+type LocationMapProps = {
+  className?: string;
+};
+
+const LocationMap = ({
+  className = "relative mb-6 h-[128px] w-full overflow-hidden rounded-[10px]",
+}: LocationMapProps) => {
   const mapRef = useRef<HTMLDivElement | null>(null);
   const mapInstanceRef = useRef<LeafletMapInstance | null>(null);
 
@@ -107,7 +113,7 @@ const LocationMap = () => {
   }, []);
 
   return (
-    <div className="relative mb-6 h-[128px] w-full overflow-hidden rounded-[10px]">
+    <div className={className}>
       <div ref={mapRef} className="absolute inset-0" />
       <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.28))]" />
     </div>

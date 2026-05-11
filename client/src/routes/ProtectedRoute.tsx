@@ -1,16 +1,16 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { getStoredAuth } from "../utils/storage";
-
-type UserRole = "consumer" | "entrepreneur";
+import {
+  getDefaultRouteForRole,
+  getStoredAuth,
+  getStoredRole,
+  isStoredSessionValid,
+  removeStoredAuth,
+  type StoredUserRole,
+} from "../utils/storage";
 
 type ProtectedRouteProps = {
   redirectTo: string;
-  allowedRoles?: UserRole[];
-};
-
-const getStoredRole = (): string | undefined => {
-  const metadata = getStoredAuth()?.user.user_metadata;
-  return typeof metadata?.role === "string" ? metadata.role : undefined;
+  allowedRoles?: StoredUserRole[];
 };
 
 const ProtectedRoute = ({
@@ -20,20 +20,22 @@ const ProtectedRoute = ({
   const location = useLocation();
   const auth = getStoredAuth();
 
-  if (!auth?.session.access_token) {
+  if (!isStoredSessionValid(auth)) {
+    removeStoredAuth();
+
     return (
       <Navigate
         to={redirectTo}
         replace
-        state={{ from: location.pathname }}
+        state={{ from: `${location.pathname}${location.search}` }}
       />
     );
   }
 
   const role = getStoredRole();
 
-  if (allowedRoles?.length && role && !allowedRoles.includes(role as UserRole)) {
-    return <Navigate to="/" replace />;
+  if (allowedRoles?.length && (!role || !allowedRoles.includes(role))) {
+    return <Navigate to={getDefaultRouteForRole(role)} replace />;
   }
 
   return <Outlet />;

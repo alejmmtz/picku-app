@@ -3,6 +3,8 @@ import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../../config/axiosConfig";
+import type { AuthData } from "../../../types/authData";
+import { setStoredAuth } from "../../../utils/storage";
 
 const EntrepreneurSignup = () => {
   const navigate = useNavigate();
@@ -29,11 +31,23 @@ const EntrepreneurSignup = () => {
         role: "entrepreneur",
       });
 
-      navigate("/entrepreneur/login", {
-        state: {
-          message: "Cuenta creada correctamente. Ahora inicia sesion.",
-        },
-      });
+      try {
+        const { data } = await axios.post<AuthData>(`${API_URL}/picku/api/auth/login`, {
+          email,
+          password,
+        });
+
+        setStoredAuth(data);
+        navigate("/entrepreneur/onboarding", { replace: true });
+      } catch {
+        navigate("/entrepreneur/login", {
+          replace: true,
+          state: {
+            message:
+              "Cuenta creada correctamente. Inicia sesion para continuar con el onboarding.",
+          },
+        });
+      }
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&

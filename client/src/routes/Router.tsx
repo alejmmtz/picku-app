@@ -28,6 +28,22 @@ import Checkout from "../pages/consumer/checkout/Checkout";
 import EntrepreneurProducts from "../pages/entrepreneur/products/EntrepreneurProducts";
 import EditProduct from "../pages/entrepreneur/products/EditProduct";
 import AddProduct from "../pages/entrepreneur/products/AddProduct";
+import EntrepreneurOrders from "../pages/entrepreneur/orders/MyOrders";
+import ProtectedRoute from "./ProtectedRoute";
+
+const ConsumerProtectedLayout = () => (
+  <ProtectedRoute
+    redirectTo="/consumer/login"
+    allowedRoles={["consumer"]}
+  />
+);
+
+const EntrepreneurProtectedLayout = () => (
+  <ProtectedRoute
+    redirectTo="/entrepreneur/login"
+    allowedRoles={["entrepreneur"]}
+  />
+);
 
 const router = createBrowserRouter([
   {
@@ -39,52 +55,8 @@ const router = createBrowserRouter([
     Component: ConsumerLogin,
   },
   {
-    path: "/consumer/order",
-    Component: ConsumerOrder,
-  },
-  {
-    path: "/consumer/order-receipt",
-    Component: ConsumerOrderReceipt,
-  },
-  {
     path: "/consumer/signup",
     Component: ConsumerSignup,
-  },
-  {
-    path: "/consumer/orders",
-    Component: MyOrders,
-  },
-  {
-    path: "/consumer/orders/:id",
-    Component: OrderDetails,
-  },
-  {
-    path: "/consumer/home",
-    Component: ConsumerHome,
-  },
-  {
-    path: "/consumer/business/:id",
-    Component: BusinessDetail,
-  },
-  {
-    path: "/consumer/product/:id",
-    Component: ProductDetail,
-  },
-  {
-    path: "/consumer/cart",
-    Component: Cart,
-  },
-  {
-    path: "/consumer/checkout",
-    Component: Checkout,
-  },
-  {
-    path: "/consumer/chatbot",
-    Component: Chatbot,
-  },
-  {
-    path: "/consumer/profile",
-    Component: ConsumerProfile,
   },
   {
     path: "/entrepreneur/login",
@@ -95,60 +67,114 @@ const router = createBrowserRouter([
     Component: EntrepreneurSignup,
   },
   {
-    path: "/entrepreneur/home",
-    Component: EntrepreneurHome,
+    Component: ConsumerProtectedLayout,
+    children: [
+      {
+        path: "/consumer/order",
+        Component: ConsumerOrder,
+      },
+      {
+        path: "/consumer/order-receipt",
+        Component: ConsumerOrderReceipt,
+      },
+      {
+        path: "/consumer/orders",
+        Component: MyOrders,
+      },
+      {
+        path: "/consumer/orders/:id",
+        Component: OrderDetails,
+      },
+      {
+        path: "/consumer/home",
+        Component: ConsumerHome,
+      },
+      {
+        path: "/consumer/business/:id",
+        Component: BusinessDetail,
+      },
+      {
+        path: "/consumer/product/:id",
+        Component: ProductDetail,
+      },
+      {
+        path: "/consumer/cart",
+        Component: Cart,
+      },
+      {
+        path: "/consumer/checkout",
+        Component: Checkout,
+      },
+      {
+        path: "/consumer/chatbot",
+        Component: Chatbot,
+      },
+      {
+        path: "/consumer/profile",
+        Component: ConsumerProfile,
+      },
+    ],
   },
   {
-    path: "/entrepreneur/orders",
-    Component: EntrepreneurHome,
-  },
-  {
-    path: "/entrepreneur/products",
-    Component: EntrepreneurProducts,
-  },
-  {
-    path: "/entrepreneur/products/edit/:id",
-    Component: EditProduct,
-  },
-  {
-    path: "/entrepreneur/products/new",
-    Component: AddProduct,
-  },
-  {
-    path: "/entrepreneur/onboarding",
-    Component: EntrepreneurOnboardingIntro,
-  },
-  {
-    path: "/entrepreneur/onboarding/category",
-    Component: EntrepreneurCategory,
-  },
-  {
-    path: "/entrepreneur/onboarding/business",
-    Component: EntrepreneurBusinessInfo,
-  },
-  {
-    path: "/entrepreneur/onboarding/image",
-    Component: EntrepreneurImage,
-  },
-  {
-    path: "/entrepreneur/onboarding/confirm",
-    Component: EntrepreneurConfirm,
-  },
-  {
-    path: "/entrepreneur/onboarding/success",
-    Component: EntrepreneurSuccess,
-  },
-  {
-    path: "/entrepreneur/profile",
-    Component: EntrepreneurProfile,
-  },
-  {
-    path: "/entrepreneur/order",
-    Component: EntrepreneurOrder,
-  },
-  {
-    path: "/entrepreneur/order-receipt",
-    Component: EntrepreneurOrderReceipt,
+    Component: EntrepreneurProtectedLayout,
+    children: [
+      {
+        path: "/entrepreneur/home",
+        Component: EntrepreneurHome,
+      },
+      {
+        path: "/entrepreneur/orders",
+        Component: EntrepreneurOrders,
+      },
+      {
+        path: "/entrepreneur/products",
+        Component: EntrepreneurProducts,
+      },
+      {
+        path: "/entrepreneur/products/edit/:id",
+        Component: EditProduct,
+      },
+      {
+        path: "/entrepreneur/products/new",
+        Component: AddProduct,
+      },
+      {
+        path: "/entrepreneur/onboarding",
+        Component: EntrepreneurOnboardingIntro,
+      },
+      {
+        path: "/entrepreneur/onboarding/category",
+        Component: EntrepreneurCategory,
+      },
+      {
+        path: "/entrepreneur/onboarding/business",
+        Component: EntrepreneurBusinessInfo,
+      },
+      {
+        path: "/entrepreneur/onboarding/image",
+        Component: EntrepreneurImage,
+      },
+      {
+        path: "/entrepreneur/onboarding/confirm",
+        Component: EntrepreneurConfirm,
+      },
+      {
+        path: "/entrepreneur/onboarding/success",
+        Component: EntrepreneurSuccess,
+      },
+      {
+        path: "/entrepreneur/profile",
+        Component: EntrepreneurProfile,
+      },
+      {
+        path: "/entrepreneur/order",
+        Component: EntrepreneurOrder,
+      },
+      {
+        path: "/entrepreneur/order-receipt",
+        Component: EntrepreneurOrderReceipt,
+      },
+    ],
   },
 ]);
 

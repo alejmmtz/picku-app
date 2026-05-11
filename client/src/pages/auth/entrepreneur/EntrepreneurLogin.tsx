@@ -18,6 +18,14 @@ const EntrepreneurLogin = () => {
       ? location.state.message
       : "";
 
+  const redirectPath =
+    typeof location.state === "object" &&
+    location.state !== null &&
+    "from" in location.state &&
+    typeof location.state.from === "string"
+      ? location.state.from
+      : null;
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -41,7 +49,31 @@ const EntrepreneurLogin = () => {
       );
 
       setStoredAuth(data);
-      navigate("/entrepreneur/home");
+
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+        return;
+      }
+
+      try {
+        await axios.get(`${API_URL}/picku/api/entrepreneurs/me`, {
+          headers: {
+            Authorization: `Bearer ${data.session.access_token}`,
+          },
+        });
+
+        navigate("/entrepreneur/home", { replace: true });
+      } catch (profileError) {
+        if (
+          axios.isAxiosError(profileError) &&
+          profileError.response?.status === 404
+        ) {
+          navigate("/entrepreneur/onboarding", { replace: true });
+          return;
+        }
+
+        throw profileError;
+      }
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&

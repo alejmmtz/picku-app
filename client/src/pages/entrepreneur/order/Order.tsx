@@ -3,6 +3,7 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import OrderFlowHeader from "./components/OrderFlowHeader";
 import OrderMap from "./components/OrderMap";
 import OrderSummaryCard from "./components/OrderSummaryCard";
+import RequestedOrderDetails from "./components/RequestedOrderDetails";
 import { useAxios } from "../../../providers/AxiosProvider";
 import {
   getOrderById,
@@ -94,6 +95,11 @@ export default function Order() {
       const updatedOrder = await updateOrder(api, order.id, payload);
       setOrder(updatedOrder);
 
+      if (updatedOrder.status === "declined") {
+        navigate("/entrepreneur/orders", { replace: true });
+        return;
+      }
+
       if (updatedOrder.status === "delivered") {
         navigate(`/entrepreneur/order-receipt?orderId=${updatedOrder.id}`, {
           replace: true,
@@ -111,12 +117,7 @@ export default function Order() {
   };
 
   const handleDecline = () => {
-    const reason = declineReason.trim();
-
-    if (!reason) {
-      setFeedbackMessage("Add a short reason before declining the order.");
-      return;
-    }
+    const reason = declineReason.trim() || "Declined by entrepreneur.";
 
     void submitUpdate({
       status: "declined",
@@ -159,13 +160,26 @@ export default function Order() {
           </p>
           <button
             type="button"
-            onClick={() => navigate("/entrepreneur/home")}
+            onClick={() => navigate("/entrepreneur/orders")}
             className="mt-6 rounded-xl bg-maroon px-5 py-3 text-sm font-semibold text-white"
           >
-            Go to home
+            Go to orders
           </button>
         </section>
       </main>
+    );
+  }
+
+  if (order.status === "requested") {
+    return (
+      <RequestedOrderDetails
+        order={order}
+        isSubmitting={isSubmitting}
+        feedbackMessage={feedbackMessage}
+        onBack={() => navigate("/entrepreneur/orders")}
+        onAccept={() => void submitUpdate({ status: "accepted" })}
+        onDecline={handleDecline}
+      />
     );
   }
 
@@ -173,7 +187,7 @@ export default function Order() {
     <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
       <section className="relative h-dvh w-full overflow-hidden sm:mx-auto sm:w-100">
         <OrderMap />
-        <OrderFlowHeader onBack={() => navigate("/entrepreneur/home")} />
+        <OrderFlowHeader onBack={() => navigate("/entrepreneur/orders")} />
         <OrderSummaryCard
           order={order}
           pickupCode={pickupCode}

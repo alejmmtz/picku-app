@@ -94,7 +94,7 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
   const inactiveColor = "text-[#a7a7a7]";
   return (
     <nav className="fixed bottom-0 z-50 w-full rounded-t-2xl bg-background px-4 pb-4 pt-3 shadow-[0_-10px_30px_rgba(0,0,0,0.08)]">
-      <div className={`grid grid-cols-${items.length} gap-1`}>
+      <div className={`grid grid-cols-4 gap-1`}>
         {items.map((item) => {
           const isActive = item.matches(pathname);
           const maskUrl = iconMaskByName[item.icon];
