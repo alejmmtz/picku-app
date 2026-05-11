@@ -4,6 +4,7 @@ export interface ChatMessage {
   id: string;
   content: string;
   role: 'user' | 'assistant';
+  user_id: string;
   parent_id: string | null;
   created_at: string;
 }
