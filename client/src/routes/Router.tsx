@@ -1,5 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import RoleSelector from "../pages/role-selector/RoleSelector";
+import ConsumerLogin from "../pages/consumer-auth/ConsumerLogin";
+import ConsumerSignup from "../pages/consumer-auth/ConsumerSignup";
 
 import EntrepreneurProducts from "../pages/entrepreneur/EntrepreneurProducts";
 import EditProduct from "../pages/entrepreneur/EditProduct";
@@ -18,7 +20,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/consumer/login",
-    element: <div>Consumer Login</div>,
+    Component: ConsumerLogin,
+  },
+  {
+    path: "/consumer/signup",
+    Component: ConsumerSignup,
   },
   {
     path: "/entrepreneur/login",
