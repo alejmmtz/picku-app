@@ -3,11 +3,13 @@ import type {
   AuthTokenResponsePassword,
 } from '@supabase/supabase-js';
 import Boom from '@hapi/boom';
+import { pool } from '../../config/database.js';
 import { supabase, supabaseAdmin } from '../../config/supabase.js';
 import type {
   AuthenticateUserDTO,
   CreateUserDTO,
   UpdateUserDTO,
+  User,
   UserRole,
 } from './auth.types.js';
 
@@ -81,6 +83,25 @@ type UpdateAuthenticationResponse = {
   name?: string;
   phone?: string;
   role?: UserRole;
+};
+
+export const getCurrentUserProfileService = async (
+  userId: string
+): Promise<User> => {
+  const result = await pool.query<User>(
+    `SELECT id::text, name, email, phone, role, created_at::text
+     FROM public.users
+     WHERE id = $1`,
+    [userId]
+  );
+
+  const profile = result.rows[0];
+
+  if (!profile) {
+    throw Boom.notFound('User profile was not found');
+  }
+
+  return profile;
 };
 
 export const updateAuthenticationService = async (

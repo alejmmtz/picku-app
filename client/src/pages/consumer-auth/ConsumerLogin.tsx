@@ -2,6 +2,8 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import type { AuthData } from "../../types/authData";
+import { setStoredAuth } from "../../utils/storage";
 
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
@@ -31,11 +33,12 @@ const ConsumerLogin = () => {
     setSuccessMessage("");
 
     try {
-      await axios.post(`${API_URL}/picku/api/auth/login`, {
+      const { data } = await axios.post<AuthData>(`${API_URL}/picku/api/auth/login`, {
         email,
         password,
       });
 
+      setStoredAuth(data);
       navigate("/consumer/home");
     } catch (error) {
       const message =
