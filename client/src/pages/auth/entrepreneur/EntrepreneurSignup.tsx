@@ -2,7 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../../config/axiosConfig";
+import { API_URL } from "../../../config/axiosConfig";
 
 const EntrepreneurSignup = () => {
   const navigate = useNavigate();
@@ -71,7 +71,11 @@ const EntrepreneurSignup = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Username</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/user.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/user.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type="text"
@@ -87,7 +91,11 @@ const EntrepreneurSignup = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Email</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/mail.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/mail.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type="email"
@@ -103,7 +111,11 @@ const EntrepreneurSignup = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Phone</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/phone.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/phone.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type="tel"
@@ -119,7 +131,11 @@ const EntrepreneurSignup = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Password</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/lock.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/lock.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type={showPassword ? "text" : "password"}
@@ -133,7 +149,9 @@ const EntrepreneurSignup = () => {
                 className="bg-transparent p-0"
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
-                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                aria-label={
+                  showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+                }
               >
                 <img
                   className="h-[24px] w-[24px] opacity-35"
@@ -144,7 +162,9 @@ const EntrepreneurSignup = () => {
             </span>
           </label>
 
-          <p className={`m-0 min-h-[18px] text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}>
+          <p
+            className={`m-0 min-h-[18px] text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}
+          >
             {errorMessage}
           </p>
 

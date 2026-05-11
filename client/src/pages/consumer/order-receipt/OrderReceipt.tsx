@@ -21,7 +21,7 @@ export default function OrderReceipt() {
 
             <button
               type="button"
-              onClick={() => navigate("/consumer/order")}
+              onClick={() => navigate("/consumer/orders")}
               className="mt-12 mb-12 rounded-xl bg-orange px-6 py-4 text-lg  text-white transition-transform active:scale-[0.99]"
             >
               Go back to orders

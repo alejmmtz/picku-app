@@ -2,9 +2,9 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_URL } from "../../config/axiosConfig";
-import type { AuthData } from "../../types/authData";
-import { setStoredAuth } from "../../utils/storage";
+import { API_URL } from "../../../config/axiosConfig";
+import type { AuthData } from "../../../types/authData";
+import { setStoredAuth } from "../../../utils/storage";
 
 const EntrepreneurLogin = () => {
   const navigate = useNavigate();
@@ -32,10 +32,13 @@ const EntrepreneurLogin = () => {
     setSuccessMessage("");
 
     try {
-      const { data } = await axios.post<AuthData>(`${API_URL}/picku/api/auth/login`, {
-        email,
-        password,
-      });
+      const { data } = await axios.post<AuthData>(
+        `${API_URL}/picku/api/auth/login`,
+        {
+          email,
+          password,
+        },
+      );
 
       setStoredAuth(data);
       navigate("/entrepreneur/home");
@@ -76,7 +79,11 @@ const EntrepreneurLogin = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Email</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/mail.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/mail.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type="email"
@@ -92,7 +99,11 @@ const EntrepreneurLogin = () => {
           <label className="flex flex-col gap-[8px]">
             <span className="text-[14px] leading-[1.2]">Password</span>
             <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img className="h-[22px] w-[22px] opacity-35" src="/icons/lock.svg" alt="" />
+              <img
+                className="h-[22px] w-[22px] opacity-35"
+                src="/icons/lock.svg"
+                alt=""
+              />
               <input
                 className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type={showPassword ? "text" : "password"}
@@ -106,7 +117,9 @@ const EntrepreneurLogin = () => {
                 className="bg-transparent p-0"
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
-                aria-label={showPassword ? "Ocultar contrasena" : "Mostrar contrasena"}
+                aria-label={
+                  showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+                }
               >
                 <img
                   className="h-[24px] w-[24px] opacity-35"
@@ -119,7 +132,11 @@ const EntrepreneurLogin = () => {
 
           <p
             className={`m-0 min-h-[18px] text-[13px] ${
-              errorMessage ? "text-[#c43e14]" : successMessage ? "text-[#2c7b44]" : ""
+              errorMessage
+                ? "text-[#c43e14]"
+                : successMessage
+                  ? "text-[#2c7b44]"
+                  : ""
             }`}
           >
             {errorMessage || successMessage}
