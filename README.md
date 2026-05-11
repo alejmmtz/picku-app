@@ -56,12 +56,45 @@ AI                  →        Recommends products
 ## 📂 Project Structure (Monorepo)
 
 ```bash
+
+```text
 picku-app/
-├── client/          # Frontend (React)
-├── server/          # Backend (REST API)
-├── database/        # SQL Scripts
-├── shared/          # TypeScript types or shared constants
-└── docs/            # Additional documentation and diagrams
+|-- client/
+|   |-- src/
+|   |   |-- assets/
+|   |   |-- components/
+|   |   |-- config/
+|   |   |-- hooks/
+|   |   |-- pages/
+|   |   |   |-- auth/
+|   |   |   |-- consumer/
+|   |   |   |-- entrepreneur/
+|   |   |   `-- role-selector/
+|   |   |-- providers/
+|   |   |-- routes/
+|   |   |-- services/
+|   |   |-- types/
+|   |   `-- utils/
+|   |-- public/
+|   `-- package.json
+|-- server/
+|   |-- src/
+|   |   |-- config/
+|   |   |-- features/
+|   |   |   |-- auth/
+|   |   |   |-- chatbot/
+|   |   |   |-- entrepreneurs/
+|   |   |   |-- order/
+|   |   |   `-- product/
+|   |   |-- middlewares/
+|   |   |-- shared/
+|   |   |-- types/
+|   |   `-- app.ts
+|   `-- package.json
+|-- package.json
+`-- README.md
+```
+
 ```
 -----
 <br/>
@@ -111,6 +144,40 @@ npm run dev
 
 -----
 <br/>
+
+
+## Env Variables
+
+### Client
+
+`client/.env`
+
+```env
+VITE_API_URL=http://localhost:3015
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_KEY=your_supabase_anon_key
+```
+
+### Server
+
+`server/.env`
+
+```env
+PORT=3015
+NODE_ENV=development
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=postgres
+
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+GROQ_API_KEY=your_groq_api_key
+```
+
 
 ## 🗺 Roadmap de Desarrollo
 
