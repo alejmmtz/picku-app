@@ -39,7 +39,7 @@ const EntrepreneurLogin = () => {
       });
 
       setStoredAuth(data);
-      navigate("/entrepreneur/profile");
+      navigate("/entrepreneur/home");
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&

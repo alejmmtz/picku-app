@@ -14,12 +14,23 @@ import type { Entrepreneur } from "../../types/entrepreneur.types";
 import type { Product } from "../../types/product.types";
 import { filterEntrepreneurs } from "../../utils/filterEntrepreneurs";
 import Loader from "../../components/common/Loader";
+import { getStoredAuth } from "../../utils/storage";
+
+type UserProfile = {
+  name: string;
+};
+
+const getStoredConsumerName = () => {
+  const name = getStoredAuth()?.user.user_metadata?.name;
+  return typeof name === "string" && name.trim() ? name.trim() : "there";
+};
 
 const ConsumerHome = () => {
   const axios = useAxios();
   const navigate = useNavigate();
   const [products, setProducts] = useState<Product[]>([]);
   const [entrepreneurs, setEntrepreneurs] = useState<Entrepreneur[]>([]);
+  const [consumerName, setConsumerName] = useState(getStoredConsumerName);
   const [searchTerm, setSearchTerm] = useState("");
   const [loading, setLoading] = useState(true);
 
@@ -31,6 +42,9 @@ const ConsumerHome = () => {
 
         const data = await getEntrepreneurs(axios);
         setEntrepreneurs(data.filter((entrepreneur) => entrepreneur.is_active));
+
+        const profileResponse = await axios.get<UserProfile>("/picku/api/auth/me");
+        setConsumerName(profileResponse.data.name);
       } catch (error) {
         console.error("Error loading entrepreneurs:", error);
       } finally {
@@ -61,7 +75,9 @@ const ConsumerHome = () => {
         </header>
 
         <section className="mb-5">
-          <p className="text-[16px] mb-1 font-light">Welcome back, Jorgi!</p>
+          <p className="text-[16px] mb-1 font-light">
+            Welcome back, {consumerName}!
+          </p>
           <h2 className="text-[27px] font-bold leading-tight">
             Discover your next pick
           </h2>

@@ -28,7 +28,7 @@ const statusClassMap: Record<OrderStatus, string> = {
 };
 
 const emptyOrdersMessage =
-  "En este momento no tienes pedidos. Si notas algo raro, ya lo estamos arreglando para ti.";
+  "You currently have no orders. If you notice anything unusual, we're already working on fixing it for you.";
 
 const formatPrice = (price: number) =>
   `$${price.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;

@@ -2,24 +2,21 @@ import axios from "axios";
 import { createContext, createElement, useContext, useMemo } from "react";
 import type { ReactNode } from "react";
 import type { AxiosInstance, InternalAxiosRequestConfig } from "axios";
-import type { AuthData } from "../types/authData";
 import {
   getStoredAuth,
-  setStoredAuth,
   removeStoredAuth,
 } from "../utils/storage";
 
-const axiosConfig = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
-});
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 
-let refreshPromise: Promise<AuthData> | null = null;
+const axiosConfig = axios.create({
+  baseURL: API_URL,
+});
 
 const isTokenExpired = (expiresAt: number): boolean =>
   Date.now() >= (expiresAt - 30) * 1000;
 
-const getAccessToken = async (baseURL: string): Promise<string | null> => {
+const getAccessToken = async (): Promise<string | null> => {
   const auth = getStoredAuth();
   if (!auth) return null;
 
@@ -29,32 +26,15 @@ const getAccessToken = async (baseURL: string): Promise<string | null> => {
     return session.access_token;
   }
 
-  try {
-    refreshPromise ??= axios
-      .post<AuthData>(`${baseURL}/api/auth/refresh`, {
-        refreshToken: session.refresh_token,
-      })
-      .then(({ data }) => {
-        setStoredAuth(data);
-        return data;
-      });
-
-    const newAuth = await refreshPromise;
-    return newAuth.session.access_token;
-  } catch {
-    removeStoredAuth();
-    globalThis.location.href = "/";
-    throw new Error("Session expired");
-  } finally {
-    refreshPromise = null;
-  }
+  removeStoredAuth();
+  globalThis.location.href = "/";
+  throw new Error("Session expired");
 };
 
 const attachAuth = async (
-  baseURL: string,
   config: InternalAxiosRequestConfig,
 ): Promise<InternalAxiosRequestConfig> => {
-  const token = await getAccessToken(baseURL);
+  const token = await getAccessToken();
   if (token) config.headers.Authorization = `Bearer ${token}`;
   return config;
 };
@@ -68,6 +48,8 @@ const extractErrorMessage = (error: unknown): never => {
 
 const AxiosContext = createContext<AxiosInstance | null>(null);
 
+axiosConfig.interceptors.request.use((config) => attachAuth(config));
+
 export default axiosConfig;
 
 export const AxiosProvider = ({
@@ -79,7 +61,7 @@ export const AxiosProvider = ({
     const baseURL = API_URL;
     const inst = axios.create({ baseURL });
 
-    inst.interceptors.request.use((config) => attachAuth(baseURL, config));
+    inst.interceptors.request.use((config) => attachAuth(config));
     inst.interceptors.response.use((response) => response, extractErrorMessage);
 
     return inst;
@@ -90,6 +72,5 @@ export const AxiosProvider = ({
 
 export const useAxios = () => {
   const ctx = useContext(AxiosContext);
-  if (!ctx) throw new Error("useAxios must be used within AxiosProvider");
-  return ctx;
+  return ctx ?? axiosConfig;
 };

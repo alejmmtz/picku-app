@@ -23,7 +23,10 @@ import BusinessDetail from "../pages/consumer/BusinessDetail";
 import ProductDetail from "../pages/consumer/ProductDetail";
 import Cart from "../pages/consumer/Cart";
 import Checkout from "../pages/consumer/Checkout";
+import Chatbot from "../pages/consumer/chatbot/Chatbot";
+import ConsumerProfile from "../pages/consumer/profile/ConsumerProfile";
 import EntrepreneurProfile from "../pages/entrepreneur/profile/EntrepreneurProfile";
+import ProtectedRoute from "./ProtectedRoute";
 
 const router = createBrowserRouter([
   {
@@ -39,12 +42,45 @@ const router = createBrowserRouter([
     Component: ConsumerSignup,
   },
   {
-    path: "/consumer/orders",
-    Component: MyOrders,
-  },
-  {
-    path: "/consumer/orders/:id",
-    Component: OrderDetails,
+    element: <ProtectedRoute redirectTo="/consumer/login" allowedRoles={["consumer"]} />,
+    children: [
+      {
+        path: "/consumer/orders",
+        Component: MyOrders,
+      },
+      {
+        path: "/consumer/orders/:id",
+        Component: OrderDetails,
+      },
+      {
+        path: "/consumer/home",
+        Component: ConsumerHome,
+      },
+      {
+        path: "/consumer/business/:id",
+        Component: BusinessDetail,
+      },
+      {
+        path: "/consumer/product/:id",
+        Component: ProductDetail,
+      },
+      {
+        path: "/consumer/cart",
+        Component: Cart,
+      },
+      {
+        path: "/consumer/checkout",
+        Component: Checkout,
+      },
+      {
+        path: "/consumer/chatbot",
+        Component: Chatbot,
+      },
+      {
+        path: "/consumer/profile",
+        Component: ConsumerProfile,
+      },
+    ],
   },
   {
     path: "/entrepreneur/login",
@@ -55,72 +91,53 @@ const router = createBrowserRouter([
     Component: EntrepreneurSignup,
   },
   {
-    path: "/entrepreneur/home",
-    Component: EntrepreneurHome,
-  },
-  {
-    path: "/entrepreneur/products",
-    Component: EntrepreneurProducts,
-  },
-  {
-    path: "/entrepreneur/products/edit/:id",
-    Component: EditProduct,
-  },
-  {
-    path: "/entrepreneur/products/new",
-    Component: AddProduct,
-  },
-  {
-    path: "/consumer/home",
-    Component: ConsumerHome,
-  },
-  {
-    path: "/consumer/business/:id",
-    Component: BusinessDetail,
-  },
-  {
-    path: "/consumer/product/:id",
-    Component: ProductDetail,
-  },
-  {
-    path: "/consumer/cart",
-    Component: Cart,
-  },
-  {
-    path: "/consumer/checkout",
-    Component: Checkout,
-  },
-  {
-    path: "/entrepreneur/onboarding",
-    Component: EntrepreneurOnboardingIntro,
-  },
-  {
-    path: "/entrepreneur/onboarding/category",
-    Component: EntrepreneurCategory,
-  },
-  {
-    path: "/entrepreneur/onboarding/business",
-    Component: EntrepreneurBusinessInfo,
-  },
-  {
-    path: "/entrepreneur/onboarding/image",
-    Component: EntrepreneurImage,
-  },
-  {
-    path: "/entrepreneur/onboarding/confirm",
-    Component: EntrepreneurConfirm,
-  },
-  {
-    path: "/entrepreneur/onboarding/success",
-    Component: EntrepreneurSuccess,
-  },
-  {
-    path: "/entrepreneur/profile",
-    Component: EntrepreneurProfile,
-  },
-  {
-    path: "/entrepreneur/onboarding/category",
-    element: <div className="flex min-h-screen items-center justify-center bg-background px-8 text-center font-sofia text-maroon">Entrepreneur onboarding category</div>,
+    element: <ProtectedRoute redirectTo="/entrepreneur/login" allowedRoles={["entrepreneur"]} />,
+    children: [
+      {
+        path: "/entrepreneur/home",
+        Component: EntrepreneurHome,
+      },
+      {
+        path: "/entrepreneur/products",
+        Component: EntrepreneurProducts,
+      },
+      {
+        path: "/entrepreneur/products/edit/:id",
+        Component: EditProduct,
+      },
+      {
+        path: "/entrepreneur/products/new",
+        Component: AddProduct,
+      },
+      {
+        path: "/entrepreneur/onboarding",
+        Component: EntrepreneurOnboardingIntro,
+      },
+      {
+        path: "/entrepreneur/onboarding/category",
+        Component: EntrepreneurCategory,
+      },
+      {
+        path: "/entrepreneur/onboarding/business",
+        Component: EntrepreneurBusinessInfo,
+      },
+      {
+        path: "/entrepreneur/onboarding/image",
+        Component: EntrepreneurImage,
+      },
+      {
+        path: "/entrepreneur/onboarding/confirm",
+        Component: EntrepreneurConfirm,
+      },
+      {
+        path: "/entrepreneur/onboarding/success",
+        Component: EntrepreneurSuccess,
+      },
+      {
+        path: "/entrepreneur/profile",
+        Component: EntrepreneurProfile,
+      },
+    ],
   },
 ]);
 

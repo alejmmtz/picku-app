@@ -11,6 +11,13 @@ import { getStoredAuth } from "../../../utils/storage";
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:1703";
 const DEFAULT_SHOP_IMAGE = "/resources/img-2-onboarding.svg";
 const MAX_IMAGE_PAYLOAD_LENGTH = 900000;
+const RETRYABLE_NETWORK_PATTERNS = [
+  "getaddrinfo",
+  "enotfound",
+  "econnreset",
+  "etimedout",
+  "network error",
+];
 
 const getSafeShopImage = (image?: string) => {
   if (!image) {
@@ -22,6 +29,24 @@ const getSafeShopImage = (image?: string) => {
   }
 
   return image;
+};
+
+const wait = (milliseconds: number) =>
+  new Promise((resolve) => {
+    window.setTimeout(resolve, milliseconds);
+  });
+
+const isRetryableRegistrationError = (error: unknown) => {
+  if (!axios.isAxiosError(error)) return false;
+
+  const status = error.response?.status;
+  const message = String(error.response?.data?.message ?? error.message).toLowerCase();
+
+  return (
+    !status ||
+    status >= 500 ||
+    RETRYABLE_NETWORK_PATTERNS.some((pattern) => message.includes(pattern))
+  );
 };
 
 const EntrepreneurConfirm = () => {
@@ -46,21 +71,37 @@ const EntrepreneurConfirm = () => {
     setErrorMessage("");
 
     try {
-      await axios.post(
-        `${API_URL}/picku/api/entrepreneurs/me`,
-        {
-          name: data.name,
-          contact_info: data.contact_info,
-          description: data.description,
-          category: data.category,
-          img: getSafeShopImage(data.img),
+      const payload = {
+        name: data.name,
+        contact_info: data.contact_info,
+        description: data.description,
+        category: data.category,
+        img: getSafeShopImage(data.img),
+      };
+      const requestConfig = {
+        headers: {
+          Authorization: `Bearer ${auth.session.access_token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${auth.session.access_token}`,
-          },
+      };
+
+      try {
+        await axios.post(
+          `${API_URL}/picku/api/entrepreneurs/me`,
+          payload,
+          requestConfig,
+        );
+      } catch (error) {
+        if (!isRetryableRegistrationError(error)) {
+          throw error;
         }
-      );
+
+        await wait(700);
+        await axios.post(
+          `${API_URL}/picku/api/entrepreneurs/me`,
+          payload,
+          requestConfig,
+        );
+      }
 
       clearOnboardingData();
       navigate("/entrepreneur/onboarding/success");

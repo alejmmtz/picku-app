@@ -47,12 +47,22 @@ const getAuthHeaders = () => {
     : undefined;
 };
 
+const wait = (milliseconds: number) =>
+  new Promise((resolve) => {
+    window.setTimeout(resolve, milliseconds);
+  });
+
+const isRetryableChatError = (error: unknown) =>
+  axios.isAxiosError(error) &&
+  (!error.response?.status || error.response.status >= 500);
+
 const Chatbot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [question, setQuestion] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const hasSubmittedRef = useRef(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -65,12 +75,16 @@ const Chatbot = () => {
 
         if (!isMounted) return;
 
-        setMessages(Array.isArray(data) ? data : []);
+        if (!hasSubmittedRef.current) {
+          setMessages(Array.isArray(data) ? data : []);
+        }
         setFeedbackMessage("");
       } catch (error) {
         if (!isMounted) return;
 
-        setMessages([]);
+        if (!hasSubmittedRef.current) {
+          setMessages([]);
+        }
 
         const message =
           axios.isAxiosError(error) &&
@@ -107,22 +121,54 @@ const Chatbot = () => {
       return;
     }
 
+    const auth = getStoredAuth();
+    const optimisticQuestion: ChatMessage = {
+      id: `pending-${Date.now()}`,
+      content: trimmedQuestion,
+      role: "user",
+      user_id: auth?.user.id ?? "me",
+      parent_id: null,
+      created_at: new Date().toISOString(),
+    };
+
+    hasSubmittedRef.current = true;
     setIsSending(true);
     setFeedbackMessage("");
+    setQuestion("");
+    setMessages((current) => [...current, optimisticQuestion]);
 
     try {
-      const { data } = await axiosConfig.post<SendMessageResponse>(
-        "/picku/api/chatbot",
-        {
-          question: trimmedQuestion,
-        },
-        {
-          headers: getAuthHeaders(),
-        },
-      );
+      const sendQuestion = () =>
+        axiosConfig.post<SendMessageResponse>(
+          "/picku/api/chatbot",
+          {
+            question: trimmedQuestion,
+          },
+          {
+            headers: getAuthHeaders(),
+          },
+        );
 
-      setMessages((current) => [...current, data.question, data.answer]);
-      setQuestion("");
+      let response;
+
+      try {
+        response = await sendQuestion();
+      } catch (error) {
+        if (!isRetryableChatError(error)) {
+          throw error;
+        }
+
+        await wait(600);
+        response = await sendQuestion();
+      }
+
+      const { data } = response;
+
+      setMessages((current) => [
+        ...current.filter((message) => message.id !== optimisticQuestion.id),
+        data.question,
+        data.answer,
+      ]);
     } catch (error) {
       const message =
         axios.isAxiosError(error) &&

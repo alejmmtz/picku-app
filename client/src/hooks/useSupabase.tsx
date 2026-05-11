@@ -1,6 +1,19 @@
 import { createClient } from "@supabase/supabase-js";
+import type { SupabaseClient } from "@supabase/supabase-js";
 
-export const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_KEY
-);
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const supabaseKey =
+  import.meta.env.VITE_SUPABASE_KEY ?? import.meta.env.VITE_SUPABASE_ANON_KEY;
+
+const missingSupabaseClient = new Proxy({} as SupabaseClient, {
+  get() {
+    throw new Error(
+      "Supabase is not configured. Add VITE_SUPABASE_URL and VITE_SUPABASE_KEY to client/.env.",
+    );
+  },
+});
+
+export const supabase =
+  supabaseUrl && supabaseKey
+    ? createClient(supabaseUrl, supabaseKey)
+    : missingSupabaseClient;
