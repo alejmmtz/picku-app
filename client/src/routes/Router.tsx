@@ -4,6 +4,8 @@ import ConsumerLogin from "../pages/consumer-auth/ConsumerLogin";
 import ConsumerSignup from "../pages/consumer-auth/ConsumerSignup";
 import MyOrders from "../pages/consumer/orders/MyOrders";
 import OrderDetails from "../pages/consumer/orders/OrderDetails";
+import EntrepreneurLogin from "../pages/entrepreneur-auth/EntrepreneurLogin";
+import EntrepreneurSignup from "../pages/entrepreneur-auth/EntrepreneurSignup";
 
 import EntrepreneurProducts from "../pages/entrepreneur/EntrepreneurProducts";
 import EditProduct from "../pages/entrepreneur/EditProduct";
@@ -37,9 +39,16 @@ const router = createBrowserRouter([
     Component: OrderDetails,
   },
   {
-    //temporal pq no existe la pantalla
     path: "/entrepreneur/login",
-    element: <div>Entrepreneur Login</div>,
+    Component: EntrepreneurLogin,
+  },
+  {
+    path: "/entrepreneur/signup",
+    Component: EntrepreneurSignup,
+  },
+  {
+    path: "/entrepreneur/home",
+    element: <div className="flex min-h-screen items-center justify-center bg-background font-sofia text-maroon">Entrepreneur Home</div>,
   },
   {
     path: "/entrepreneur/products",
