@@ -116,10 +116,7 @@ const Checkout = () => {
 
         <LocationMap />
 
-        <div className="mb-6">
-          <p className="text-[13px] text-[#85827F]">
-            Static campus map preview for this first delivery.
-          </p>
+        <div className="mb-4">
 
           {errorMessage ? (
             <p className="mt-2 text-[13px] text-[#b4202f]">

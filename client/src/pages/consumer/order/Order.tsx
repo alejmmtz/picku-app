@@ -9,6 +9,7 @@ import {
   getOrders,
 } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
+import Loader from "../../../components/common/Loader";
 
 const isActiveOrder = (order: OrderResponse) =>
   order.status === "requested" ||
@@ -80,19 +81,19 @@ export default function OrderFlow() {
   }, [api, orderId]);
 
   if (isLoading) {
-    return (
-      <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
-        <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
-          <p className="text-sm text-black/60">Loading order...</p>
-        </section>
-      </main>
-    );
-  }
+  return (
+    <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
+      <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
+        <Loader message="Loading order..." />
+      </section>
+    </main>
+  );
+}
 
   if (!order) {
     return (
       <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
-        <section className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden px-8 text-center sm:mx-auto sm:w-100">
+        <section className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden px-13 text-center sm:mx-auto sm:w-100">
           <h1 className="text-2xl font-semibold">No active order</h1>
           <p className="mt-3 text-sm text-black/60">
             {feedbackMessage || "Your current order will appear here."}

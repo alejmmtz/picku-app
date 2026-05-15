@@ -4,6 +4,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_URL } from "../../../config/axiosConfig";
 
+import UserIcon from "../../../assets/user.svg?react";
+import PhoneIcon from "../../../assets/phone.svg?react";
+import MailIcon from "../../../assets/mail.svg?react";
+import LockIcon from "../../../assets/lock.svg?react";
+import EyeIcon from "../../../assets/eye.svg?react";
+import EyeOffIcon from "../../../assets/eye-off.svg?react";
+
 const ConsumerSignup = () => {
   const navigate = useNavigate();
 
@@ -49,38 +56,34 @@ const ConsumerSignup = () => {
 
   return (
     <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia">
-      <section className="flex min-h-screen w-full max-w-[430px] flex-col justify-center px-6 pt-5 pb-7">
-        <div className="relative z-[2] mt-[38px] mb-[-104px] flex min-h-[80px] items-center justify-end">
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-37">
+        <div className="relative z-[2] mt-[38px] mb-[-120px] flex min-h-[80px] items-center justify-end">
           <img
-            className="h-auto w-[140px]"
+            className="h-auto w-[130px]"
             src="/resources/Image-SignUp-Consumer.svg"
             alt="Ilustración de registro"
           />
         </div>
 
         <header>
-          <h1 className="mb-[18px] !font-sofia text-[24px] font-semibold leading-[0.3] text-black">
+          <h1 className="mb-[16px] !font-sofia text-[25px] font-semibold leading-[0.3] text-black">
             Ready to pick?
           </h1>
-          <p className="mt-2 text-[15px] text-[rgba(27,27,27,0.82)]">
+          <p className="text-[16px] font-light text-black">
             Join PickU as Consumer
           </p>
         </header>
 
         <form
-          className="mt-6 mb-[10px] flex flex-col gap-[14px]"
+          className="mt-10 mb-[10px] flex flex-col gap-[16px]"
           onSubmit={handleSubmit}
         >
           <label className="flex flex-col gap-2">
-            <span className="text-[15px]">Username</span>
+            <span className="text-[15px] font-light">Username</span>
             <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <img
-                className="h-[22px] w-[22px] shrink-0 opacity-35"
-                src="/icons/user.svg"
-                alt=""
-              />
+              <UserIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-[14px] font-light text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="text"
                 placeholder="Enter username"
                 value={name}
@@ -92,15 +95,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px]">Phone</span>
+            <span className="text-[15px] font-light">Phone</span>
             <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <img
-                className="h-[22px] w-[22px] shrink-0 opacity-35"
-                src="/icons/phone.svg"
-                alt=""
-              />
+              <PhoneIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-[14px] font-light text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="tel"
                 placeholder="Enter number"
                 value={phone}
@@ -112,15 +111,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px]">Email</span>
+            <span className="text-[15px] font-light">Email</span>
             <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <img
-                className="h-[22px] w-[22px] shrink-0 opacity-35"
-                src="/icons/mail.svg"
-                alt=""
-              />
+              <MailIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent font-light py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type="email"
                 placeholder="Enter email"
                 value={email}
@@ -132,15 +127,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px]">Password</span>
+            <span className="text-[15px] font-light">Password</span>
             <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <img
-                className="h-[22px] w-[22px] shrink-0 opacity-35"
-                src="/icons/lock.svg"
-                alt=""
-              />
+              <LockIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-[14px] text-black font-light outline-none placeholder:text-[rgba(27,27,27,0.38)]"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
@@ -157,11 +148,11 @@ const ConsumerSignup = () => {
                   showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                 }
               >
-                <img
-                  className="h-[22px] w-[22px] shrink-0 opacity-35"
-                  src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
-                  alt=""
-                />
+                {showPassword ? (
+              <EyeIcon className="h-[22px] w-[22px] shrink-0" />
+            ) : (
+              <EyeOffIcon className="h-[22px] w-[22px] shrink-0" />
+            )}
               </button>
             </span>
           </label>
@@ -173,7 +164,7 @@ const ConsumerSignup = () => {
           </p>
 
           <button
-            className="mt-7 min-h-[52px] rounded-[12px] bg-orange text-[16px] text-white transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            className="min-h-[52px] rounded-[12px] bg-orange text-[16px] text-white transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -181,10 +172,10 @@ const ConsumerSignup = () => {
           </button>
         </form>
 
-        <p className="mt-[18px] text-center text-[16px]">
+        <p className="mt-[18px] text-center text-[16px] font-light">
           Already have an account?{" "}
           <button
-            className="bg-transparent p-0 font-semibold text-orange"
+            className="bg-transparent p-0 font-medium text-orange"
             type="button"
             onClick={() => navigate("/consumer/login")}
           >

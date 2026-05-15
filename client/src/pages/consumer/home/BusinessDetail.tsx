@@ -8,9 +8,10 @@ import { getProductsByEntrepreneurId } from "../../../services/product.service";
 
 import type { Entrepreneur } from "../../../types/entrepreneur.types";
 import type { Product } from "../../../types/product.types";
+import ArrowIcon from "../../../assets/arrow.svg?react";
 
 import CheckIcon from "../../../assets/check icon.svg?react";
-import ArrowIcon from "../../../assets/arrow.svg?react";
+
 
 const BusinessDetail = () => {
   const axios = useAxios();

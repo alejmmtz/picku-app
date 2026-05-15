@@ -5,6 +5,9 @@ import axiosConfig from "../../../config/axiosConfig";
 import { getStoredAuth } from "../../../utils/storage";
 import BottomNav from "../../../components/common/BottomNav";
 
+import LogoConsumer from "../../../assets/logo consumer.png";
+import SendIcon from "../../../assets/send.svg?react";
+
 type ChatMessage = {
   id: string;
   content: string;
@@ -185,10 +188,12 @@ const Chatbot = () => {
 
   return (
     <main className="flex min-h-screen justify-center bg-background font-sofia">
-      <section className="relative min-h-screen w-full max-w-[430px] px-[18px] pt-7 pb-[220px]">
-        <img className="mb-[38px] w-16" src="/logos/picku-logo.svg" alt="PickU" />
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+         <header className="flex items-center justify-between mb-8 mt-1.5">
+          <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
+        </header>
 
-        <div className="flex flex-col gap-[14px]">
+        <div className="flex flex-col gap-[18px]">
           {displayMessages.map((message) => {
             const isUser = message.role === "user";
 
@@ -201,7 +206,7 @@ const Chatbot = () => {
                   className={`max-w-[296px] rounded-[18px] px-4 py-3 text-[16px] leading-[1.05] shadow-none ${
                     isUser
                       ? "rounded-br-[2px] bg-orange text-white"
-                      : "rounded-bl-[2px] border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] text-black"
+                      : "rounded-bl-[2px] border border-[#DCD6D3] text-black"
                   }`}
                 >
                   {message.content}
@@ -213,7 +218,7 @@ const Chatbot = () => {
           {isSending ? (
             <div className="flex justify-start">
               <div className="max-w-[296px] rounded-[18px] rounded-bl-[2px] border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] px-4 py-3 text-[15px] text-[rgba(27,27,27,0.68)]">
-                Muffiy is thinking...
+                Muffy is thinking...
               </div>
             </div>
           ) : null}
@@ -227,7 +232,7 @@ const Chatbot = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="fixed bottom-[106px] left-1/2 z-40 w-full max-w-[430px] -translate-x-1/2 bg-[rgba(255,255,255,0.96)] px-[18px] py-6">
+        <div className="fixed bottom-[85px] left-1/2 z-200 w-full max-w-[430px] border-y border-[#EBEBEB] -translate-x-1/2 bg-white px-[18px] py-6">
           <form
             className="flex min-h-[56px] items-center gap-3 rounded-[12px] border border-[#e3d9d1] bg-white px-4"
             onSubmit={handleSubmit}
@@ -235,7 +240,7 @@ const Chatbot = () => {
             <input
               className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-[rgba(27,27,27,0.28)]"
               type="text"
-              placeholder="Ask muffiy..."
+              placeholder="Ask muffy..."
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
             />
@@ -246,7 +251,7 @@ const Chatbot = () => {
               disabled={isSending || !question.trim()}
               aria-label="Send message"
             >
-              <img className="h-6 w-6" src="/icons/send.svg" alt="" />
+              <SendIcon className="h-6 w-6" />
             </button>
           </form>
         </div>

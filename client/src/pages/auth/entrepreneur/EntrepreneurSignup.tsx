@@ -6,12 +6,17 @@ import { API_URL } from "../../../config/axiosConfig";
 import type { AuthData } from "../../../types/authData";
 import { setStoredAuth } from "../../../utils/storage";
 
+import UserIcon from "../../../assets/user.svg?react";
+import MailIcon from "../../../assets/mail.svg?react";
+import LockIcon from "../../../assets/lock.svg?react";
+import EyeIcon from "../../../assets/eye.svg?react";
+import EyeOffIcon from "../../../assets/eye-off.svg?react";
+
 const EntrepreneurSignup = () => {
   const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -26,7 +31,6 @@ const EntrepreneurSignup = () => {
       await axios.post(`${API_URL}/picku/api/auth/register`, {
         name,
         email,
-        phone,
         password,
         role: "entrepreneur",
       });
@@ -63,35 +67,31 @@ const EntrepreneurSignup = () => {
 
   return (
     <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia text-black">
-      <section className="flex h-screen w-full max-w-[430px] flex-col justify-center overflow-hidden px-6 py-4">
-        <div className="relative z-[2] mt-[30px] mb-[-104px] flex min-h-[80px] items-center justify-center">
+       <section className="w-full max-w-[430px] min-h-screen px-13 pt-30">
+        <div className="relative z-[2] mb-[-104px] flex min-h-[80px] items-center justify-center">
           <img
-            className="h-auto w-[205px]"
+            className="h-auto w-[200px] mr-7"
             src="/resources/sign-up-img-signup.svg"
             alt=""
           />
         </div>
 
         <header className="mb-[38px] mt-[-20px]">
-          <h1 className="m-0 !font-sofia text-[24px] font-bold leading-[1.1]">
+          <h1 className="m-0 !font-sofia text-[25px] font-semibold leading-[1.1]">
             Start your own pick
           </h1>
-          <p className="mt-[7px] text-[15px] leading-[1.2]">
+          <p className="mt-[6px] font-light text-[16px] leading-[1.2]">
             Join PickU as Entrepreneur
           </p>
         </header>
 
-        <form className="flex flex-col gap-[17px]" onSubmit={handleSubmit}>
-          <label className="flex flex-col gap-[8px]">
-            <span className="text-[14px] leading-[1.2]">Username</span>
-            <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img
-                className="h-[22px] w-[22px] opacity-35"
-                src="/icons/user.svg"
-                alt=""
-              />
+        <form className="mt-10 mb-[10px] flex flex-col gap-[16px]" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-[7px]">
+            <span className="text-[15px] font-light leading-[1.2]">Username</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+             <UserIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type="text"
                 placeholder="Enter username"
                 value={name}
@@ -103,15 +103,11 @@ const EntrepreneurSignup = () => {
           </label>
 
           <label className="flex flex-col gap-[8px]">
-            <span className="text-[14px] leading-[1.2]">Email</span>
-            <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img
-                className="h-[22px] w-[22px] opacity-35"
-                src="/icons/mail.svg"
-                alt=""
-              />
+            <span className="text-[15px] font-light leading-[1.2]">Email</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+              <MailIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-[14px]  outline-none placeholder:text-[#9d9d9d]"
                 type="email"
                 placeholder="Enter email"
                 value={email}
@@ -122,36 +118,13 @@ const EntrepreneurSignup = () => {
             </span>
           </label>
 
-          <label className="flex flex-col gap-[8px]">
-            <span className="text-[14px] leading-[1.2]">Phone</span>
-            <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img
-                className="h-[22px] w-[22px] opacity-35"
-                src="/icons/phone.svg"
-                alt=""
-              />
-              <input
-                className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
-                type="tel"
-                placeholder="Enter number"
-                value={phone}
-                onChange={(event) => setPhone(event.target.value)}
-                autoComplete="tel"
-                required
-              />
-            </span>
-          </label>
 
           <label className="flex flex-col gap-[8px]">
-            <span className="text-[14px] leading-[1.2]">Password</span>
-            <span className="flex min-h-[50px] items-center gap-[12px] rounded-[10px] border border-maroon px-[18px]">
-              <img
-                className="h-[22px] w-[22px] opacity-35"
-                src="/icons/lock.svg"
-                alt=""
-              />
+            <span className="text-[15px] font-light leading-[1.2]">Password</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+              <LockIcon className="h-[22px] w-[22px] shrink-0" />
               <input
-                className="w-full bg-transparent text-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
@@ -160,18 +133,18 @@ const EntrepreneurSignup = () => {
                 required
               />
               <button
-                className="bg-transparent p-0"
+                className="inline-flex items-center bg-transparent p-0"
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={
-                  showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                 }
               >
-                <img
-                  className="h-[24px] w-[24px] opacity-35"
-                  src={showPassword ? "/icons/eye.svg" : "/icons/eye-off.svg"}
-                  alt=""
-                />
+                {showPassword ? (
+              <EyeIcon className="h-[22px] w-[22px] shrink-0" />
+            ) : (
+              <EyeOffIcon className="h-[22px] w-[22px] shrink-0" />
+            )}
               </button>
             </span>
           </label>
@@ -183,7 +156,7 @@ const EntrepreneurSignup = () => {
           </p>
 
           <button
-            className="mt-[10px] min-h-[52px] rounded-[8px] bg-maroon text-[15px] font-semibold text-white transition-[transform,opacity] active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            className="min-h-[52px] rounded-[12px] bg-maroon text-[16px] text-white transition-[transform,opacity] active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -191,10 +164,10 @@ const EntrepreneurSignup = () => {
           </button>
         </form>
 
-        <p className="mt-[24px] mb-[14px] text-center text-[15px]">
+        <p className="mt-[18px] font-light text-center text-[16px]">
           Already have an account?{" "}
           <button
-            className="bg-transparent p-0 font-semibold text-maroon"
+            className="bg-transparent p-0 font-medium text-maroon"
             type="button"
             onClick={() => navigate("/entrepreneur/login")}
           >

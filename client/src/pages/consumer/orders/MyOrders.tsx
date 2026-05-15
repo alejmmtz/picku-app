@@ -6,6 +6,8 @@ import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
 
+import LogoConsumer from "../../../assets/logo consumer.png";
+
 type OrderTab = "ongoing" | "delivered";
 
 const statusLabelMap: Record<OrderStatus, string> = {
@@ -18,19 +20,19 @@ const statusLabelMap: Record<OrderStatus, string> = {
 
 const statusClassMap: Record<OrderStatus, string> = {
   requested:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3 text-[14px] text-[#ecb100]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3 text-[14px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
   declined:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 text-[14px] text-[#b4202f]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3 text-[14px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
   delivered:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#78aa38] bg-[#eef8df] px-3 text-[14px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#78aa38] bg-[#eef8df] px-3 text-[13px] text-[#78aa38]",
 };
 
 const emptyOrdersMessage =
-  "You currently have no orders. If you notice anything unusual, we're already working on fixing it for you.";
+  "No orders yet. We're working on it!";
 
 const formatPrice = (price: number) =>
   `$${price.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;
@@ -44,7 +46,7 @@ const getOrderTitle = (order: ConsumerOrder) =>
   order.items[0]?.name || order.entrepreneur.name || "Order";
 
 const getOrderSubtitle = (order: ConsumerOrder) =>
-  order.delivery_notes || order.entrepreneur.category || "PickU order";
+  order.delivery_notes || order.entrepreneur.name || "PickU order";
 
 const getDistanceLabel = (order: ConsumerOrder) => {
   return order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup";
@@ -95,18 +97,21 @@ const MyOrders = () => {
 
   return (
     <main className="flex min-h-screen justify-center font-sofia">
-      <section className="relative min-h-screen w-full max-w-[430px] px-[18px] pt-7 pb-[110px] font-sofia">
-        <img className="mb-[38px] w-16" src="/logos/picku-logo.svg" alt="PickU" />
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+         <header className="flex items-center justify-between mb-10 mt-1.5">
+          <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
+        </header>
 
-        <h1 className="mb-[18px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
+        <h1 className="mb-[20px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
           Your orders
         </h1>
 
-        <div className="mb-6 flex gap-3">
+      {/*delivered or ongoing*/}
+        <div className="mb-8 flex gap-4">
           <button
             className={`rounded-full px-4 py-2 text-[15px] ${
               activeTab === "ongoing"
-                ? "bg-[#f6ede7] font-semibold text-orange"
+                ? "bg-orange/11 font-medium text-orange"
                 : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
             }`}
             type="button"
@@ -118,7 +123,7 @@ const MyOrders = () => {
           <button
             className={`rounded-full px-4 py-2 text-[15px] ${
               activeTab === "delivered"
-                ? "bg-[#f6ede7] font-semibold text-orange"
+                ? "bg-orange/11 font-medium text-orange"
                 : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
             }`}
             type="button"
@@ -129,17 +134,26 @@ const MyOrders = () => {
         </div>
 
         {feedbackMessage ? (
-          <p className="mb-[14px] text-[13px] text-[#b4202f]">{feedbackMessage}</p>
+          <div className="mt-65 flex flex-col items-center justify-center text-center">
+            <p className="text-[18px] font-medium text-black">
+              No orders yet
+            </p>
+
+            <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-[#7A716D]">
+              Your future orders will appear here.
+            </p>
+          </div>
         ) : null}
 
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-5">
           {filteredOrders.map((order) => {
             const item = order.items[0];
 
+            {/*order card*/}
             return (
               <article
                 key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] p-3"
+                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#DCD6D3] p-3"
                 onClick={() => {
                   if (
                     order.status === "requested" ||
@@ -164,8 +178,8 @@ const MyOrders = () => {
                 <div className="flex min-w-0 flex-col">
                   <div className="flex items-start justify-between gap-[10px]">
                     <div>
-                      <h2 className="text-[16px] font-semibold">{getOrderTitle(order)}</h2>
-                      <p className="mt-1 mb-1.5 text-[12px] text-[rgba(27,27,27,0.72)]">
+                      <h2 className="text-[16px] font-medium">{getOrderTitle(order)}</h2>
+                      <p className="mt-1 text-[12px] text-black font-light">
                         {getOrderSubtitle(order)}
                       </p>
                     </div>
@@ -175,7 +189,7 @@ const MyOrders = () => {
                     </span>
                   </div>
 
-                  <span className="inline-flex items-center gap-1 text-[12px] text-[rgba(27,27,27,0.8)]">
+                  <span className="inline-flex mb-2 items-center gap-1 text-[12px] text-black">
                     <img className="h-[14px] w-[14px]" src="/icons/map-pin.svg" alt="" />
                     {getDistanceLabel(order)}
                   </span>
@@ -195,7 +209,8 @@ const MyOrders = () => {
           })}
         </div>
       </section>
-
+      
+      {/*navbar*/}
       <BottomNav variant="consumer" />
     </main>
   );

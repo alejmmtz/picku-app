@@ -10,16 +10,16 @@ type OrderInfoRowsProps = {
 
 export default function OrderInfoRows({ rows }: OrderInfoRowsProps) {
   return (
-    <div className="mb-8">
+    <div className="mb-10">
       {rows.map(({ label, value, accent }) => (
         <div
           key={label}
           className="flex items-center justify-between border-b border-black/25 py-2"
         >
-          <span className=" text-black">{label}</span>
+          <span className=" text-black font-light">{label}</span>
           <span
             className={
-              accent ? "font-medium text-orange" : "font-medium text-black"
+              accent ? "font-medium text-orange" : "font-light text-black"
             }
           >
             {value}
