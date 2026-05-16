@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import OnboardingShell from "./OnboardingShell";
 import { getOnboardingData, setOnboardingData } from "./onboardingStorage";
 
+import UploadImageIcon from "../../../assets/upload image.svg?react";
+
 const DEFAULT_SHOP_IMAGE = "/resources/img-2-onboarding.svg";
 const MAX_IMAGE_SIZE_BYTES = 650 * 1024;
 
@@ -19,7 +21,7 @@ const EntrepreneurImage = () => {
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setImage("");
       setFeedbackMessage(
-        "La imagen pesa demasiado para guardarla por ahora. Usaremos la ilustracion default."
+        "Image is too large to upload right now. Using default illustration instead."
       );
       event.target.value = "";
       return;
@@ -43,23 +45,23 @@ const EntrepreneurImage = () => {
   return (
     <OnboardingShell progress={75} showBack>
       <header>
-        <h1 className="m-0 !font-sofia text-[24px] font-bold leading-[1.12]">
+        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
           Make it yours!
         </h1>
-        <p className="mt-[8px] text-[15px] leading-[1.2]">
+        <p className="mt-[8px] text-[15px] font-light leading-[1.2]">
           Add a logo or image for your shop.
         </p>
       </header>
 
       <button
-        className="mx-auto mt-[104px] flex h-[310px] w-[230px] items-center justify-center overflow-hidden rounded-[10px] border border-dashed border-[#d7aaa9] bg-[#f7eeee]"
+        className="mx-auto mt-[145px] flex h-[320px] w-[250px] items-center justify-center overflow-hidden rounded-[13px] border border-dashed border-maroon/36 bg-maroon/5"
         type="button"
         onClick={() => inputRef.current?.click()}
       >
         {image ? (
           <img className="h-full w-full object-cover" src={image} alt="Shop preview" />
         ) : (
-          <img className="h-[46px] w-[46px]" src="/icons/image.svg" alt="" />
+          <UploadImageIcon className="h-[60px] w-[60px]" />
         )}
       </button>
 
@@ -78,7 +80,7 @@ const EntrepreneurImage = () => {
       />
 
       <button
-        className="mt-auto min-h-[52px] rounded-[8px] bg-maroon text-[15px] font-semibold text-white"
+        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white"
         type="button"
         onClick={continueToNext}
       >

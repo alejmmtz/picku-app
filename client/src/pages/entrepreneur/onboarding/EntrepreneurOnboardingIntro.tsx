@@ -6,21 +6,21 @@ const EntrepreneurOnboardingIntro = () => {
 
   return (
     <OnboardingShell>
-      <div className="mt-[54px]">
-        <h1 className="m-0 !font-sofia text-[26px] font-bold leading-[1.1]">
+      <div className="mt-[15px]">
+        <h1 className="m-0 !font-sofia text-[30px] font-bold leading-[1.1]">
           Ready to start selling?
         </h1>
-        <p className="mt-[17px] text-[16px] leading-[1.1]">
+        <p className="mt-[17px] font-light text-[16px] leading-[1.1]">
           Create your shop, show what you offer, and let others discover your picks!
         </p>
       </div>
 
-      <div className="mt-[82px] flex justify-center">
-        <img className="w-[240px]" src="/resources/img-1-onboarding.svg" alt="" />
+      <div className="mt-[90px] flex justify-center">
+        <img className="w-[290px]" src="/resources/img-1-onboarding.svg" alt="" />
       </div>
 
       <button
-        className="mt-auto min-h-[52px] rounded-[8px] bg-maroon text-[15px] font-semibold text-white"
+        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white"
         type="button"
         onClick={() => navigate("/entrepreneur/onboarding/category")}
       >

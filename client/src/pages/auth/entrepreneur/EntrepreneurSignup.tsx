@@ -8,6 +8,7 @@ import { setStoredAuth } from "../../../utils/storage";
 
 import UserIcon from "../../../assets/user.svg?react";
 import MailIcon from "../../../assets/mail.svg?react";
+import PhoneIcon from "../../../assets/phone.svg?react";
 import LockIcon from "../../../assets/lock.svg?react";
 import EyeIcon from "../../../assets/eye.svg?react";
 import EyeOffIcon from "../../../assets/eye-off.svg?react";
@@ -17,6 +18,7 @@ const EntrepreneurSignup = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -29,11 +31,12 @@ const EntrepreneurSignup = () => {
 
     try {
       await axios.post(`${API_URL}/picku/api/auth/register`, {
-        name,
-        email,
-        password,
-        role: "entrepreneur",
-      });
+      name,
+      phone,
+      email,
+      password,
+      role: "entrepreneur",
+    });
 
       try {
         const { data } = await axios.post<AuthData>(`${API_URL}/picku/api/auth/login`, {
@@ -67,10 +70,10 @@ const EntrepreneurSignup = () => {
 
   return (
     <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia text-black">
-       <section className="w-full max-w-[430px] min-h-screen px-13 pt-30">
+       <section className="w-full max-w-[430px] min-h-screen px-13 pt-18">
         <div className="relative z-[2] mb-[-104px] flex min-h-[80px] items-center justify-center">
           <img
-            className="h-auto w-[200px] mr-7"
+            className="h-auto w-[190px] mr-7"
             src="/resources/sign-up-img-signup.svg"
             alt=""
           />
@@ -117,6 +120,24 @@ const EntrepreneurSignup = () => {
               />
             </span>
           </label>
+
+          <label className="flex flex-col gap-[8px]">
+          <span className="text-[15px] font-light leading-[1.2]">Phone</span>
+
+          <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+            <PhoneIcon className="h-[22px] w-[22px] shrink-0" />
+
+            <input
+              className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
+              type="tel"
+              placeholder="Enter phone"
+              value={phone}
+              onChange={(event) => setPhone(event.target.value)}
+              autoComplete="tel"
+              required
+            />
+          </span>
+        </label>
 
 
           <label className="flex flex-col gap-[8px]">

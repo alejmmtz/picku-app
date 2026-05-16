@@ -7,8 +7,9 @@ import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
+import MapPinIcon from "../../../assets/map-pin.svg?react";
 
-type OrderTab = "ongoing" | "delivered";
+type OrderTab = "ongoing" | "delivered" | "declined";
 
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
@@ -86,14 +87,21 @@ const MyOrders = () => {
   }, [api]);
 
   const filteredOrders = useMemo(() => {
-    if (activeTab === "delivered") {
-      return orders.filter((order) => order.status === "delivered");
-    }
+  if (activeTab === "delivered") {
+    return orders.filter((order) => order.status === "delivered");
+  }
 
-    return orders.filter(
-      (order) => order.status !== "delivered" && order.status !== "declined",
-    );
-  }, [activeTab, orders]);
+  if (activeTab === "declined") {
+    return orders.filter((order) => order.status === "declined");
+  }
+
+  return orders.filter(
+    (order) =>
+      order.status === "requested" ||
+      order.status === "accepted" ||
+      order.status === "delivering",
+  );
+}, [activeTab, orders]);
 
   return (
     <main className="flex min-h-screen justify-center font-sofia">
@@ -107,7 +115,8 @@ const MyOrders = () => {
         </h1>
 
       {/*delivered or ongoing*/}
-        <div className="mb-8 flex gap-4">
+
+        <div className="mb-8 flex gap-3 overflow-x-auto">
           <button
             className={`rounded-full px-4 py-2 text-[15px] ${
               activeTab === "ongoing"
@@ -129,27 +138,42 @@ const MyOrders = () => {
             type="button"
             onClick={() => setActiveTab("delivered")}
           >
-            Delivered orders
+            Delivered
           </button>
+
+          <button
+          className={`rounded-full px-4 py-2 text-[15px] ${
+            activeTab === "declined"
+              ? "bg-orange/11 font-medium text-orange"
+              : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
+          }`}
+          type="button"
+          onClick={() => setActiveTab("declined")}
+        >
+          Cancelled
+        </button>
+        
         </div>
 
-        {feedbackMessage ? (
-          <div className="mt-65 flex flex-col items-center justify-center text-center">
-            <p className="text-[18px] font-medium text-black">
-              No orders yet
-            </p>
 
-            <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-[#7A716D]">
-              Your future orders will appear here.
-            </p>
-          </div>
-        ) : null}
+        {!feedbackMessage && filteredOrders.length === 0 ? (
+        <div className="mt-65 flex flex-col items-center justify-center text-center">
+          <p className="text-[18px] font-medium text-black">
+            No orders here yet
+          </p>
+
+          <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-[#7A716D]">
+            Your orders will appear here.
+          </p>
+        </div>
+      ) : null}
 
         <div className="flex flex-col gap-5">
           {filteredOrders.map((order) => {
             const item = order.items[0];
 
             {/*order card*/}
+
             return (
               <article
                 key={order.id}
@@ -158,7 +182,7 @@ const MyOrders = () => {
                   if (
                     order.status === "requested" ||
                     order.status === "accepted" ||
-                    order.status === "delivering"
+                    order.status === "delivering" 
                   ) {
                     navigate(`/consumer/order?orderId=${order.id}`);
                     return;
@@ -179,7 +203,7 @@ const MyOrders = () => {
                   <div className="flex items-start justify-between gap-[10px]">
                     <div>
                       <h2 className="text-[16px] font-medium">{getOrderTitle(order)}</h2>
-                      <p className="mt-1 text-[12px] text-black font-light">
+                      <p className="mt-1 text-[13px] text-black font-light">
                         {getOrderSubtitle(order)}
                       </p>
                     </div>
@@ -189,8 +213,8 @@ const MyOrders = () => {
                     </span>
                   </div>
 
-                  <span className="inline-flex mb-2 items-center gap-1 text-[12px] text-black">
-                    <img className="h-[14px] w-[14px]" src="/icons/map-pin.svg" alt="" />
+                  <span className="inline-flex mb-2 items-center gap-1 text-[13px] font-light text-black">
+                    <MapPinIcon className="h-[17px] w-[17px] shrink-0" />
                     {getDistanceLabel(order)}
                   </span>
 
@@ -211,6 +235,7 @@ const MyOrders = () => {
       </section>
       
       {/*navbar*/}
+      
       <BottomNav variant="consumer" />
     </main>
   );

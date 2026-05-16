@@ -16,10 +16,10 @@ export default function OrderInfoRows({ rows }: OrderInfoRowsProps) {
           key={label}
           className="flex items-center justify-between border-b border-black/25 py-2"
         >
-          <span className=" text-black">{label}</span>
+          <span className=" text-black font-light">{label}</span>
           <span
             className={
-              accent ? " font-medium text-orange" : " font-medium text-black/80"
+              accent ? " font-medium text-orange" : " font-light text-black"
             }
           >
             {value}

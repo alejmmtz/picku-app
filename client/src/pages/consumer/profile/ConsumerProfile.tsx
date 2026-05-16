@@ -99,7 +99,7 @@ const ConsumerProfile = () => {
           </div>
 
           <button
-            className="flex min-h-[50px] w-full items-center justify-center gap-[18px] rounded-[10px] bg-orange px-4 text-[15px] font-medium text-white"
+            className="flex min-h-[50px] w-full items-center justify-center gap-[18px] rounded-[10px] bg-orange px-4 text-[15px] font-regular text-white"
             type="button"
             onClick={() => navigate("/entrepreneur/login")}
           >

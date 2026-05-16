@@ -32,7 +32,7 @@ export default function VerifyPickupCodeCard({
   const isTerminal = status === "delivered" || status === "declined";
 
   return (
-    <div className="rounded-xl border border-black/25 bg-background p-4">
+    <div className="rounded-xl border border-black/25 bg-background p-5">
       <div className=" flex items-center gap-2">
         <AppIcon name="smartphone" className="h-5 w-5 text-orange" />
         <p className="text-lg text-black">Order Actions</p>
@@ -83,7 +83,7 @@ export default function VerifyPickupCodeCard({
             type="button"
             disabled={isSubmitting}
             onClick={onStartDelivery}
-            className="w-full rounded-xl bg-maroon px-4 py-4 text-base font-semibold text-background transition-transform active:scale-[0.99] disabled:opacity-60"
+            className="w-full rounded-xl bg-maroon px-4 py-4 text-base font-light text-background transition-transform active:scale-[0.99] disabled:opacity-60"
           >
             Start delivery
           </button>
@@ -92,7 +92,7 @@ export default function VerifyPickupCodeCard({
 
       {isDelivering ? (
         <>
-          <p className="mb-4 font-light text-black">
+          <p className="mb-4 mt-2 font-light text-black">
             Ask the customer for the pickup code to complete the order.
           </p>
 
@@ -101,14 +101,14 @@ export default function VerifyPickupCodeCard({
             value={pickupCode}
             onChange={(event) => onPickupCodeChange(event.target.value)}
             placeholder="Enter code (e.g, E456)"
-            className="mb-4 h-12 w-full rounded-xl border border-maroon px-4 text-sm text-black outline-none placeholder:text-black/25"
+            className="mb-4 h-12 w-full rounded-xl border border-maroon px-4 font-light  text-black outline-none placeholder:text-[#B2B2B2]"
           />
 
           <button
             type="button"
             disabled={isSubmitting}
             onClick={onComplete}
-            className="w-full rounded-xl bg-maroon px-4 py-4 text-base font-semibold text-background transition-transform active:scale-[0.99] disabled:opacity-60"
+            className="w-full rounded-xl bg-maroon px-4 py-4 text-base font-light text-background transition-transform active:scale-[0.99] disabled:opacity-60"
           >
             Verify & Complete Order
           </button>

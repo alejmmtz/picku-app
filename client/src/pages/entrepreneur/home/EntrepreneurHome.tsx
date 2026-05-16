@@ -7,6 +7,13 @@ import type { OrderResponse } from "../../../types/order.types";
 import { getStoredAuth } from "../../../utils/storage";
 import BottomNav from "../../../components/common/BottomNav";
 
+import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
+import CheckIcon from "../../../assets/check icon.svg?react";
+import CheckCircleIcon from "../../../assets/check_circle.svg?react";
+import ClipboardIcon from "../../../assets/clipboard.svg?react";
+import MapPinIcon from "../../../assets/map-pin.svg?react";
+import Loader from "../../../components/common/LoaderEntrepreneur";
+
 type Entrepreneur = {
   id: string;
   name: string;
@@ -52,10 +59,10 @@ const mapOrder = (order: OrderResponse): DisplayOrder => {
 };
 
 const statusClasses: Record<DisplayOrder["status"], string> = {
-  Pending: "border-[#ffc64a] text-[#ffc64a]",
-  Accepted: "border-[#7bad55] text-[#5c9c31]",
-  Delivered: "border-[#7bad55] text-[#5c9c31]",
-  Declined: "border-[#b64c4c] text-[#b64c4c]",
+  Pending: "border-[#ffc64a] bg-[#FFC64A]/8 text-[#ffc64a]",
+  Accepted: "border-[#5ba7ff] bg-[#edf5ff] text-[#3478c9]",
+  Delivered: "border-[#7bad55] bg-[#93E47A]/10 text-[#5c9c31]",
+  Declined: "border-[#b64c4c] bg-[#86081F]/8 text-[#b64c4c]",
 };
 
 const EntrepreneurHome = () => {
@@ -125,11 +132,11 @@ const EntrepreneurHome = () => {
 
   return (
     <main className="flex min-h-screen justify-center bg-background font-sofia text-black">
-      <section className="min-h-screen w-full max-w-[430px] px-[30px] pt-[72px] pb-[144px]">
-        <header className="flex items-center justify-between">
-          <img className="w-[72px]" src="/logos/picku-logo.svg" alt="PickU" />
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
+        <header className="flex items-center justify-between mb-7">
+            <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] " />
           <button
-            className={`flex min-h-[45px] min-w-[110px] items-center justify-center rounded-[8px] px-[22px] text-[24px] font-semibold text-white transition-opacity disabled:opacity-70 ${
+            className={`flex min-h-[40px] min-w-[64px] items-center justify-center rounded-[8px]  px-[22px] text-[15px] font-medium text-white transition-opacity disabled:opacity-70 ${
               isOpen ? "bg-[#48aa00]" : "bg-[#9d9d9d]"
             }`}
             type="button"
@@ -139,61 +146,87 @@ const EntrepreneurHome = () => {
             {isOpen ? "Open" : "Closed"}
           </button>
         </header>
-
-        <p className="mt-[40px] text-[24px] leading-[1.1]">
+      
+      {/*entrepreneur info*/}
+      
+        <p className="mt-[35px] text-[17px] font-light leading-[1.1]">
           Welcome back, {isLoading ? "..." : businessName}!
         </p>
-        <h1 className="mt-[28px] max-w-[350px] !font-sofia text-[34px] font-bold leading-[1.05]">
-          Let&#39;s see how your business is doing
+        <h1 className="mt-[15px] max-w-[350px] !font-sofia text-[30px] font-semibold leading-[1.05]">
+          Let's see how your business is doing
         </h1>
+      
+      {/*orders info*/}
 
-        <section className="mt-[64px]">
-          <h2 className="m-0 flex items-center gap-[12px] !font-sofia text-[26px] font-bold text-maroon">
+        <section className="mt-[30px]">
+          <h2 className="m-0 flex items-center gap-[12px] !font-sofia text-[17px] font-medium text-maroon">
             {businessName}
-            <span className="flex h-[26px] w-[26px] items-center justify-center rounded-full bg-[#a9ed9d]">
-              <img className="h-[17px] w-[17px]" src="/icons/check.svg" alt="" />
+            <span className="flex items-center justify-center">
+              <CheckIcon className="h-[25px] w-[30px]" />
             </span>
           </h2>
 
-          <div className="mt-[22px] grid grid-cols-2 gap-[8px]">
-            <article className="min-h-[92px] rounded-[8px] border border-maroon px-[14px] py-[16px]">
-              <div className="flex items-start justify-between gap-3">
-                <p className="m-0 text-[16px] font-semibold leading-[1.1]">Orders Fulfilled</p>
-                <img className="h-[30px] w-[30px] shrink-0 opacity-35" src="/icons/check-circle.svg" alt="" />
-              </div>
-              <strong className="mt-[14px] block text-[24px] leading-none">{deliveredCount}</strong>
-            </article>
+          <div className="mt-[12px] grid grid-cols-2 gap-[8px]">
+  <article className="h-[82px] rounded-[14px] border-[1.5px] border-maroon px-[14px] py-[10px]">
+    <div className="flex items-start justify-between">
+      <p className="text-[14px] font-light leading-[1.1] text-black">
+        Orders Fulfilled
+      </p>
 
-            <article className="min-h-[92px] rounded-[8px] border border-maroon px-[14px] py-[16px]">
-              <div className="flex items-start justify-between gap-3">
-                <p className="m-0 text-[16px] font-semibold leading-[1.1]">Incoming orders</p>
-                <img className="h-[30px] w-[30px] shrink-0 opacity-35" src="/icons/clipboard.svg" alt="" />
-              </div>
-              <strong className="mt-[14px] block text-[24px] leading-none">{incomingCount}</strong>
-            </article>
-          </div>
+      <CheckCircleIcon className="h-[30px] w-[30px] mt-6 shrink-0 text-maroon" />
+    </div>
+
+    <strong className="mt-[-30px] block text-[30px] font-medium leading-none text-black">
+      {deliveredCount}
+    </strong>
+  </article>
+
+  <article className="h-[82px] rounded-[14px] border-[1.5px] border-maroon px-[14px] py-[10px]">
+    <div className="flex items-start justify-between">
+      <p className="text-[13px] font-light leading-[1.1] text-black">
+        Incoming orders
+      </p>
+
+      <ClipboardIcon className="h-[30px] w-[30px] mt-6 shrink-0 text-maroon" />
+    </div>
+
+    <strong className="mt-[-30px] block text-[30px] font-medium leading-none text-black">
+      {incomingCount}
+    </strong>
+  </article>
+</div>
         </section>
+        
+        {/*recent orders*/}
 
-        <section className="mt-[48px]">
-          <h2 className="m-0 !font-sofia text-[32px] font-medium leading-[1.1]">
+        <section className="mt-[45px]">
+          <h2 className="m-0 !font-sofia text-[18px] font-regular leading-[1.1]">
             Recent Orders
           </h2>
 
-          <div className="mt-[34px] flex flex-col gap-[26px]">
+          <div className="mt-[25px] flex flex-col gap-[26px]">
+
+            {isLoading ? (
+            <div className="flex justify-center py-6">
+              <Loader message="Loading recent orders..." />
+            </div>
+          ) : null}
+
             {orders.length === 0 && !isLoading ? (
-              <div className="rounded-[18px] border border-[#ded8d4] px-[18px] py-[22px] text-[15px] text-[#8d8a87]">
+              <div className="py-[22px] text-[15px] text-[#8d8a87]">
                 You do not have recent orders yet.
               </div>
             ) : null}
 
-            {orders.map((order) => (
+            {!isLoading &&
+            orders.map((order) => (
               <article
                 key={order.id}
-                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[14px] rounded-[18px] border border-[#ded8d4] px-[14px] py-[14px]"
+                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[3px] rounded-[18px] border border-[#DCD6D3] px-[14px] py-[14px]"
                 onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img
-                  className="h-[106px] w-[112px] rounded-[10px] object-cover"
+                  className="h-[94px] w-[102px] rounded-[14px] object-cover"
                   src={order.img}
                   alt=""
                   onError={(event) => {
@@ -202,28 +235,31 @@ const EntrepreneurHome = () => {
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <h3 className="m-0 min-w-0 flex-1 truncate !font-sofia text-[23px] font-bold leading-[1.05]">
+                    <h3 className="m-0 min-w-0 flex-1 truncate !font-sofia text-[16px] font-medium leading-[1.05]">
                       {order.productName}
                     </h3>
-                    <span className="shrink-0 rounded-[8px] bg-[#99041d] px-[12px] py-[7px] text-[17px] font-bold leading-none text-white">
+                    <span className="inline-flex h-7 min-w-[30px] items-center font-medium justify-center rounded-lg bg-maroon px-1.5 text-[14px] text-white">
                       x{order.quantity}
                     </span>
                   </div>
-                  <p className="mt-[11px] truncate text-[15px] leading-none">{order.customerName}</p>
-                  <p className="mt-[11px] flex items-center gap-[6px] truncate text-[15px] font-semibold leading-none">
-                    <img className="h-[17px] w-[17px] shrink-0" src="/icons/map-pin.svg" alt="" />
+
+                  <p className="truncate text-[13px] mt-[-2px] text-black font-light leading-none mb-1">{order.customerName}</p>
+                  <p className="inline-flex mb-1 items-center gap-1 text-[13px] text-black">
+                    <MapPinIcon className="h-[17px] w-[17px] shrink-0" />
                     {order.distance}
                   </p>
-                  <div className="mt-[18px] flex items-center justify-between gap-3">
+
+                  <div className="mt-auto flex items-center justify-between gap-3">
                     <span
-                      className={`rounded-full border px-[13px] py-[3px] text-[15px] font-medium ${statusClasses[order.status]}`}
+                      className={`rounded-full border mt-1 px-[13px] py-[2px] text-[15px] font-regular ${statusClasses[order.status]}`}
                     >
                       {order.status}
                     </span>
-                    <strong className="shrink-0 text-[23px] leading-none">
+                    <strong className="text-[18px] font-semibold text-black">
                       ${formatCurrency(order.price)}
                     </strong>
                   </div>
+                  
                 </div>
               </article>
             ))}

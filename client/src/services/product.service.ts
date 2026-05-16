@@ -71,3 +71,18 @@ export const deleteProduct = async (
 
   return normalizeProduct(response.data as Product);
 };
+
+export const updateProductAvailability = async (
+  axiosInstance: AxiosInstance,
+  productId: string,
+  isAvailable: boolean
+): Promise<Product> => {
+  const response = await axiosInstance.patch(
+    `/picku/api/products/${productId}/availability`,
+    {
+      is_available: isAvailable,
+    }
+  );
+
+  return response.data;
+};

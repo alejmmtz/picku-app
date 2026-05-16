@@ -1,6 +1,8 @@
 import type { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
 
+import ArrowIcon from "../../../assets/arrow.svg?react";
+
 type OnboardingShellProps = {
   children: ReactNode;
   progress?: number;
@@ -26,10 +28,10 @@ const OnboardingShell = ({
                 onClick={() => navigate(-1)}
                 aria-label="Go back"
               >
-                <img className="h-6 w-6" src="/icons/chevron-left.svg" alt="" />
+                <ArrowIcon className="h-[18px] w-[18px]" />
               </button>
             ) : null}
-            <div className="h-[6px] flex-1 overflow-hidden rounded-full bg-[#f0e8e3]">
+            <div className="h-[7px] flex-1 overflow-hidden rounded-full bg-[#f0e8e3]">
               <div
                 className="h-full rounded-full bg-maroon"
                 style={{ width: `${Math.min(progress, 100)}%` }}

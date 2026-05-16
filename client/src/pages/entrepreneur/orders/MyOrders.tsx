@@ -6,6 +6,9 @@ import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { OrderResponse, OrderStatus } from "../../../types/order.types";
 
+import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
+import MapPinIcon from "../../../assets/map-pin.svg?react";
+
 type OrderTab = "incoming" | "accepted";
 
 const statusLabelMap: Record<OrderStatus, string> = {
@@ -20,7 +23,7 @@ const statusClassMap: Record<OrderStatus, string> = {
   requested:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3 text-[14px] text-[#ecb100]",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#78aa38] bg-[#eef8df] px-3 text-[14px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#5ba7ff] bg-[#edf5ff] text-[#3478c9] px-3 text-[14px]",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 text-[14px] text-[#b4202f]",
   delivering:
@@ -30,8 +33,8 @@ const statusClassMap: Record<OrderStatus, string> = {
 };
 
 const emptyMessages: Record<OrderTab, string> = {
-  incoming: "No incoming orders yet. New requests will appear here as soon as they arrive.",
-  accepted: "No accepted orders right now. Accepted and delivering orders will appear here.",
+  incoming: "No incoming orders yet.",
+  accepted: "No accepted orders right now.",
 };
 
 const formatPrice = (price: number) =>
@@ -96,18 +99,22 @@ const EntrepreneurOrders = () => {
 
   return (
     <main className="flex min-h-screen justify-center font-sofia">
-      <section className="relative min-h-screen w-full max-w-[430px] px-[18px] pt-7 pb-[110px] font-sofia">
-        <img className="mb-[38px] w-16" src="/logos/picku-logo.svg" alt="PickU" />
+      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+        <header className="flex items-center justify-between mb-10 mt-2">
+          <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] " />
+        </header>
 
-        <h1 className="mb-[18px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
+        <h1 className="mb-[20px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
           Your orders
         </h1>
 
-        <div className="mb-6 flex gap-3">
+      {/*incoming or accepted*/}
+
+        <div className="mb-8 flex gap-3">
           <button
             className={`rounded-full px-4 py-2 text-[15px] ${
               activeTab === "incoming"
-                ? "bg-[#f4e6e9] font-semibold text-maroon"
+                ? "bg-[#f4e6e9] font-medium text-maroon"
                 : "bg-[#f4e6e9] text-[rgba(27,27,27,0.38)]"
             }`}
             type="button"
@@ -119,7 +126,7 @@ const EntrepreneurOrders = () => {
           <button
             className={`rounded-full px-4 py-2 text-[15px] ${
               activeTab === "accepted"
-                ? "bg-[#f4e6e9] font-semibold text-maroon"
+                ? "bg-[#f4e6e9] font-medium text-maroon"
                 : "bg-[#f4e6e9] text-[rgba(27,27,27,0.38)]"
             }`}
             type="button"
@@ -130,11 +137,11 @@ const EntrepreneurOrders = () => {
         </div>
 
         {feedbackMessage ? (
-          <p className="mb-[14px] text-[13px] text-[#b4202f]">{feedbackMessage}</p>
+          <p className="mb-[14px] font-regular text-[15px] text-[rgba(27,27,27,0.58)]">{feedbackMessage}</p>
         ) : null}
 
         {!feedbackMessage && filteredOrders.length === 0 ? (
-          <p className="mb-[14px] text-[13px] text-[rgba(27,27,27,0.58)]">
+          <p className="mb-[14px] ml-2 font-regular text-[15px] text-[rgba(27,27,27,0.58)]">
             {emptyMessages[activeTab]}
           </p>
         ) : null}
@@ -143,10 +150,12 @@ const EntrepreneurOrders = () => {
           {filteredOrders.map((order) => {
             const item = order.items[0];
 
+            {/*orders card*/}
+
             return (
               <article
                 key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] p-3"
+                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#DCD6D3] p-3"
                 onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img
@@ -161,19 +170,19 @@ const EntrepreneurOrders = () => {
                 <div className="flex min-w-0 flex-col">
                   <div className="flex items-start justify-between gap-[10px]">
                     <div>
-                      <h2 className="text-[16px] font-semibold">{getOrderTitle(order)}</h2>
-                      <p className="mt-1 mb-1.5 text-[12px] text-[rgba(27,27,27,0.72)]">
+                      <h2 className="text-[16px] font-medium">{getOrderTitle(order)}</h2>
+                      <p className="mt-1 mb-1 text-[13px] text-black font-light">
                         {getOrderSubtitle(order)}
                       </p>
                     </div>
 
-                    <span className="inline-flex h-7 min-w-[30px] items-center justify-center rounded-lg bg-maroon px-1.5 text-[14px] text-white">
+                    <span className="inline-flex h-7 min-w-[30px] items-center justify-center font-medium rounded-lg bg-maroon px-1.5 text-[14px] text-white">
                       x{item?.quantity ?? 1}
                     </span>
                   </div>
 
-                  <span className="inline-flex items-center gap-1 text-[12px] text-[rgba(27,27,27,0.8)]">
-                    <img className="h-[14px] w-[14px]" src="/icons/map-pin.svg" alt="" />
+                  <span className="inline-flex mb-1 items-center gap-1 text-[13px] font-light">
+                    <MapPinIcon className="h-[17px] w-[17px] shrink-0" />
                     {order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup"}
                   </span>
 

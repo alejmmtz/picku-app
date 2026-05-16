@@ -41,7 +41,7 @@ const EntrepreneurProducts = () => {
   return (
     <main className="min-h-screen flex justify-center bg-background text-black">
       <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
-        <img src={Logo} alt="PickU" className="w-[72px] mb-14" />
+        <img src={Logo} alt="PickU" className="w-[72px] mt-2 mb-14" />
 
         <div className="flex items-center justify-between mb-10">
           <div>
@@ -68,8 +68,8 @@ const EntrepreneurProducts = () => {
             {loading && <Loader message="Loading products..." />}
 
             {!loading && products.length === 0 && (
-            <div className="rounded-[16px] border border-[#DCD6D3] px-6 py-10 text-center">
-                <p className="text-[17px] font-medium">No products yet</p>
+            <div className="px-6 py-50 text-center">
+                <p className="text-[17px] font-medium">No products yet :(</p>
                 <p className="mt-2 text-[14px]  font-light text-[#7A716D]">
                 Create your first product.
                 </p>

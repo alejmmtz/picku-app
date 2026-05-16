@@ -24,7 +24,7 @@ const CategoryButton = ({
   onClick: () => void;
 }) => (
   <button
-    className={`min-h-[34px] rounded-[8px] border px-[10px] text-[14px] font-semibold ${
+    className={`min-h-[34px] rounded-[8px] border px-[10px] text-[14px] font-medium ${
       selected
         ? "border-maroon bg-[#f4e9e6] text-maroon"
         : "border-[#d6cec9] bg-transparent text-maroon"
@@ -49,14 +49,14 @@ const EntrepreneurCategory = () => {
   return (
     <OnboardingShell progress={25}>
       <header>
-        <h1 className="m-0 !font-sofia text-[24px] font-bold leading-[1.12]">
+        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
           Select Category
         </h1>
-        <p className="mt-[8px] text-[15px] leading-[1.2]">So people know what you sell.</p>
+        <p className="mt-[8px] font-light text-[15px] leading-[1.2]">So people know what you sell.</p>
       </header>
 
-      <section className="mt-[46px]">
-        <p className="mb-[15px] text-[15px]">Foods:</p>
+      <section className="mt-[42px]">
+        <p className="mb-[15px] text-[15px] font-light">Foods:</p>
         <div className="flex flex-wrap gap-[8px]">
           {foodCategories.map((item) => (
             <CategoryButton
@@ -70,7 +70,7 @@ const EntrepreneurCategory = () => {
       </section>
 
       <section className="mt-[38px]">
-        <p className="mb-[16px] text-[15px]">Mas categorias:</p>
+        <p className="mb-[16px] text-[15px] font-light">More categories:</p>
         <div className="flex flex-wrap gap-[8px]">
           {moreCategories.map((item) => (
             <CategoryButton
@@ -84,7 +84,7 @@ const EntrepreneurCategory = () => {
       </section>
 
       <button
-        className="mt-auto min-h-[52px] rounded-[8px] bg-maroon text-[15px] font-semibold text-white disabled:opacity-45"
+        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white disabled:opacity-45"
         type="button"
         disabled={!category}
         onClick={continueToNext}

@@ -6,9 +6,11 @@ import {
   getProductById,
   updateProduct,
   deleteProduct,
+  updateProductAvailability,
 } from "../../../services/product.service";
 import { uploadProductImage } from "../../../services/storage.service";
 import ConfirmModal from "../../../components/common/ConfirmModal";
+
 
 import Logo from "../../../assets/logo entrepeneur color.svg";
 import ArrowIcon from "../../../assets/arrow.svg?react";
@@ -31,6 +33,8 @@ const EditProduct = () => {
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isAvailable, setIsAvailable] = useState(true);
+  const [updatingAvailability, setUpdatingAvailability] = useState(false);
 
   useEffect(() => {
     const loadProduct = async () => {
@@ -44,6 +48,7 @@ const EditProduct = () => {
         setCurrentImg(product.img);
         setImagePreview(product.img);
         setDescription(product.description);
+        setIsAvailable(product.is_available);
       } catch (error) {
         console.error("Error loading product:", error);
         setError("Could not load product.");
@@ -68,6 +73,30 @@ const EditProduct = () => {
 
     return "";
   };
+
+  const handleToggleAvailability = async () => {
+  if (!id || updatingAvailability) return;
+
+  const nextAvailability = !isAvailable;
+
+  try {
+    setUpdatingAvailability(true);
+    setError("");
+
+    const updatedProduct = await updateProductAvailability(
+      axios,
+      id,
+      nextAvailability
+    );
+
+    setIsAvailable(updatedProduct.is_available);
+  } catch (error) {
+    console.error("Error updating availability:", error);
+    setError("Could not update product availability.");
+  } finally {
+    setUpdatingAvailability(false);
+  }
+};
 
   const handleSubmit = async () => {
     if (!id) return;
@@ -131,7 +160,20 @@ const EditProduct = () => {
     <>
       <main className="min-h-screen flex justify-center text-black">
         <section className="w-full max-w-[430px] min-h-screen px-13 pt-16">
-          <img src={Logo} alt="PickU" className="w-[72px] mb-10" />
+          <header className="mb-7 flex items-center justify-between">
+            <img src={Logo} alt="PickU" className="w-[72px]" />
+
+            <button
+              type="button"
+              disabled={updatingAvailability}
+              onClick={handleToggleAvailability}
+              className={`flex min-h-[40px] min-w-[92px] items-center justify-center rounded-[10px] px-[18px] text-[14px] font-regular text-white transition-opacity disabled:opacity-70 ${
+                isAvailable ? "bg-[#48aa00]" : "bg-[#9d9d9d]"
+              }`}
+            >
+              {isAvailable ? "Available" : "Hidden"}
+            </button>
+          </header>
 
           <button
             type="button"
@@ -170,7 +212,7 @@ const EditProduct = () => {
                 step="100"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="h-[56px] rounded-[10px] border border-maroon bg-transparent px-4 outline-none"
+                className="h-[56px] rounded-[10px] border border-maroon mr-2.5 bg-transparent px-4 outline-none"
               />
             </label>
           </div>

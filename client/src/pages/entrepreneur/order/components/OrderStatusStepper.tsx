@@ -12,7 +12,7 @@ export default function OrderStatusStepper({
   const currentStatusIndex = ORDER_STATUS_STEP_INDEX[status];
 
   return (
-    <div className="mb-8 flex w-full items-start gap-2">
+    <div className="mb-10 mt-10 flex w-full items-start gap-2">
       {STATUSES.map(({ icon, label }, index) => (
         <>
           <div key={index} className="flex flex-col items-center">

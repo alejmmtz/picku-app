@@ -48,7 +48,7 @@ export default function OrderReceipt() {
 
   if (!order) {
     return (
-      <main className="min-h-screen bg-background px-12 text-black sm:py-6">
+      <main className="min-h-screen bg-background px-13 text-black sm:py-6">
         <section className="relative flex h-dvh w-full flex-col items-center justify-center bg-background text-center">
           <p className="text-sm text-black/60">
             {feedbackMessage || "Loading receipt..."}
@@ -56,7 +56,7 @@ export default function OrderReceipt() {
           <button
             type="button"
             onClick={() => navigate("/consumer/orders")}
-            className="mt-6 rounded-xl bg-orange px-6 py-4 text-lg text-white transition-transform active:scale-[0.99]"
+            className="mt-6 rounded-xl bg-orange px-6 py-4 text-[15px] text-[15px] text-white transition-transform active:scale-[0.99]"
           >
             Go back to orders
           </button>
@@ -66,7 +66,7 @@ export default function OrderReceipt() {
   }
 
   return (
-    <main className="min-h-screen bg-background px-12 text-black sm:py-6">
+    <main className="min-h-screen bg-background px-13 py-13 text-black sm:py-6">
       <section className="relative h-dvh w-full bg-background">
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex flex-1 flex-col">
@@ -83,7 +83,7 @@ export default function OrderReceipt() {
             <button
               type="button"
               onClick={() => navigate("/consumer/orders")}
-              className="mt-12 mb-12 rounded-xl bg-orange px-6 py-4 text-lg  text-white transition-transform active:scale-[0.99]"
+              className="mt-12 mb-12 rounded-xl bg-orange px-6 py-4 text-[15px]  text-white transition-transform active:scale-[0.99]"
             >
               Go back to orders
             </button>

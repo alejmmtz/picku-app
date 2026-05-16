@@ -8,6 +8,7 @@ import {
   getOnboardingData,
 } from "./onboardingStorage";
 import { getStoredAuth } from "../../../utils/storage";
+import EditIcon from "../../../assets/edit-2.svg?react";
 const DEFAULT_SHOP_IMAGE = "/resources/img-2-onboarding.svg";
 const MAX_IMAGE_PAYLOAD_LENGTH = 900000;
 const RETRYABLE_NETWORK_PATTERNS = [
@@ -108,52 +109,56 @@ const EntrepreneurConfirm = () => {
   return (
     <OnboardingShell progress={100} showBack>
       <header>
-        <h1 className="m-0 !font-sofia text-[24px] font-bold leading-[1.12]">
+        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
           Ready to go live?
         </h1>
-        <p className="mt-[8px] text-[15px] leading-[1.05]">
+        <p className="mt-[8px] font-light text-[15px] leading-[1.05]">
           Your shop is almost ready. Just review and start selling.
         </p>
       </header>
 
-      <div className="mt-[18px] flex justify-center">
-        <img className="h-[81px] w-[58px]" src="/resources/img-2-onboarding.svg" alt="" />
-      </div>
+      <div className="mb-[-37px] ml-[150px] flex justify-center">
+      <img
+        className="h-[90px] w-[58px]"
+        src="/resources/img-2-onboarding.svg"
+        alt=""
+      />
+    </div>
 
       <section className="mt-[2px] flex flex-col gap-[16px]">
         <label className="flex flex-col gap-[8px]">
-          <span className="text-[14px]">Company Name</span>
+          <span className="text-[14px] font-light">Company Name</span>
           <button
             className="flex min-h-[52px] items-center justify-between rounded-[10px] border border-maroon px-[18px] text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
-            <span className="truncate">{data.name || "Company Name"}</span>
-            <img className="h-[22px] w-[22px] opacity-35" src="/icons/edit-2.svg" alt="" />
+            <span className="truncate font-light">{data.name || "Company Name"}</span>
+            <EditIcon className="h-[20px] w-[20px]" />
           </button>
         </label>
 
         <label className="flex flex-col gap-[8px]">
-          <span className="text-[14px]">Contact Information</span>
+          <span className="text-[14px] font-light">Contact Information</span>
           <button
-            className="flex min-h-[52px] items-center justify-between rounded-[10px] border border-maroon px-[18px] text-left text-[14px] text-[#8d8a87]"
+            className="flex min-h-[52px] items-center justify-between rounded-[10px] border border-maroon px-[18px] font-light text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
             <span className="truncate">{data.contact_info || "Contact Information"}</span>
-            <img className="h-[22px] w-[22px] opacity-35" src="/icons/edit-2.svg" alt="" />
+            <EditIcon className="h-[20px] w-[20px]" />
           </button>
         </label>
 
         <label className="flex flex-col gap-[8px]">
-          <span className="text-[14px]">Description</span>
+          <span className="text-[14px] font-light">Description</span>
           <button
-            className="flex min-h-[112px] items-start justify-between rounded-[10px] border border-maroon px-[18px] py-[17px] text-left text-[14px]"
+            className="flex min-h-[112px] items-start justify-between rounded-[10px] border  font-light border-maroon px-[18px] py-[17px] text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
-            <span className="line-clamp-4">{data.description || "Description"}</span>
-            <img className="h-[22px] w-[22px] shrink-0 opacity-35" src="/icons/edit-2.svg" alt="" />
+            <span className="line-clamp-4 ">{data.description || "Description"}</span>
+            <EditIcon className="h-[20px] w-[20px]" />
           </button>
         </label>
       </section>
@@ -163,7 +168,7 @@ const EntrepreneurConfirm = () => {
       ) : null}
 
       <button
-        className="mt-auto min-h-[52px] rounded-[8px] bg-maroon px-4 text-[15px] font-semibold text-white disabled:opacity-60"
+        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white disabled:opacity-60"
         type="button"
         disabled={isSubmitting}
         onClick={registerBusiness}
