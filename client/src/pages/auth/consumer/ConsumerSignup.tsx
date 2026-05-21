@@ -55,35 +55,35 @@ const ConsumerSignup = () => {
   };
 
   return (
-    <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-37">
-        <div className="relative z-[2] mt-[38px] mb-[-120px] flex min-h-[80px] items-center justify-end">
+    <main className="flex h-screen items-center justify-center w-full bg-background p-12 relative">
+      <section className="w-full">
+        <div className="mb-6 flex min-h-40 right-8 top-12 absolute z-50">
           <img
-            className="h-auto w-[130px]"
+            className="block h-auto w-35"
             src="/resources/Image-SignUp-Consumer.svg"
-            alt="Ilustración de registro"
+          />
+        </div>
+        <div className="mb-6 flex min-h-40 right-6 -top-2 absolute z-30">
+          <img
+            className="block h-auto w-12.5"
+            src="/resources/sign-up-colors.svg"
           />
         </div>
 
         <header>
-          <h1 className="mb-[16px] !font-sofia text-[25px] font-semibold leading-[0.3] text-black">
+          <h2 className="mb-4 text-2xl font-semibold leading-[0.2] text-black">
             Ready to pick?
-          </h1>
-          <p className="text-[16px] font-light text-black">
-            Join PickU as Consumer
-          </p>
+          </h2>
+          <p className="text-black font-light">Join PickU as Consumer</p>
         </header>
 
-        <form
-          className="mt-10 mb-[10px] flex flex-col gap-[16px]"
-          onSubmit={handleSubmit}
-        >
+        <form className="mt-12 flex flex-col gap-4" onSubmit={handleSubmit}>
           <label className="flex flex-col gap-2">
-            <span className="text-[15px] font-light">Username</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <UserIcon className="h-[22px] w-[22px] shrink-0" />
+            <span className="text-sm font-light">Username</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500">
+              <UserIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] font-light text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type="text"
                 placeholder="Enter username"
                 value={name}
@@ -95,11 +95,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px] font-light">Phone</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <PhoneIcon className="h-[22px] w-[22px] shrink-0" />
+            <span className="text-sm font-light">Phone</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500">
+              <PhoneIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] font-light text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type="tel"
                 placeholder="Enter number"
                 value={phone}
@@ -111,11 +111,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px] font-light">Email</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <MailIcon className="h-[22px] w-[22px] shrink-0" />
+            <span className="text-sm font-light">Email</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500">
+              <MailIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent font-light py-[14px] text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type="email"
                 placeholder="Enter email"
                 value={email}
@@ -127,11 +127,11 @@ const ConsumerSignup = () => {
           </label>
 
           <label className="flex flex-col gap-2">
-            <span className="text-[15px] font-light">Password</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
-              <LockIcon className="h-[22px] w-[22px] shrink-0" />
+            <span className="text-sm font-light">Password</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500">
+              <LockIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] text-black font-light outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
@@ -149,22 +149,20 @@ const ConsumerSignup = () => {
                 }
               >
                 {showPassword ? (
-              <EyeIcon className="h-[22px] w-[22px] shrink-0" />
-            ) : (
-              <EyeOffIcon className="h-[22px] w-[22px] shrink-0" />
-            )}
+                  <EyeIcon className="h-5 w-5 shrink-0 cursor-pointer" />
+                ) : (
+                  <EyeOffIcon className="h-5 w-5 shrink-0 cursor-pointer" />
+                )}
               </button>
             </span>
           </label>
 
-          <p
-            className={`m-0 min-h-[18px] text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}
-          >
+          <p className={`m-0 ${errorMessage ? "text-orange" : ""}`}>
             {errorMessage}
           </p>
 
           <button
-            className="min-h-[52px] rounded-[12px] bg-orange text-[16px] text-white transition-[transform,opacity] duration-150 active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            className="rounded-xl cursor-pointer bg-orange p-4 text-sm text-white transition-all duration-500 active:scale-90 disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -172,10 +170,10 @@ const ConsumerSignup = () => {
           </button>
         </form>
 
-        <p className="mt-[18px] text-center text-[16px] font-light">
+        <p className="mt-6 text-center text-[16px] font-light">
           Already have an account?{" "}
           <button
-            className="bg-transparent p-0 font-medium text-orange"
+            className="cursor-pointer bg-transparent p-0 font-medium text-orange"
             type="button"
             onClick={() => navigate("/consumer/login")}
           >

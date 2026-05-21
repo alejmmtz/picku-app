@@ -8,7 +8,7 @@ import { setStoredAuth } from "../../../utils/storage";
 
 import UserIcon from "../../../assets/user.svg?react";
 import MailIcon from "../../../assets/mail.svg?react";
-import PhoneIcon from "../../../assets/phone.svg?react";
+
 import LockIcon from "../../../assets/lock.svg?react";
 import EyeIcon from "../../../assets/eye.svg?react";
 import EyeOffIcon from "../../../assets/eye-off.svg?react";
@@ -18,7 +18,6 @@ const EntrepreneurSignup = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,18 +30,21 @@ const EntrepreneurSignup = () => {
 
     try {
       await axios.post(`${API_URL}/picku/api/auth/register`, {
-      name,
-      phone,
-      email,
-      password,
-      role: "entrepreneur",
-    });
+        name,
+
+        email,
+        password,
+        role: "entrepreneur",
+      });
 
       try {
-        const { data } = await axios.post<AuthData>(`${API_URL}/picku/api/auth/login`, {
-          email,
-          password,
-        });
+        const { data } = await axios.post<AuthData>(
+          `${API_URL}/picku/api/auth/login`,
+          {
+            email,
+            password,
+          },
+        );
 
         setStoredAuth(data);
         navigate("/entrepreneur/onboarding", { replace: true });
@@ -69,34 +71,32 @@ const EntrepreneurSignup = () => {
   };
 
   return (
-    <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia text-black">
-       <section className="w-full max-w-[430px] min-h-screen px-13 pt-18">
-        <div className="relative z-[2] mb-[-104px] flex min-h-[80px] items-center justify-center">
+    <main className="flex h-screen items-center justify-center overflow-hidden bg-background font-sofia text-black">
+      <section className="w-full  min-h-screen p-12 ">
+        <div className="relative  flex  items-center justify-center -mb-24">
           <img
-            className="h-auto w-[190px] mr-7"
+            className="h-auto w-50"
             src="/resources/sign-up-img-signup.svg"
             alt=""
           />
         </div>
 
-        <header className="mb-[38px] mt-[-20px]">
-          <h1 className="m-0 !font-sofia text-[25px] font-semibold leading-[1.1]">
-            Start your own pick
-          </h1>
-          <p className="mt-[6px] font-light text-[16px] leading-[1.2]">
-            Join PickU as Entrepreneur
-          </p>
+        <header className="">
+          <h2 className="mb-4 text-2xl font-semibold leading-[0.2]">
+            Start your own pick!
+          </h2>
+          <p className="font-light ">Join PickU as Entrepreneur</p>
         </header>
 
-        <form className="mt-10 mb-[10px] flex flex-col gap-[16px]" onSubmit={handleSubmit}>
-          <label className="flex flex-col gap-[7px]">
-            <span className="text-[15px] font-light leading-[1.2]">Username</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-             <UserIcon className="h-[22px] w-[22px] shrink-0" />
+        <form className="mt-8 mb-6 flex flex-col gap-4" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Username</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <UserIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-4 outline-none placeholder:text-black/25"
                 type="text"
-                placeholder="Enter username"
+                placeholder="Make it Cool!"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 autoComplete="name"
@@ -105,14 +105,14 @@ const EntrepreneurSignup = () => {
             </span>
           </label>
 
-          <label className="flex flex-col gap-[8px]">
-            <span className="text-[15px] font-light leading-[1.2]">Email</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-              <MailIcon className="h-[22px] w-[22px] shrink-0" />
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Email</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <MailIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent font-light py-[14px]  outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-4  outline-none placeholder:text-black/25"
                 type="email"
-                placeholder="Enter email"
+                placeholder="Your Email"
                 value={email}
                 onChange={(event) => setEmail(event.target.value)}
                 autoComplete="email"
@@ -121,33 +121,14 @@ const EntrepreneurSignup = () => {
             </span>
           </label>
 
-          <label className="flex flex-col gap-[8px]">
-          <span className="text-[15px] font-light leading-[1.2]">Phone</span>
-
-          <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-            <PhoneIcon className="h-[22px] w-[22px] shrink-0" />
-
-            <input
-              className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
-              type="tel"
-              placeholder="Enter phone"
-              value={phone}
-              onChange={(event) => setPhone(event.target.value)}
-              autoComplete="tel"
-              required
-            />
-          </span>
-        </label>
-
-
-          <label className="flex flex-col gap-[8px]">
-            <span className="text-[15px] font-light leading-[1.2]">Password</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-              <LockIcon className="h-[22px] w-[22px] shrink-0" />
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Password</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <LockIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent font-light py-4 outline-none placeholder:text-black/25"
                 type={showPassword ? "text" : "password"}
-                placeholder="Enter password"
+                placeholder="Make it Secret..."
                 value={password}
                 onChange={(event) => setPassword(event.target.value)}
                 autoComplete="new-password"
@@ -162,22 +143,22 @@ const EntrepreneurSignup = () => {
                 }
               >
                 {showPassword ? (
-              <EyeIcon className="h-[22px] w-[22px] shrink-0" />
-            ) : (
-              <EyeOffIcon className="h-[22px] w-[22px] shrink-0" />
-            )}
+                  <EyeIcon className="h-5 w-5 shrink-0" />
+                ) : (
+                  <EyeOffIcon className="h-5 w-5 shrink-0" />
+                )}
               </button>
             </span>
           </label>
 
           <p
-            className={`m-0 min-h-[18px] text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}
+            className={`m-0 text-[13px] ${errorMessage ? "text-[#c43e14]" : ""}`}
           >
             {errorMessage}
           </p>
 
           <button
-            className="min-h-[52px] rounded-[12px] bg-maroon text-[16px] text-white transition-[transform,opacity] active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            className="rounded-xl cursor-pointer bg-maroon p-4 text-sm text-white transition-all active:scale-90 disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -185,7 +166,7 @@ const EntrepreneurSignup = () => {
           </button>
         </form>
 
-        <p className="mt-[18px] font-light text-center text-[16px]">
+        <p className="mt-4 font-light text-center text-[16px]">
           Already have an account?{" "}
           <button
             className="bg-transparent p-0 font-medium text-maroon"

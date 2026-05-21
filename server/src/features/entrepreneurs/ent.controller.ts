@@ -9,8 +9,18 @@ import {
     updateEntrepreneurService,
     updateEntrepreneurStatusService,
 } from "./ent.service.js";
+ 
+const requireEntrepreneurUser = (req: Request): string => {
+    if (!req.authUser) {
+        throw Boom.unauthorized("Authenticated user was not found");
+    }
 
-//TODO: Add auth middleware when auth module is ready
+    if (req.authUser.role !== "entrepreneur") {
+        throw Boom.forbidden("Only entrepreneurs can manage business profiles");
+    }
+
+    return req.authUser.id;
+};
 
 //create entrepreneur
 export const createEntrepreneurController = async (
@@ -21,7 +31,15 @@ export const createEntrepreneurController = async (
         throw Boom.badRequest("Request body is required");
     }
 
-    const entrepreneur = await createEntrepreneurService(req.body);
+    const ownerId = requireEntrepreneurUser(req);
+    const entrepreneur = await createEntrepreneurService({
+        student_id: ownerId,
+        name: req.body.name,
+        img: req.body.img,
+        description: req.body.description,
+        contact_info: req.body.contact_info,
+        category: req.body.category,
+    });
     return res.status(201).json(entrepreneur);
 };
 
@@ -29,12 +47,10 @@ export const createMyEntrepreneurController = async (
     req: Request,
     res: Response
 ) => {
-    if (!req.authUser) {
-        throw Boom.unauthorized("Authenticated user was not found");
-    }
+    const ownerId = requireEntrepreneurUser(req);
 
     const entrepreneur = await createEntrepreneurService({
-        student_id: req.authUser.id,
+        student_id: ownerId,
         name: req.body.name,
         img: req.body.img,
         description: req.body.description,
@@ -99,6 +115,13 @@ export const updateEntrepreneurController = async (
         throw Boom.badRequest("Request body is required");
     }
 
+    const ownerId = requireEntrepreneurUser(req);
+    const currentEntrepreneur = await getRequiredEntrepreneurByOwnerIdService(ownerId);
+
+    if (currentEntrepreneur.id !== id) {
+        throw Boom.forbidden("You can only update your own entrepreneur profile");
+    }
+
     const updatedEntrepreneur = await updateEntrepreneurService(id, req.body);
     return res.json(updatedEntrepreneur);
 };
@@ -114,6 +137,13 @@ export const updateEntrepreneurStatusController = async (
         throw Boom.badRequest("is_active is required");
     }
 
+    const ownerId = requireEntrepreneurUser(req);
+    const currentEntrepreneur = await getRequiredEntrepreneurByOwnerIdService(ownerId);
+
+    if (currentEntrepreneur.id !== id) {
+        throw Boom.forbidden("You can only update your own entrepreneur profile");
+    }
+
     const updatedStatus = await updateEntrepreneurStatusService(
         id,
         req.body.is_active
@@ -126,15 +156,13 @@ export const updateMyEntrepreneurStatusController = async (
     req: Request,
     res: Response
 ) => {
-    if (!req.authUser) {
-        throw Boom.unauthorized("Authenticated user was not found");
-    }
+    const ownerId = requireEntrepreneurUser(req);
 
     if (req.body?.is_active === undefined) {
         throw Boom.badRequest("is_active is required");
     }
 
-    const entrepreneur = await getRequiredEntrepreneurByOwnerIdService(req.authUser.id);
+    const entrepreneur = await getRequiredEntrepreneurByOwnerIdService(ownerId);
     const updatedStatus = await updateEntrepreneurStatusService(
         entrepreneur.id,
         req.body.is_active

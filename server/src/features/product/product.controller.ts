@@ -3,15 +3,29 @@ import Boom from "@hapi/boom";
 
 import {
     createProductService,
+    createProductForOwnerService,
     getProductsService,
     getProductByIdService,
     getProductsByEntrepreneurIdService,
     updateProductService,
+    updateOwnedProductService,
     updateProductAvailabilityService,
+    updateOwnedProductAvailabilityService,
     deleteProductService,
+    deleteOwnedProductService,
 } from "./product.service.js";
+ 
+const requireEntrepreneurUser = (req: Request): string => {
+    if (!req.authUser) {
+        throw Boom.unauthorized("Authenticated user was not found");
+    }
 
-//TODO: Add auth middleware when auth module is ready
+    if (req.authUser.role !== "entrepreneur") {
+        throw Boom.forbidden("Only entrepreneurs can manage products");
+    }
+
+    return req.authUser.id;
+};
 
 //Create product
 export const createProductController = async (
@@ -22,7 +36,8 @@ export const createProductController = async (
         throw Boom.badRequest("Request body is required");
     }
 
-    const product = await createProductService(req.body);
+    const ownerId = requireEntrepreneurUser(req);
+    const product = await createProductForOwnerService(ownerId, req.body);
     return res.status(201).json(product);
 };
 
@@ -68,7 +83,8 @@ export const updateProductController = async (
         throw Boom.badRequest("Request body is required");
     }
 
-    const updatedProduct = await updateProductService(id, req.body);
+    const ownerId = requireEntrepreneurUser(req);
+    const updatedProduct = await updateOwnedProductService(ownerId, id, req.body);
     return res.json(updatedProduct);
 };
 
@@ -83,7 +99,9 @@ export const updateProductAvailabilityController = async (
         throw Boom.badRequest("is_available is required");
     }
 
-    const updatedAvailability = await updateProductAvailabilityService(
+    const ownerId = requireEntrepreneurUser(req);
+    const updatedAvailability = await updateOwnedProductAvailabilityService(
+        ownerId,
         id,
         req.body.is_available
     );
@@ -97,7 +115,7 @@ export const deleteProductController = async (
     res: Response
 ) => {
     const { id } = req.params;
-
-    const deletedProduct = await deleteProductService(id);
+    const ownerId = requireEntrepreneurUser(req);
+    const deletedProduct = await deleteOwnedProductService(ownerId, id);
     return res.json(deletedProduct);
 };

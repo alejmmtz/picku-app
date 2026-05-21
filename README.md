@@ -1,134 +1,193 @@
-<img width="410" alt="Group 32" src="https://github.com/user-attachments/assets/a2329096-025e-4272-a3dd-09a4fde1b2f4" />
+# PickU
 
-# Local Products One Tap Away
+Plataforma para conectar emprendimientos universitarios con consumidores dentro del campus.
 
-> Connecting university entrepreneurs with their consumers intelligently.
+## Stack
 
-**PickU** is a platform designed for university ecosystems that enables student entrepreneurs to manage their products, receive real-time orders, and optimize deliveries through AI-driven recommendations.
+- Frontend: React + TypeScript + Vite + Tailwind
+- Backend: Node.js + Express + TypeScript
+- Base de datos y auth: Supabase + PostgreSQL
+- Mapas: Leaflet + CARTO
+- Recomendaciones conversacionales: Groq
 
-## Features
+## Arquitectura actual
 
-  * **🏪 Entrepreneur Marketplace:** Personalized profiles for every student business with geolocation support.
-  * **🤖 AI Recommendations:** Smart suggestions based on natural language prompts from the consumer.
-  * **🛒 Order Management:** Full workflow from `Pending` to `Completed`, including security codes to ensure successful delivery.
-  * **📍 Geolocation:** Distance and estimated time calculations between the consumer and the delivery point.
-  * **📱 Responsive Design:** A seamless experience across all mobile devices.
-
-<br/>
-<br/>
-<br/>
-    
-<img width="400"  alt="Group 27" src="https://github.com/user-attachments/assets/314e3887-496b-4fdd-98b4-55b82fdb31bc" />
-
-<br/>
-<br/>
-<br/>
-
-## App Development
-
-| Component | Technology |
-| :--- | :--- |
-| **Frontend** | React.js + Tailwind CSS |
-| **Backend** | Node.js (Express) |
-| **Database** | PostgreSQL (Supabase) |
-| **AI** | OpenAI API |
-| **Maps** | Google Maps API |
-<br/>
-
-## 📂 Project Structure (Monorepo)
-
-```bash
+```text
 picku-app/
-├── client/          # Frontend (React)
-├── server/          # Backend (REST API)
-├── database/        # SQL Scripts
-├── shared/          # TypeScript types or shared constants
-└── docs/            # Additional documentation and diagrams
+|-- client/
+|   |-- src/
+|   |   |-- assets/
+|   |   |-- components/
+|   |   |-- config/
+|   |   |-- hooks/
+|   |   |-- pages/
+|   |   |   |-- auth/
+|   |   |   |-- consumer/
+|   |   |   |-- entrepreneur/
+|   |   |   `-- role-selector/
+|   |   |-- providers/
+|   |   |-- routes/
+|   |   |-- services/
+|   |   |-- types/
+|   |   `-- utils/
+|   |-- public/
+|   `-- package.json
+|-- server/
+|   |-- src/
+|   |   |-- config/
+|   |   |-- features/
+|   |   |   |-- auth/
+|   |   |   |-- chatbot/
+|   |   |   |-- entrepreneurs/
+|   |   |   |-- order/
+|   |   |   `-- product/
+|   |   |-- middlewares/
+|   |   |-- shared/
+|   |   |-- types/
+|   |   `-- app.ts
+|   `-- package.json
+|-- package.json
+`-- README.md
 ```
------
-<br/>
 
+## Organización del backend
 
+Cada feature sigue una separación por responsabilidades:
 
-## 📊 Data Model
+- `router`: define endpoints y middlewares
+- `controller`: adapta request/response
+- `service`: contiene la lógica de negocio
+- `types` o `schema`: define contratos y validación
 
-PickU’s core is built on a relational schema:
+Esto se usa en módulos como:
 
-<img width="full" alt="supabase-schema-nrhcfsmopjerjgzmgmjw" src="https://github.com/user-attachments/assets/5ce74c2e-6909-42e7-a832-69bc7cc05d8e" />
+- `auth`
+- `entrepreneurs`
+- `product`
+- `order`
+- `chatbot`
 
-> **Note:** The schema includes role validations (`consumer`, `entrepreneur`) and order status transitions.
------
+## Organización del frontend
 
-<br/>
+El frontend está dividido por dominio y por capas:
 
+- `pages/`: pantallas por flujo
+- `components/common/`: componentes reutilizables
+- `services/`: acceso a API
+- `providers/`: estado compartido y dependencias globales
+- `routes/`: router y protección de rutas
+- `types/`: contratos de datos
+- `utils/`: helpers
 
+### Providers implementados
 
-## 🚀 Installation & Setup
+- `AxiosProvider`: expone la instancia central de Axios
+- `CartProvider`: maneja el carrito del consumidor
 
-Dev steps to set up the project locally:
+## Funcionalidades implementadas
 
-### 1. Clone the repository
+### Consumidor
+
+- registro e inicio de sesión
+- home con negocios y productos
+- detalle de producto
+- carrito y checkout
+- creación de órdenes
+- historial y detalle de órdenes
+- flujo de orden activa
+- perfil
+- chatbot
+
+### Entrepreneur
+
+- registro e inicio de sesión
+- onboarding del negocio
+- home del negocio
+- listado de órdenes
+- detalle de orden y acciones por estado
+- recibo de orden
+- gestión de productos
+- perfil
+- apertura y cierre del negocio
+
+## Seguridad y acceso
+
+- autenticación con Supabase
+- token Bearer enviado desde frontend
+- protección de rutas privadas en frontend
+- `authMiddleware` en backend para endpoints protegidos
+- validación de ownership para gestión de productos y negocio del entrepreneur
+- separación de permisos entre `consumer` y `entrepreneur`
+
+## Variables de entorno
+
+### Client
+
+Crear `client/.env` con:
+
+```env
+VITE_API_URL=http://localhost:3015
+VITE_SUPABASE_URL=your_supabase_url
+VITE_SUPABASE_KEY=your_supabase_anon_key
+```
+
+### Server
+
+Crear `server/.env` con:
+
+```env
+PORT=3015
+NODE_ENV=development
+
+DB_HOST=localhost
+DB_PORT=5432
+DB_USER=postgres
+DB_PASSWORD=your_password
+DB_NAME=postgres
+
+SUPABASE_URL=your_supabase_url
+SUPABASE_KEY=your_supabase_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+GROQ_API_KEY=your_groq_api_key
+```
+
+## Scripts
+
+### Raíz
 
 ```bash
-git clone https://github.com/alejmmtz/picku-app
-cd picku-app
+npm run dev
 ```
 
-### 2. Init the Backend
+Levanta client y server al mismo tiempo.
+
+### Frontend
+
+```bash
+cd client
+npm run dev
+npm run build
+```
+
+### Backend
 
 ```bash
 cd server
-npm i
-# Configure your DB credentials
 npm run dev
+npm run build
 ```
 
-### 3. Configure the Frontend
+## Estado del proyecto
 
-```bash
-cd ../client
-npm i
-npm run dev
-```
+Actualmente el proyecto está enfocado en un prototipo funcional end-to-end con:
 
------
-<br/>
+- autenticación
+- onboarding
+- catálogo de productos
+- creación de órdenes
+- gestión de órdenes para ambos roles
+- protección de rutas y sesiones
 
-## 🗺 Roadmap de Desarrollo
+## Nota
 
-### Phase 1: Foundation
-- [x] **Initial Database Schema Design:** Defining entities for Users, Entrepreneurs, Products, and Orders.
-
-### Phase 2: First Backend Build (Core API)
-- [ ] **Milestone 2.1:** Server scaffolding with Node.js/Express and Supabase connection.
-- [ ] **Milestone 2.2:** Implementation of User and Entrepreneur basic REST endpoints.
-- [ ] **Milestone 2.3:** Core Product CRUD logic (Create, Read, Update, Delete).
-
-### Phase 3: Frontend Development (MVP UI)
-- [ ] **Milestone 3.1:** Project initialization with React and Tailwind CSS configuration.
-- [ ] **Milestone 3.2:** Component Library setup (Navbar, Sidebar, Button, and Input).
-- [ ] **Milestone 3.3:** Marketplace View: Product grid and Entrepreneur profile pages.
-
-### Phase 4: Authentication & Security
-- [ ] **Supabase Auth Integration:** Implementation of JWT-based login, signup, and protected routes.
-- [ ] **Role-based Access Control (RBAC):** Restricting actions for consumers vs. entrepreneurs.
-
-### Phase 5: Second Backend Build & Integration
-- [ ] **Order Management System:** Logic for handling order flows and status transitions.
-- [ ] **Geolocation Services:** Integration with Google Maps API for distance and ETA calculations.
-- [ ] **AI Recommendation Engine:** Integrating OpenAI API to process natural language consumer prompts.
-
-### Phase 6: Testing & Quality Assurance
-- [ ] **First Integration Test:** End-to-end flow from product creation to order completion.
-- [ ] **API Load Testing:** Ensuring the backend handles concurrent requests efficiently.
-- [ ] **Bug Bash:** Fixing UI/UX inconsistencies and edge cases.
-
-### Phase 7: Deployment & Launch
-- [ ] **CI/CD Pipeline:** Setting up automated deployments (Vercel/GitHub Actions).
-- [ ] **Beta Release:** Deploying the first live version for university user testing.
-- [ ] **Production Monitoring:** Setting up logging and error tracking.
-
-
-## ✉️ More
-
-Behance Link: [PickU Behance](https://www.behance.net/gallery/246129701/PickU-UIFrontend)
+La documentación de este README describe la estructura real actual del repositorio y reemplaza versiones anteriores del scaffolding que ya no corresponden al código vigente.

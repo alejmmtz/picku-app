@@ -1,4 +1,5 @@
 import { Router } from "express";
+import { authMiddleware } from "../../middlewares/authMiddleware.js";
 
 import {
     createProductController,
@@ -10,12 +11,10 @@ import {
     deleteProductController,
 } from "./product.controller.js";
 
-//TODO: Add auth middleware when auth module is ready
-
 export const productRouter = Router();
 
 //Create product
-productRouter.post("/", createProductController);
+productRouter.post("/", authMiddleware, createProductController);
 
 //Get all products
 productRouter.get("/", getProductsController);
@@ -28,11 +27,11 @@ productRouter.get("/entrepreneur/:entrepreneurId",getProductsByEntrepreneurIdCon
 productRouter.get("/:id", getProductByIdController);
 
 //Update product
-productRouter.patch("/:id", updateProductController);
+productRouter.patch("/:id", authMiddleware, updateProductController);
 
 //Update product availability
-productRouter.patch( "/:id/availability", updateProductAvailabilityController
+productRouter.patch( "/:id/availability", authMiddleware, updateProductAvailabilityController
 );
 
 //Delete product
-productRouter.delete("/:id", deleteProductController);
+productRouter.delete("/:id", authMiddleware, deleteProductController);

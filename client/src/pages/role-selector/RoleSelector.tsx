@@ -7,17 +7,15 @@ const RoleSelector = () => {
   const navigate = useNavigate();
 
   return (
-    <main className="min-h-screen flex flex-col justify-center px-13 text-black relative">
-      <section className="w-full max-w-[430px] mx-auto">
+    <main className="min-h-screen flex flex-col justify-center px-12 text-black relative">
+      <section className="w-full ">
         <div className="mb-10">
-          <h2 className="text-[32px] font-semibold leading-tight mb-2 ">
+          <h2 className="text-3xl font-semibold leading-tight mb-2 ">
             Sooo...
           </h2>
 
           <div className="flex items-center gap-2">
-            <p className="text-[16px] font-light">
-              How would you like to use PickU?
-            </p>
+            <p className="text font-light">How would you like to use PickU?</p>
           </div>
         </div>
 
@@ -25,17 +23,17 @@ const RoleSelector = () => {
           <button
             type="button"
             onClick={() => navigate("/consumer/login")}
-            className="w-full min-h-[112px] rounded-[22px] border border-[#DCD6D3] px-6 flex items-center gap-6 text-left transition-all duration-400 hover:border-orange hover:shadow-[0_12px_30px_rgba(255,112,45,0.10)] active:scale-[0.100]"
+            className="cursor-pointer w-full rounded-2xl border border-black/25 px-4 py-4 flex items-center gap-6 text-left transition-all duration-400 hover:border-orange active:scale-90"
           >
-            <div className="w-[74px] h-[74px] rounded-[14px] bg-[#FFE9DD] flex items-center justify-center shrink-0">
-              <ShoppingBagIcon className="w-9 h-9" />
+            <div className="p-4 rounded-xl bg-orange/15 flex items-center justify-center shrink-0">
+              <ShoppingBagIcon className="w-8 h-8" />
             </div>
 
             <div>
-              <h2 className="text-orange text-[17px] font-medium mb-1">
+              <h2 className="text-orange text-lg font-semibold mb-1">
                 I’m a Consumer
               </h2>
-              <p className="text-[15px] leading-tight font-light">
+              <p className="leading-tight text-sm font-light">
                 Browse and buy from student entrepreneurs
               </p>
             </div>
@@ -44,17 +42,17 @@ const RoleSelector = () => {
           <button
             type="button"
             onClick={() => navigate("/entrepreneur/login")}
-            className="w-full min-h-[112px] rounded-[22px] border border-[#ddd4cc] px-6 flex items-center gap-6 text-left transition-all duration-400 hover:border-blue hover:shadow-[0_12px_30px_rgba(255,112,45,0.10)] active:scale-[0.100]"
+            className="cursor-pointer w-full rounded-2xl border border-black/25 px-4 py-4 flex items-center gap-6 text-left transition-all duration-400 hover:border-blue active:scale-90"
           >
-            <div className="w-[74px] h-[74px] rounded-[14px] bg-[#DFF1FC] flex items-center justify-center shrink-0">
-              <ShoppingCartIcon className="w-9 h-9" />
+            <div className="p-4 rounded-xl bg-blue/15 flex items-center justify-center shrink-0">
+              <ShoppingCartIcon className="w-8 h-8" />
             </div>
 
             <div>
-              <h2 className="text-blue text-[17px] font-medium mb-1">
+              <h2 className="text-blue text-lg font-semibold mb-1">
                 I’m an Entrepreneur
               </h2>
-              <p className="text-[15px] leading-tight font-light">
+              <p className="leading-tight text-sm font-light">
                 Sell your products to fellow students
               </p>
             </div>
@@ -62,7 +60,7 @@ const RoleSelector = () => {
         </div>
       </section>
 
-      <p className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full px-8 text-center text-[15px] font-light">
+      <p className="absolute bottom-12 left-1/2 -translate-x-1/2 w-full px-8 text-center font-light">
         You can switch roles anytime from your profile
       </p>
     </main>

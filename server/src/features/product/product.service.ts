@@ -6,6 +6,39 @@ import type {
     UpdateProductDTO,
 } from "./product.types.js";
 
+const getEntrepreneurIdByOwnerId = async (userId: string): Promise<string> => {
+    const result = await pool.query<{ id: string }>(
+        `
+            SELECT id
+            FROM entrepreneurs
+            WHERE student_id = $1
+        `,
+        [userId]
+    );
+
+    const entrepreneurId = result.rows[0]?.id;
+
+    if (!entrepreneurId) {
+        throw Boom.notFound("Entrepreneur not found for this user");
+    }
+
+    return entrepreneurId;
+};
+
+const ensureProductOwnership = async (
+    productId: string,
+    ownerId: string
+): Promise<Product> => {
+    const product = await getProductByIdService(productId);
+    const entrepreneurId = await getEntrepreneurIdByOwnerId(ownerId);
+
+    if (product.entrepreneur_id !== entrepreneurId) {
+        throw Boom.forbidden("You can only manage your own products");
+    }
+
+    return product;
+};
+
 //Get all products
 export const getProductsService = async (): Promise<Product[]> => {
     const query = `
@@ -130,6 +163,18 @@ export const createProductService = async (
     return result.rows[0];
 };
 
+export const createProductForOwnerService = async (
+    ownerId: string,
+    data: Omit<CreateProductDTO, "entrepreneur_id">
+): Promise<Product> => {
+    const entrepreneurId = await getEntrepreneurIdByOwnerId(ownerId);
+
+    return createProductService({
+        entrepreneur_id: entrepreneurId,
+        ...data,
+    });
+};
+
 //Update an existing product
 export const updateProductService = async (
     productId: string,
@@ -175,6 +220,15 @@ export const updateProductService = async (
     return result.rows[0];
 };
 
+export const updateOwnedProductService = async (
+    ownerId: string,
+    productId: string,
+    data: UpdateProductDTO
+): Promise<Product> => {
+    await ensureProductOwnership(productId, ownerId);
+    return updateProductService(productId, data);
+};
+
 //Update product availability
 export const updateProductAvailabilityService = async (
     productId: string,
@@ -201,6 +255,15 @@ export const updateProductAvailabilityService = async (
     return result.rows[0];
 };
 
+export const updateOwnedProductAvailabilityService = async (
+    ownerId: string,
+    productId: string,
+    isAvailable: boolean
+): Promise<Product> => {
+    await ensureProductOwnership(productId, ownerId);
+    return updateProductAvailabilityService(productId, isAvailable);
+};
+
 //Delete product by id
 export const deleteProductService = async (
     productId: string
@@ -224,4 +287,12 @@ export const deleteProductService = async (
     const result = await pool.query(query, [productId]);
 
     return result.rows[0] ?? existingProduct;
+};
+
+export const deleteOwnedProductService = async (
+    ownerId: string,
+    productId: string
+): Promise<Product> => {
+    await ensureProductOwnership(productId, ownerId);
+    return deleteProductService(productId);
 };

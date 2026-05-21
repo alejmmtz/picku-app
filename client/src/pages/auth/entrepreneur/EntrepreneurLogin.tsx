@@ -93,32 +93,30 @@ const EntrepreneurLogin = () => {
   };
 
   return (
-    <main className="flex min-h-screen justify-center overflow-hidden bg-background font-sofia text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-31">
-        <div className="mb-[70px] flex justify-center">
+    <main className="flex h-screen items-center justify-center w-full bg-background p-12 relative">
+      <section className="w-full">
+        <div className="mb-12 flex min-h-40 items-center justify-center relative z-50">
           <img
-            className="h-auto w-[280px]"
+            className="block h-auto w-64"
             src="/resources/Img-login-Entrepeneurs.svg"
-            alt=""
+            alt="Ilustración de inicio de sesión"
           />
         </div>
 
-        <header className="mb-[38px] mt-[-20px]">
-          <h1 className="m-0 !font-sofia text-[25px] font-semibold leading-[1.1]">
+        <header>
+          <h2 className="mb-4 text-2xl font-semibold leading-[0.2] text-black">
             Welcome back!
-          </h1>
-          <p className="mt-[7px] text-[16px] font-light leading-[1.2]">
-            Log in as Entrepeneurs
-          </p>
+          </h2>
+          <p className="text-black font-light">Log in as Entrepeneurs</p>
         </header>
 
-        <form className="flex flex-col gap-[16px] mt-10 mb-[10px] " onSubmit={handleSubmit}>
-          <label className="flex flex-col gap-[5px]">
-            <span className="text-[15px] font-light">Email</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-              <MailIcon className="h-[22px] w-[22px] shrink-0" />
+        <form className="mt-8 flex flex-col gap-4" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Email</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <MailIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent py-[14px] font-light  text-black outline-none placeholder:text-[rgba(27,27,27,0.38)]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type="email"
                 placeholder="Enter email"
                 value={email}
@@ -129,12 +127,12 @@ const EntrepreneurLogin = () => {
             </span>
           </label>
 
-          <label className="flex flex-col gap-[8px]">
-            <span className="text-[14px] leading-[1.2] font-light">Password</span>
-             <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
-              <LockIcon className="h-[22px] w-[22px] shrink-0" />
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Password</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <LockIcon className="h-5 w-5 shrink-0" />
               <input
-                className="w-full bg-transparent font-light py-[14px] outline-none placeholder:text-[#9d9d9d]"
+                className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
                 type={showPassword ? "text" : "password"}
                 placeholder="Enter password"
                 value={password}
@@ -142,27 +140,28 @@ const EntrepreneurLogin = () => {
                 autoComplete="current-password"
                 required
               />
+
               <button
-                className="bg-transparent p-0"
+                className="inline-flex items-center bg-transparent p-0"
                 type="button"
                 onClick={() => setShowPassword((current) => !current)}
                 aria-label={
-                  showPassword ? "Ocultar contrasena" : "Mostrar contrasena"
+                  showPassword ? "Ocultar contraseña" : "Mostrar contraseña"
                 }
               >
                 {showPassword ? (
-            <EyeIcon className="h-[24px] w-[24px] shrink-0" />
-          ) : (
-            <EyeOffIcon className="h-[24px] w-[24px] shrink-0" />
-          )}
+                  <EyeIcon className="h-5 w-5 shrink-0 cursor-pointer" />
+                ) : (
+                  <EyeOffIcon className="h-5 w-5 shrink-0 cursor-pointer" />
+                )}
               </button>
             </span>
           </label>
 
           <p
-            className={`m-0 min-h-[18px] text-[14px] ${
+            className={`m-0 ${
               errorMessage
-                ? "text-[#c43e14]"
+                ? "text-maroon"
                 : successMessage
                   ? "text-[#2c7b44]"
                   : ""
@@ -172,7 +171,7 @@ const EntrepreneurLogin = () => {
           </p>
 
           <button
-            className="min-h-[52px] rounded-[12px] bg-maroon text-[16px] text-white transition-[transform,opacity] active:scale-[0.98] disabled:cursor-wait disabled:opacity-70"
+            className="rounded-xl cursor-pointer bg-maroon p-4 text-sm text-white transition-all duration-500 active:scale-90 disabled:cursor-wait disabled:opacity-70"
             type="submit"
             disabled={isSubmitting}
           >
@@ -180,10 +179,10 @@ const EntrepreneurLogin = () => {
           </button>
         </form>
 
-        <p className="mt-[18px] text-center font-light text-[16px]">
+        <p className="mt-6 text-center text-[16px] font-light">
           Don't have an account?{" "}
           <button
-            className="bg-transparent p-0 font-medium text-maroon"
+            className="cursor-pointer bg-transparent p-0 font-medium text-maroon"
             type="button"
             onClick={() => navigate("/entrepreneur/signup")}
           >
