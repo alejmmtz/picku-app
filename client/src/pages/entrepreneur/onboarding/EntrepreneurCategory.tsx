@@ -84,7 +84,7 @@ const EntrepreneurCategory = () => {
       </section>
 
       <button
-        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white disabled:opacity-45"
+        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white disabled:opacity-45"
         type="button"
         disabled={!category}
         onClick={continueToNext}

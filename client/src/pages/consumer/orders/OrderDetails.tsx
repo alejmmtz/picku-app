@@ -94,11 +94,11 @@ const OrderDetails = () => {
 
   if (!order || !primaryItem) {
     return (
-      <main className="flex min-h-screen justify-center bg-background font-sofia">
-        <section className="min-h-screen w-full max-w-[430px] bg-background px-13 pt-7 pb-9 font-sofia">
+      <main className="app-shell">
+        <section className="min-h-screen w-full max-w-[430px] bg-background px-12 pb-9 pt-7">
 
           <button
-            className="mt-0 inline-flex min-h-10 items-center gap-2 rounded-[14px] bg-[rgba(255,255,255,0.86)] px-4 !font-sofia text-[16px] font-medium"
+            className="mt-0 inline-flex min-h-10 items-center gap-2 rounded-xl bg-[rgba(255,255,255,0.86)] px-4 !font-sofia text-[16px] font-medium"
             type="button"
             onClick={() => navigate("/consumer/orders")}
           >
@@ -120,9 +120,9 @@ const OrderDetails = () => {
   }
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia">
-      <section className="min-h-screen w-full max-w-[430px] bg-background font-sofia">
-        <div className="relative h-[324px] overflow-hidden px-13 pt-7">
+    <main className="app-shell">
+      <section className="min-h-screen w-full max-w-[430px] bg-background">
+        <div className="relative h-[324px] overflow-hidden px-12 pt-7">
           <img
             className="absolute inset-0 h-full w-full object-cover"
             src={primaryItem.img || order.entrepreneur.img}
@@ -136,7 +136,7 @@ const OrderDetails = () => {
           <button
             type="button"
             onClick={() => navigate("/consumer/orders")}
-            className="flex items-center gap-1 rounded-full font-regular bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
+            className="flex items-center gap-1 rounded-full font-light bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
           >
             <ArrowIcon className="w-3 h-3" />
             <span>Orders</span>
@@ -144,8 +144,8 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-13 pt-7 pb-9">
-          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-[10px] bg-orange px-[10px] font-medium text-[22px] font-sofia text-white">
+        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-12 pt-7 pb-9">
+          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-xl bg-orange px-[10px] font-medium text-[22px] font-sofia text-white">
             x{primaryItem.quantity}
           </span>
 
@@ -164,15 +164,15 @@ const OrderDetails = () => {
             </span>
           </div>
 
-          <h2 className="mt-[35px] mb-3 font-sofia text-[18px] font-regular text-black">
+          <h2 className="mt-[35px] mb-3 font-sofia text-[18px] font-light text-black">
             Delivery notes
           </h2>
-          <p className="m-0 font-sofia font-light text-[16px] leading-[1.15] text-[#707070]">
+          <p className="m-0 font-sofia font-light text-[16px] leading-[1.15] text-black/60">
             {getOrderDescription(order)}
           </p>
 
           {order.cancel_reason ? (
-            <section className="mt-[30px] rounded-[14px] border-[1.5px] border-[#b4202f] p-[20px]">
+            <section className="mt-[30px] rounded-xl border-[1.5px] border-[#b4202f] p-[20px]">
               <h3 className="mb-2 font-sofia text-[16px] font-medium text-[#b4202f]">
                 Reason for order decline
               </h3>

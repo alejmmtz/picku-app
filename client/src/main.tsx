@@ -5,15 +5,18 @@ import "./index.css";
 
 import router from "./routes/Router";
 import { AxiosProvider } from "./providers/AxiosProvider";
+import { MapsProvider } from "./providers/MapsProvider";
 import { StrictMode } from "react";
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AxiosProvider>
-      <CartProvider>
-        <RouterProvider router={router} />
-      </CartProvider>
+      <MapsProvider>
+        <CartProvider>
+          <RouterProvider router={router} />
+        </CartProvider>
+      </MapsProvider>
     </AxiosProvider>
   </StrictMode>
 );

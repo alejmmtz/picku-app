@@ -39,8 +39,8 @@ const ProductDetail = () => {
 
   if (loading) {
     return (
-      <main className="min-h-screen flex justify-center bg-background font-sofia">
-        <section className="w-full max-w-[430px] min-h-screen flex items-center justify-center">
+      <main className="app-shell">
+        <section className="app-screen flex items-center justify-center">
           <Loader message="Loading product..." />
         </section>
       </main>
@@ -49,8 +49,8 @@ const ProductDetail = () => {
 
   if (!product) {
     return (
-      <main className="min-h-screen flex justify-center bg-background font-sofia">
-        <section className="w-full max-w-[430px] min-h-screen flex flex-col items-center justify-center px-8 text-center">
+      <main className="app-shell">
+        <section className="app-screen flex flex-col items-center justify-center text-center">
           <p className="text-[18px] font-medium">Product not found</p>
 
           <button
@@ -76,8 +76,8 @@ const ProductDetail = () => {
 
 
   return (
-    <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="relative w-full max-w-[430px] min-h-screen overflow-hidden">
+    <main className="app-shell">
+      <section className="relative min-h-screen w-full max-w-[430px] overflow-hidden">
         <div className="relative h-[330px]">
           <img
             src={product.img}
@@ -92,7 +92,7 @@ const ProductDetail = () => {
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 font-regular rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
+              className="flex items-center gap-1 font-light rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
             >
               <ArrowIcon className="w-3 h-3" />
               <span>Back</span>
@@ -102,12 +102,12 @@ const ProductDetail = () => {
 
          {/*product information*/}
          
-        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-13 pt-8 pb-10">
+        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-12 pt-8 pb-10">
           <div className="flex items-start justify-between gap-4 mb-8">
             <div>
               <h2 className="text-[21px] font-medium">{product.name}</h2>
 
-              <p className="mt-1 text-[32px] leading-none font-regular text-orange">
+              <p className="mt-1 text-[32px] leading-none font-light text-orange">
                 ${product.price.toLocaleString("es-CO")}
               </p>
             </div>
@@ -116,7 +116,7 @@ const ProductDetail = () => {
               className={`rounded-full bg-[#B1EE9F]/20 border px-4 py-1 text-[15px] font-light ${
                 product.is_available
                   ? "border-[#3D7B00] text-[#3D7B00]"
-                  : "border-[#DCD6D3] text-[#85827F]"
+                  : "border-black/15 text-[#85827F]"
               }`}
             >
               {product.is_available ? "Available" : "Not available"}
@@ -124,9 +124,9 @@ const ProductDetail = () => {
           </div>
 
           <div className="mb-32">
-            <h2 className="text-[17px] font-regular mb-3">Description</h2>
+            <h2 className="text-[17px] font-light mb-3">Description</h2>
 
-            <p className="text-[16px] leading-tight font-light text-[#707070]">
+            <p className="text-[16px] leading-tight font-light text-black/60">
               {product.description}
             </p>
           </div>

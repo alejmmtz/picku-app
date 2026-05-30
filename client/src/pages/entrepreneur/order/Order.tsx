@@ -147,7 +147,7 @@ export default function Order() {
 
   if (isLoading) {
   return (
-    <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
+    <main className="app-shell sm:px-6 sm:py-6">
       <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
         <Loader message="Loading order..." />
       </section>
@@ -157,8 +157,8 @@ export default function Order() {
 
   if (!order) {
     return (
-      <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
-        <section className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden px-13 text-center sm:mx-auto sm:w-100">
+      <main className="app-shell sm:px-6 sm:py-6">
+        <section className="relative flex h-dvh w-full flex-col items-center justify-center overflow-hidden px-12 text-center sm:mx-auto sm:w-100">
           <h1 className="text-2xl font-semibold">No active order</h1>
           <p className="mt-3 text-sm text-black/60">
             {feedbackMessage || "Incoming orders will appear here."}
@@ -188,7 +188,7 @@ export default function Order() {
   }
 
   return (
-    <main className="min-h-screen bg-background text-black sm:px-6 sm:py-6">
+    <main className="app-shell sm:px-6 sm:py-6">
       <section className="relative h-dvh w-full overflow-hidden sm:mx-auto sm:w-100">
         <OrderMap />
         <OrderFlowHeader onBack={() => navigate("/entrepreneur/orders")} />

@@ -129,7 +129,7 @@ const EntrepreneurConfirm = () => {
         <label className="flex flex-col gap-[8px]">
           <span className="text-[14px] font-light">Company Name</span>
           <button
-            className="flex min-h-[52px] items-center justify-between rounded-[10px] border border-maroon px-[18px] text-left text-[14px]"
+            className="flex min-h-[52px] items-center justify-between rounded-xl border border-maroon px-[18px] text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
@@ -141,7 +141,7 @@ const EntrepreneurConfirm = () => {
         <label className="flex flex-col gap-[8px]">
           <span className="text-[14px] font-light">Contact Information</span>
           <button
-            className="flex min-h-[52px] items-center justify-between rounded-[10px] border border-maroon px-[18px] font-light text-left text-[14px]"
+            className="flex min-h-[52px] items-center justify-between rounded-xl border border-maroon px-[18px] font-light text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
@@ -153,7 +153,7 @@ const EntrepreneurConfirm = () => {
         <label className="flex flex-col gap-[8px]">
           <span className="text-[14px] font-light">Description</span>
           <button
-            className="flex min-h-[112px] items-start justify-between rounded-[10px] border  font-light border-maroon px-[18px] py-[17px] text-left text-[14px]"
+            className="flex min-h-[112px] items-start justify-between rounded-xl border  font-light border-maroon px-[18px] py-[17px] text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
@@ -168,7 +168,7 @@ const EntrepreneurConfirm = () => {
       ) : null}
 
       <button
-        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white disabled:opacity-60"
+        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white disabled:opacity-60"
         type="button"
         disabled={isSubmitting}
         onClick={registerBusiness}

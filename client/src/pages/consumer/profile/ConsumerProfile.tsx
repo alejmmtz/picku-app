@@ -70,8 +70,8 @@ const ConsumerProfile = () => {
   const displayEmail = profile?.email ?? fallbackEmail;
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia text-black">
-     <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+    <main className="app-shell">
+     <section className="app-screen pb-[220px]">
         <header className="relative mb-[45px] flex items-start justify-between mt-1.5">
           <img src={LogoConsumer} alt="PickU" className="w-[72px]" />
           <img
@@ -82,24 +82,24 @@ const ConsumerProfile = () => {
         </header>
 
         {/* card profile */}
-        <section className="rounded-[10px] border border-[#DCD6D3] px-[18px] py-[22px]">
+        <section className="rounded-xl border border-black/15 px-[18px] py-[22px]">
           <div className="mb-[26px] flex items-center gap-[14px]">
             <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[50px] bg-orange/10">
               <UserOrangeIcon className="h-[26px] w-[26px]" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="m-0 truncate !font-sofia font-regular text-[16px] leading-[1.25]">
+              <h1 className="m-0 truncate !font-sofia font-light text-[16px] leading-[1.25]">
                 {displayName}
               </h1>
-              <p className="mt-[3px] truncate text-[15px] font-light leading-[1.25] text-[#A7A7A7]">
+              <p className="mt-[3px] truncate text-[15px] font-light leading-[1.25] text-black/45">
                 {displayEmail}
               </p>
             </div>
           </div>
 
           <button
-            className="flex min-h-[50px] w-full items-center justify-center gap-[18px] rounded-[10px] bg-orange px-4 text-[15px] font-regular text-white"
+            className="flex min-h-[50px] w-full items-center justify-center gap-[18px] rounded-xl bg-orange px-4 text-[15px] font-light text-white"
             type="button"
             onClick={() => navigate("/entrepreneur/login")}
           >
@@ -110,7 +110,7 @@ const ConsumerProfile = () => {
 
       {/* log out */}
         <button
-          className="mt-[22px] flex w-full items-center rounded-[10px] border border-[#DCD6D3] px-[18px] py-[18px] text-left"
+          className="mt-[22px] flex w-full items-center rounded-xl border border-black/15 px-[18px] py-[18px] text-left"
           type="button"
           onClick={handleLogout}
         >
@@ -120,7 +120,7 @@ const ConsumerProfile = () => {
 
           <span className="min-w-0">
             <span className="block text-[15px] font-medium leading-[1.25]">Log Out</span>
-            <span className="mt-[4px] block truncate font-light text-[15px] text-[#A7A7A7]">
+            <span className="mt-[4px] block truncate font-light text-[15px] text-black/45">
               Sign out of your account.
             </span>
           </span>

@@ -17,8 +17,8 @@ const OnboardingShell = ({
   const navigate = useNavigate();
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia text-black">
-      <section className="flex min-h-screen w-full max-w-[430px] flex-col px-[50px] py-[78px]">
+    <main className="app-shell">
+      <section className="app-screen flex flex-col py-[78px]">
         {progress > 0 ? (
           <div className="mb-[30px] flex h-[10px] items-center gap-[22px]">
             {showBack ? (

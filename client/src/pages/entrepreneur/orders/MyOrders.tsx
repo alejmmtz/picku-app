@@ -98,8 +98,8 @@ const EntrepreneurOrders = () => {
   }, [activeTab, orders]);
 
   return (
-    <main className="flex min-h-screen justify-center font-sofia">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[220px]">
         <header className="flex items-center justify-between mb-10 mt-2">
           <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] " />
         </header>
@@ -137,11 +137,11 @@ const EntrepreneurOrders = () => {
         </div>
 
         {feedbackMessage ? (
-          <p className="mb-[14px] font-regular text-[15px] text-[rgba(27,27,27,0.58)]">{feedbackMessage}</p>
+          <p className="mb-[14px] font-light text-[15px] text-[rgba(27,27,27,0.58)]">{feedbackMessage}</p>
         ) : null}
 
         {!feedbackMessage && filteredOrders.length === 0 ? (
-          <p className="mb-[14px] ml-2 font-regular text-[15px] text-[rgba(27,27,27,0.58)]">
+          <p className="mb-[14px] ml-2 font-light text-[15px] text-[rgba(27,27,27,0.58)]">
             {emptyMessages[activeTab]}
           </p>
         ) : null}
@@ -155,11 +155,11 @@ const EntrepreneurOrders = () => {
             return (
               <article
                 key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#DCD6D3] p-3"
+                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-black/15 p-3"
                 onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img
-                  className="h-[94px] w-[102px] rounded-[14px] bg-[#f2e7de] object-cover"
+                  className="h-[94px] w-[102px] rounded-xl bg-[#f2e7de] object-cover"
                   src={getOrderImage(order)}
                   alt={getOrderTitle(order)}
                   onError={(event) => {

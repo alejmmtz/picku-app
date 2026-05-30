@@ -18,6 +18,7 @@ const EntrepreneurSignup = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,10 +29,14 @@ const EntrepreneurSignup = () => {
     setIsSubmitting(true);
     setErrorMessage("");
 
+    const randomNumber = Math.floor(1000000000 + Math.random() * 9999999999);
+
+    setPhone(randomNumber.toString());
+
     try {
       await axios.post(`${API_URL}/picku/api/auth/register`, {
         name,
-
+        phone,
         email,
         password,
         role: "entrepreneur",
@@ -71,8 +76,8 @@ const EntrepreneurSignup = () => {
   };
 
   return (
-    <main className="flex h-screen items-center justify-center overflow-hidden bg-background font-sofia text-black">
-      <section className="w-full  min-h-screen p-12 ">
+    <main className="app-shell overflow-hidden">
+      <section className="app-screen flex flex-col justify-center">
         <div className="relative  flex  items-center justify-center -mb-24">
           <img
             className="h-auto w-50"
@@ -81,11 +86,11 @@ const EntrepreneurSignup = () => {
           />
         </div>
 
-        <header className="">
-          <h2 className="mb-4 text-2xl font-semibold leading-[0.2]">
+        <header>
+          <h2 className="mb-4 text-2xl font-semibold leading-tight">
             Start your own pick!
           </h2>
-          <p className="font-light ">Join PickU as Entrepreneur</p>
+          <p className="app-subtitle">Join PickU as Entrepreneur</p>
         </header>
 
         <form className="mt-8 mb-6 flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -158,7 +163,7 @@ const EntrepreneurSignup = () => {
           </p>
 
           <button
-            className="rounded-xl cursor-pointer bg-maroon p-4 text-sm text-white transition-all active:scale-90 disabled:cursor-wait disabled:opacity-70"
+            className="app-action cursor-pointer bg-maroon"
             type="submit"
             disabled={isSubmitting}
           >

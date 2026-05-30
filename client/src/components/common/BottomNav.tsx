@@ -91,9 +91,9 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
   const items = variant === "consumer" ? consumerItems : entrepreneurItems;
   const activeColor = variant === "consumer" ? "text-orange" : "text-maroon";
   const activeBarColor = variant === "consumer" ? "bg-orange" : "bg-maroon";
-  const inactiveColor = "text-[#a7a7a7]";
+  const inactiveColor = "text-black/40";
   return (
-    <nav className="fixed bottom-0 z-50 w-full rounded-t-2xl bg-white px-3 pb-5 pt-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
+    <nav className="fixed bottom-0 z-50 w-full rounded-t-2xl border-t border-black/10 bg-white px-3 pb-5 pt-4 shadow-[0_-10px_30px_rgba(0,0,0,0.05)]">
       <div className={`grid grid-cols-4 gap-1`}>
         {items.map((item) => {
           const isActive = item.matches(pathname);
@@ -115,7 +115,7 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
               )}
 
               <span
-                className={`h-6 w-6 ${isActive ? activeBarColor : "bg-[#A3A3A3]"}`}
+                className={`h-6 w-6 ${isActive ? activeBarColor : "bg-black/35"}`}
                 style={{
                   maskImage: `url(${maskUrl})`,
                   WebkitMaskImage: `url(${maskUrl})`,
@@ -125,7 +125,7 @@ export default function BottomNav({ variant }: { variant: BottomNavVariant }) {
                 }}
               />
 
-              <span className="text-[12px] font-regular leading-none">{item.label}</span>
+              <span className="text-[12px] font-light leading-none">{item.label}</span>
             </button>
           );
         })}

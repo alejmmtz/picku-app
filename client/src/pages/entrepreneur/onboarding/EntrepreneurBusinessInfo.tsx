@@ -39,7 +39,7 @@ const EntrepreneurBusinessInfo = () => {
       <form className="mt-[42px] flex flex-col gap-[17px]">
         <label className="flex flex-col gap-[11px]">
           <span className="text-[14px] font-light">Company Name</span>
-          <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+          <span className="flex min-h-12 items-center gap-3 rounded-xl border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
             <UserIcon className="h-[22px] w-[22px] shrink-0" />
             <input
               className="w-full bg-transparent font-light text-[15px] outline-none placeholder:text-[#9d9d9d]"
@@ -52,7 +52,7 @@ const EntrepreneurBusinessInfo = () => {
 
         <label className="flex flex-col gap-[11px]">
           <span className="text-[14px] font-light">Contact Information</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-[14px] border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border-[1.5px] border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]">
             <PhoneIcon className="h-[22px] w-[22px] shrink-0" />
             <input
               className="w-full bg-transparent font-light text-[15px] outline-none placeholder:text-[#9d9d9d]"
@@ -66,7 +66,7 @@ const EntrepreneurBusinessInfo = () => {
         <label className="flex flex-col gap-[11px]">
           <span className="text-[14px] font-light">Description</span>
           <textarea
-            className="min-h-[112px] resize-none rounded-[14px] font-light border border-maroon bg-transparent px-[18px] py-[17px] text-[15px] outline-none placeholder:text-[#9d9d9d]"
+            className="min-h-[112px] resize-none rounded-xl font-light border border-maroon bg-transparent px-[18px] py-[17px] text-[15px] outline-none placeholder:text-[#9d9d9d]"
             placeholder="Type here..."
             value={description}
             onChange={(event) => setDescription(event.target.value)}
@@ -75,7 +75,7 @@ const EntrepreneurBusinessInfo = () => {
       </form>
 
       <button
-        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white disabled:opacity-45"
+        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white disabled:opacity-45"
         type="button"
         disabled={!canContinue}
         onClick={continueToNext}

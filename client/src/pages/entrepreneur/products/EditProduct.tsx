@@ -158,8 +158,8 @@ const EditProduct = () => {
 
   return (
     <>
-      <main className="min-h-screen flex justify-center text-black">
-        <section className="w-full max-w-[430px] min-h-screen px-13 pt-16">
+      <main className="app-shell">
+        <section className="app-screen">
           <header className="mb-7 flex items-center justify-between">
             <img src={Logo} alt="PickU" className="w-[72px]" />
 
@@ -167,7 +167,7 @@ const EditProduct = () => {
               type="button"
               disabled={updatingAvailability}
               onClick={handleToggleAvailability}
-              className={`flex min-h-[40px] min-w-[92px] items-center justify-center rounded-[10px] px-[18px] text-[14px] font-regular text-white transition-opacity disabled:opacity-70 ${
+              className={`flex min-h-[40px] min-w-[92px] items-center justify-center rounded-xl px-[18px] text-[14px] font-light text-white transition-opacity disabled:opacity-70 ${
                 isAvailable ? "bg-[#48aa00]" : "bg-[#9d9d9d]"
               }`}
             >
@@ -187,7 +187,7 @@ const EditProduct = () => {
           <h2 className="mb-7 text-[28px] font-semibold">Edit product</h2>
 
           {error && (
-            <p className="mb-4 rounded-[10px] border border-maroon px-4 py-3 text-[14px] text-maroon">
+            <p className="mb-4 rounded-xl border border-maroon px-4 py-3 text-[14px] text-maroon">
               {error}
             </p>
           )}
@@ -199,7 +199,7 @@ const EditProduct = () => {
               <input
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="h-[56px] rounded-[10px] border border-maroon bg-transparent px-4 outline-none"
+                className="h-[56px] rounded-xl border border-maroon bg-transparent px-4 outline-none"
               />
             </label>
 
@@ -212,7 +212,7 @@ const EditProduct = () => {
                 step="100"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="h-[56px] rounded-[10px] border border-maroon mr-2.5 bg-transparent px-4 outline-none"
+                className="h-[56px] rounded-xl border border-maroon mr-2.5 bg-transparent px-4 outline-none"
               />
             </label>
           </div>
@@ -251,7 +251,7 @@ const EditProduct = () => {
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="h-[126px] resize-none rounded-[10px] border border-maroon bg-transparent px-4 py-4 outline-none"
+              className="h-[126px] resize-none rounded-xl border border-maroon bg-transparent px-4 py-4 outline-none"
             />
           </label>
 
@@ -259,7 +259,7 @@ const EditProduct = () => {
             type="button"
             disabled={saving}
             onClick={handleSubmit}
-            className={`mt-12 h-[58px] w-full rounded-[10px] text-[16px] text-white ${
+            className={`mt-12 h-[58px] w-full rounded-xl text-[16px] text-white ${
               saving ? "cursor-not-allowed bg-maroon/50" : "bg-maroon"
             }`}
           >
@@ -270,7 +270,7 @@ const EditProduct = () => {
             type="button"
             disabled={deleting}
             onClick={handleDelete}
-            className="mt-4 h-[58px] w-full rounded-[10px] border border-maroon text-[16px] text-maroon disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-4 h-[58px] w-full rounded-xl border border-maroon text-[16px] text-maroon disabled:cursor-not-allowed disabled:opacity-50"
           >
             {deleting ? "Deleting..." : "Delete product"}
           </button>

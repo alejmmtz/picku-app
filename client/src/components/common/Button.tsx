@@ -16,7 +16,7 @@ const Button = ({
   type = "button",
 }: ButtonProps) => {
   const baseStyles =
-    "flex h-[54px] w-[320px] ml-3 items-center justify-center gap-2 rounded-[10px] text-[15px] font-medium transition-all duration-200";
+    "app-action flex min-h-[54px] w-full items-center justify-center gap-2";
 
   const buttonStyles = disabled
     ? "cursor-not-allowed bg-orange/40 text-white"

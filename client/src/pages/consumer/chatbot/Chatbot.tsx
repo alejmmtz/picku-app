@@ -187,8 +187,8 @@ const Chatbot = () => {
   };
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[220px]">
          <header className="flex items-center justify-between mb-8 mt-1.5">
           <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
         </header>
@@ -206,7 +206,7 @@ const Chatbot = () => {
                   className={`max-w-[296px] rounded-[18px] px-4 py-3 text-[16px] leading-[1.05] shadow-none ${
                     isUser
                       ? "rounded-br-[2px] bg-orange text-white"
-                      : "rounded-bl-[2px] border border-[#DCD6D3] text-black"
+                      : "rounded-bl-[2px] border border-black/15 text-black"
                   }`}
                 >
                   {message.content}
@@ -234,7 +234,7 @@ const Chatbot = () => {
 
         <div className="fixed bottom-[85px] left-1/2 z-200 w-full max-w-[430px] border-y border-[#EBEBEB] -translate-x-1/2 bg-white px-[18px] py-6">
           <form
-            className="flex min-h-[56px] items-center gap-3 rounded-[12px] border border-[#e3d9d1] bg-white px-4"
+            className="flex min-h-[56px] items-center gap-3 rounded-xl border border-[#e3d9d1] bg-white px-4"
             onSubmit={handleSubmit}
           >
             <input

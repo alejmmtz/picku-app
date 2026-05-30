@@ -55,15 +55,15 @@ const ConsumerSignup = () => {
   };
 
   return (
-    <main className="flex h-screen items-center justify-center w-full bg-background p-12 relative">
-      <section className="w-full">
-        <div className="mb-6 flex min-h-40 right-8 top-12 absolute z-50">
+    <main className="app-shell">
+      <section className="app-screen max-h-screen flex flex-col justify-center">
+        <div className="flex min-h-40 right-10 top-14 absolute z-50">
           <img
             className="block h-auto w-35"
             src="/resources/Image-SignUp-Consumer.svg"
           />
         </div>
-        <div className="mb-6 flex min-h-40 right-6 -top-2 absolute z-30">
+        <div className="mb-6 flex min-h-40 right-8 top-0 absolute z-30">
           <img
             className="block h-auto w-12.5"
             src="/resources/sign-up-colors.svg"
@@ -71,10 +71,10 @@ const ConsumerSignup = () => {
         </div>
 
         <header>
-          <h2 className="mb-4 text-2xl font-semibold leading-[0.2] text-black">
+          <h2 className="mb-2 text-2xl font-semibold leading-tight text-black">
             Ready to pick?
           </h2>
-          <p className="text-black font-light">Join PickU as Consumer</p>
+          <p className="app-subtitle">Join PickU as Consumer</p>
         </header>
 
         <form className="mt-12 flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -162,7 +162,7 @@ const ConsumerSignup = () => {
           </p>
 
           <button
-            className="rounded-xl cursor-pointer bg-orange p-4 text-sm text-white transition-all duration-500 active:scale-90 disabled:cursor-wait disabled:opacity-70"
+            className="app-action cursor-pointer bg-orange"
             type="submit"
             disabled={isSubmitting}
           >

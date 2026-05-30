@@ -119,27 +119,27 @@ const AddProduct = () => {
   };
 
   return (
-    <main className="min-h-screen flex justify-center text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-10">
+    <main className="app-shell">
+      <section className="app-screen pb-10">
 
         <img src={Logo} alt="PickU" className="w-[72px] mb-10" />
 
         <button
           type="button"
           onClick={() => navigate("/entrepreneur/products")}
-          className="mb-2 flex items-center gap-2 text-[17px] font-regular"
+          className="mb-2 flex items-center gap-2 text-[17px] font-light"
         >
           <ArrowIcon className="w-4 h-4" />
 
           <span>Products</span>
         </button>
 
-        <h2 className="mb-8 text-[28px] font-semibold">
+        <h2 className="app-title mb-8">
           Create new product
         </h2>
 
         {error && (
-          <p className="mb-4 rounded-[10px] border border-maroon px-4 py-3 text-[14px] text-maroon">
+          <p className="mb-4 rounded-xl border border-maroon px-4 py-3 text-[14px] text-maroon">
             {error}
           </p>
         )}
@@ -154,7 +154,7 @@ const AddProduct = () => {
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter product name"
-              className="h-[56px] w-[190px] rounded-[10px] border border-maroon bg-transparent px-4 outline-none"
+              className="app-field h-[56px] w-[190px] border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
             />
           </label>
 
@@ -170,7 +170,7 @@ const AddProduct = () => {
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="Enter price"
-              className="h-[56px] rounded-[10px] border border-maroon bg-transparent px-4 outline-none"
+              className="app-field h-[56px] border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
             />
           </label>
         </div>
@@ -190,7 +190,7 @@ const AddProduct = () => {
 
           <label
             htmlFor="product-image"
-            className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border-2 border-dashed border-maroon/30 bg-maroon/5"
+            className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-maroon/30 bg-maroon/5 transition-all duration-500 hover:border-maroon/60"
           >
             {imagePreview ? (
               <img
@@ -213,7 +213,7 @@ const AddProduct = () => {
             value={description}
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter details"
-            className="h-[126px] resize-none rounded-[10px] border border-maroon bg-transparent px-4 py-4 outline-none"
+            className="app-field h-[126px] resize-none border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
           />
         </label>
 
@@ -222,9 +222,9 @@ const AddProduct = () => {
           type="button"
           disabled={creating || loadingEntrepreneur}
           onClick={handleSubmit}
-          className={`mt-26 h-[58px] w-full rounded-[10px] text-[16px] text-white ${
+          className={`app-action mt-26 h-[58px] w-full bg-maroon text-[16px] ${
             creating || loadingEntrepreneur
-              ? "cursor-not-allowed bg-maroon/50"
+              ? "bg-maroon/50"
               : "bg-maroon"
           }`}
         >

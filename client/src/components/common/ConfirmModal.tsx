@@ -21,12 +21,12 @@ const ConfirmModal = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-6 backdrop-blur-[2px]">
-      <div className="w-full max-w-[340px] rounded-[24px] bg-background p-6 shadow-xl">
-        <h2 className="text-[22px] font-semibold">
+      <div className="app-card w-full max-w-[340px] bg-background p-6 shadow-xl">
+        <h2 className="text-[22px] font-semibold text-black">
           {title}
         </h2>
 
-        <p className="mt-2 text-[15px] leading-relaxed text-[#7A716D]">
+        <p className="app-subtitle mt-2">
           {description}
         </p>
 
@@ -34,7 +34,7 @@ const ConfirmModal = ({
           <button
             type="button"
             onClick={onCancel}
-            className="h-[52px] flex-1 rounded-[12px] border border-[#D8D1CD] text-[15px]"
+            className="app-ghost-action h-[52px] flex-1 border-black/15 text-black"
           >
             {cancelText}
           </button>
@@ -42,7 +42,7 @@ const ConfirmModal = ({
           <button
             type="button"
             onClick={onConfirm}
-            className="h-[52px] flex-1 rounded-[12px] bg-[#A40019] text-[15px] text-white"
+            className="app-action h-[52px] flex-1 bg-maroon"
           >
             {confirmText}
           </button>

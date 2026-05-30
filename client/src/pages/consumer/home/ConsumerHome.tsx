@@ -61,8 +61,8 @@ const ConsumerHome = () => {
 }, [entrepreneurs, products, searchTerm]);
 
   return (
-    <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[140px]">
         <header className="flex items-center justify-between mb-7">
           <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
 
@@ -79,7 +79,7 @@ const ConsumerHome = () => {
           <p className="text-[16px] mb-1 font-light">
             Welcome back, {consumerName}!
           </p>
-          <h2 className="text-[27px] font-bold leading-tight">
+          <h2 className="app-title">
             Discover your next pick
           </h2>
         </section>
@@ -93,21 +93,7 @@ const ConsumerHome = () => {
         placeholder="Search for business..."
         value={searchTerm}
         onChange={(event) => setSearchTerm(event.target.value)}
-        className="
-        w-full
-        font-light
-        h-[54px]
-        rounded-[10px]
-        border
-        border-[#DCD6D3]
-        bg-transparent
-        pl-11
-        pr-5
-        text-[13px]
-        outline-none
-        placeholder:text-[#9B928E]
-        focus:border-orange
-        "
+        className="h-[54px] w-full rounded-xl border border-black/15 bg-transparent pl-11 pr-5 text-[13px] font-light outline-none transition-all duration-500 placeholder:text-black/50 focus:border-orange focus:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]"
     />
     </div>
 
@@ -119,16 +105,16 @@ const ConsumerHome = () => {
 
     {/*loader*/}
         <section>
-          <h2 className="text-[20px] font-regular mb-4">Open business</h2>
+          <h2 className="text-[20px] font-light mb-4">Open business</h2>
 
           {loading && (
         <Loader message="Finding open businesses..." />
         )}
 
         {!loading && filteredEntrepreneurs.length === 0 && (
-        <div className="flex flex-col items-center justify-center rounded-[16px] px-10 mt-30 py-10 text-center">
+        <div className="flex flex-col items-center justify-center rounded-xl px-10 mt-30 py-10 text-center">
             <p className="text-[18px] font-medium">No open businesses yet :(</p>
-            <p className="mt-2 text-[16px] leading-tight font-light text-[#7A716D]">
+            <p className="mt-2 text-[16px] leading-tight font-light text-black/60">
             Try again later.
             </p>
         </div>
@@ -142,12 +128,12 @@ const ConsumerHome = () => {
                 onClick={() =>
                   navigate(`/consumer/business/${entrepreneur.id}`)
                 }
-                className="rounded-[13px] border border-[#DCD6D3] p-3 cursor-pointer transition-all duration-200 hover:border-orange hover:shadow-[0_12px_30px_rgba(255,112,45,0.10)] active:scale-[0.100]"
+                className="app-card cursor-pointer p-3 transition-all duration-500 hover:border-orange hover:shadow-[0_12px_30px_rgba(255,112,45,0.10)] active:scale-95"
               >
                 <img
                   src={entrepreneur.img}
                   alt={entrepreneur.name}
-                  className="w-full h-[106px] object-cover rounded-[10px] mb-3"
+                  className="w-full h-[106px] object-cover rounded-xl mb-3"
                 />
 
                 <div className="flex items-center gap-1 mb-1">
@@ -157,7 +143,7 @@ const ConsumerHome = () => {
                   <CheckIcon className="w-6 h-6" />
                 </div>
 
-                <p className="text-[15px] font-light ext-[#707070] mb-4 line-clamp-1">
+                <p className="mb-4 line-clamp-1 text-[15px] font-light text-black/60">
                   {entrepreneur.description}
                 </p>
 

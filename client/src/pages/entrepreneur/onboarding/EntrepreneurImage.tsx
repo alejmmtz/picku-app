@@ -80,7 +80,7 @@ const EntrepreneurImage = () => {
       />
 
       <button
-        className="mt-auto min-h-[53px] rounded-[12px] font-light bg-maroon text-[16px] text-white"
+        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white"
         type="button"
         onClick={continueToNext}
       >

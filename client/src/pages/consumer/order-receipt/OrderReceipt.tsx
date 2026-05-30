@@ -48,7 +48,7 @@ export default function OrderReceipt() {
 
   if (!order) {
     return (
-      <main className="min-h-screen bg-background px-13 text-black sm:py-6">
+      <main className="app-shell px-12 sm:py-6">
         <section className="relative flex h-dvh w-full flex-col items-center justify-center bg-background text-center">
           <p className="text-sm text-black/60">
             {feedbackMessage || "Loading receipt..."}
@@ -66,7 +66,7 @@ export default function OrderReceipt() {
   }
 
   return (
-    <main className="min-h-screen bg-background px-13 py-13 text-black sm:py-6">
+    <main className="app-shell px-12 py-13 sm:py-6">
       <section className="relative h-dvh w-full bg-background">
         <div className="relative z-10 flex h-full flex-col">
           <div className="flex flex-1 flex-col">

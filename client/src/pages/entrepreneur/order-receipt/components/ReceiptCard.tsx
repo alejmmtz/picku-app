@@ -36,7 +36,7 @@ export default function ReceiptCard({ order }: ReceiptCardProps) {
         <ReceiptRow label="Date:" value={formatDate(order.created_at)} accent />
         <div className="flex items-center justify-between ">
           <span className="text-black">Status:</span>
-          <span className="inline-flex w-fit items-center rounded-full border border-[#3D7B00]/53 bg-[#93E47A]/10 px-3 py-1 text-sm font-regular text-[#3D7B00]">
+          <span className="inline-flex w-fit items-center rounded-full border border-[#3D7B00]/53 bg-[#93E47A]/10 px-3 py-1 text-sm font-light text-[#3D7B00]">
             {order.status === "delivered" ? "Delivered" : "Completed"}
           </span>
         </div>

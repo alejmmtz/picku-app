@@ -39,14 +39,14 @@ const EntrepreneurProducts = () => {
   }, [api, navigate]);
 
   return (
-    <main className="min-h-screen flex justify-center bg-background text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[140px]">
         <img src={Logo} alt="PickU" className="w-[72px] mt-2 mb-14" />
 
         <div className="flex items-center justify-between mb-10">
           <div>
-            <h2 className="text-[28px] font-semibold">My products</h2>
-            <p className="text-[16px] mt-1 font-light text-[#9C9BA6]">
+            <h2 className="app-title">My products</h2>
+            <p className="app-subtitle mt-1">
               Total {products.length} items.
             </p>
           </div>
@@ -56,7 +56,7 @@ const EntrepreneurProducts = () => {
           <button
             type="button"
             onClick={() => navigate("/entrepreneur/products/new")}
-            className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-maroon text-white"
+              className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-maroon text-white transition-all duration-500 active:scale-95"
             >
             <PlusIcon className="h-4 w-4" />
             </button>
@@ -70,7 +70,7 @@ const EntrepreneurProducts = () => {
             {!loading && products.length === 0 && (
             <div className="px-6 py-50 text-center">
                 <p className="text-[17px] font-medium">No products yet :(</p>
-                <p className="mt-2 text-[14px]  font-light text-[#7A716D]">
+                <p className="mt-2 text-[14px]  font-light text-black/60">
                 Create your first product.
                 </p>
             </div>
@@ -81,18 +81,18 @@ const EntrepreneurProducts = () => {
             products.map((product) => (
             <article
               key={product.id}
-              className="flex items-center gap-4 rounded-[16px] border border-[#DCD6D3] p-4"
+              className="app-card flex items-center gap-4 p-4"
             >
               <img
                 src={product.img}
                 alt={product.name}
-                className="h-[95px] w-[95px] rounded-[10px] object-cover"
+                className="h-[95px] w-[95px] rounded-xl object-cover"
               />
 
               <div className="flex-1">
                 <h2 className="text-[17px] font-medium">{product.name}</h2>
 
-                <p className="mt-1 line-clamp-2 font-light text-[14px] leading-tight text-[#85827F]">
+                <p className="mt-1 line-clamp-2 text-[14px] font-light leading-tight text-black/60">
                   {product.description}
                 </p>
 
@@ -107,7 +107,7 @@ const EntrepreneurProducts = () => {
                 onClick={() =>
                   navigate(`/entrepreneur/products/edit/${product.id}`)
                 }
-                className="rounded-full bg-maroon px-7 py-2 text-[14px] text-white"
+                className="rounded-full bg-maroon px-7 py-2 text-[14px] font-light text-white transition-all duration-500 active:scale-95"
               >
                 Edit
               </button>

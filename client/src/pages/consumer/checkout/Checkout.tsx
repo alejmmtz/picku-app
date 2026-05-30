@@ -8,6 +8,8 @@ import type { CreateOrderDTO } from "../../../types/order.types";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
 import ArrowIcon from "../../../assets/arrow.svg?react";
+import MapPinIcon from "../../../assets/map-pin.svg?react";
+import ClockIcon from "../../../assets/clock.svg?react";
 import LocationMap from "../../../components/common/LocationMap";
 
 const Checkout = () => {
@@ -97,59 +99,72 @@ const Checkout = () => {
   };
 
   return (
-    <main className="min-h-screen flex justify-center bg-background font-sofia text-black">
-      <section className="relative w-full max-w-[430px] min-h-screen px-13 pt-16 ">
-        <img src={LogoConsumer} alt="PickU" className="w-[72px] mt-1.5 mb-8" />
+    <main className="app-shell">
+      <section className="app-screen pb-36">
+        <img src={LogoConsumer} alt="PickU" className="mb-8 mt-1.5 w-[72px]" />
 
         <button
           type="button"
           onClick={() => navigate("/consumer/cart")}
-          className="mb-4 flex items-center gap-2 font-regular text-[17px]"
+          className="mb-4 flex items-center gap-2 bg-transparent p-0 text-[17px] font-light transition-all duration-500 active:scale-95"
         >
-          <ArrowIcon className="w-4 h-4" />
+          <ArrowIcon className="h-4 w-4" />
           <span>Cart</span>
         </button>
 
-        <h2 className="mb-6 text-[28px] font-bold">Checkout</h2>
+        <header>
+          <h2 className="mb-2 text-[28px] font-semibold leading-tight">
+            Checkout
+          </h2>
+          <p className="font-light text-black/70">
+            Confirm your pickup spot before placing the order.
+          </p>
+        </header>
 
-        {/* map ui */}
+        <div className="mt-8">
+          <LocationMap className="relative h-[156px] w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3] shadow-[0_8px_22px_rgba(80,3,17,0.06)]" />
 
-        <LocationMap />
+          <div className="mt-3 flex items-center justify-between rounded-xl border border-orange/20 px-4 py-3 text-[14px] font-light text-black/75">
+            <span className="inline-flex items-center gap-2">
+              <MapPinIcon className="h-4 w-4 shrink-0 text-orange" />
+              Campus pickup
+            </span>
 
-        <div className="mb-4">
-
-          {errorMessage ? (
-            <p className="mt-2 text-[13px] text-[#b4202f]">
-              {errorMessage}
-            </p>
-          ) : null}
+            <span className="inline-flex items-center gap-2">
+              <ClockIcon className="h-4 w-4 shrink-0 text-orange" />
+              3 min
+            </span>
+          </div>
         </div>
 
-        {/*pick up details*/}
+        {errorMessage ? (
+          <p className="mt-4 text-[13px] text-[#b4202f]">{errorMessage}</p>
+        ) : null}
 
-        <div className="mb-24">
-          <h2 className="mb-4 text-[20px] font-regular">Pickup Details</h2>
+        <div className="mt-8">
+          <label className="flex flex-col gap-3">
+            <span className="text-[20px] font-light">Pickup Details</span>
 
-          <textarea
-            value={pickupDetails}
-            onChange={(event) => setPickupDetails(event.target.value)}
-            placeholder="e.g, I’m in the cafeteria, I have blue shirt."
-            className="h-[126px] w-full resize-none rounded-[10px] font-light border border-orange bg-transparent px-5 py-4 text-[14px] outline-none placeholder:text-[#7B7B7B] focus:border-orange"
-          />
+            <textarea
+              value={pickupDetails}
+              onChange={(event) => setPickupDetails(event.target.value)}
+              placeholder="e.g. I'm in the cafeteria, I have a blue shirt."
+              className="h-[126px] w-full resize-none rounded-xl border border-orange bg-transparent px-5 py-4 text-[14px] font-light outline-none transition-all duration-500 placeholder:text-black/50 focus:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]"
+            />
+          </label>
         </div>
 
-        {/* items detail */}
-        <div className="mb-8 flex flex-col gap-4">
+        <div className="mt-8 flex flex-col gap-4">
           {cartItems.map((item) => (
             <div
               key={item.product.id}
-              className="flex items-center font-light justify-between text-[17px]"
+              className="flex items-center justify-between rounded-xl border border-black/15 px-4 py-3 text-[17px] font-light"
             >
-              <p>
+              <p className="min-w-0 pr-3">
                 {item.product.name} x{item.quantity}
               </p>
 
-              <p>
+              <p className="shrink-0 font-medium">
                 ${(item.product.price * item.quantity).toLocaleString("es-CO")}
               </p>
             </div>
@@ -163,9 +178,7 @@ const Checkout = () => {
           </div>
         </div>
 
-        {/* subtotal */}
-
-        <div className="fixed bottom-0 left-1/2 w-full max-w-[430px] -translate-x-1/2 rounded-t-[18px] bg-white px-13 py-7 shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
+        <div className="fixed bottom-0 left-1/2 w-full max-w-[430px] -translate-x-1/2 rounded-t-[18px] bg-white px-12 py-7 shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
           <div className="flex items-center justify-between gap-5">
             <div>
               <p className="text-[16px] font-light">Subtotal</p>
@@ -178,9 +191,9 @@ const Checkout = () => {
               type="button"
               disabled={cartItems.length === 0 || isSubmitting}
               onClick={handlePlaceOrder}
-              className={`h-[50px] rounded-[10px] px-9 text-[16px] font-light text-white ${
+              className={`h-[50px] rounded-xl px-8 text-[16px] font-light text-white transition-all duration-500 active:scale-95 disabled:cursor-wait disabled:opacity-70 ${
                 cartItems.length === 0 || isSubmitting
-                  ? "cursor-not-allowed bg-orange/40"
+                  ? "bg-orange/40"
                   : "bg-orange"
               }`}
             >

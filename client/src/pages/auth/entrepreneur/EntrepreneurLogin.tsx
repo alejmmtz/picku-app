@@ -93,8 +93,8 @@ const EntrepreneurLogin = () => {
   };
 
   return (
-    <main className="flex h-screen items-center justify-center w-full bg-background p-12 relative">
-      <section className="w-full">
+    <main className="app-shell">
+      <section className="app-screen max-h-screen flex flex-col justify-center">
         <div className="mb-12 flex min-h-40 items-center justify-center relative z-50">
           <img
             className="block h-auto w-64"
@@ -104,10 +104,10 @@ const EntrepreneurLogin = () => {
         </div>
 
         <header>
-          <h2 className="mb-4 text-2xl font-semibold leading-[0.2] text-black">
+          <h2 className="mb-4 text-2xl font-semibold leading-tight text-black">
             Welcome back!
           </h2>
-          <p className="text-black font-light">Log in as Entrepeneurs</p>
+          <p className="app-subtitle">Log in as Entrepreneur</p>
         </header>
 
         <form className="mt-8 flex flex-col gap-4" onSubmit={handleSubmit}>
@@ -171,7 +171,7 @@ const EntrepreneurLogin = () => {
           </p>
 
           <button
-            className="rounded-xl cursor-pointer bg-maroon p-4 text-sm text-white transition-all duration-500 active:scale-90 disabled:cursor-wait disabled:opacity-70"
+            className="app-action cursor-pointer bg-maroon"
             type="submit"
             disabled={isSubmitting}
           >

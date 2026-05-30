@@ -51,9 +51,9 @@ export default function RequestedOrderDetails({
 };
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia">
-      <section className="min-h-screen w-full max-w-[430px] bg-background font-sofia">
-        <div className="relative h-[324px] overflow-hidden px-13 pt-7">
+    <main className="app-shell">
+      <section className="min-h-screen w-full max-w-[430px] bg-background">
+        <div className="relative h-[324px] overflow-hidden px-12 pt-7">
           <img
             className="absolute inset-0 h-full w-full object-cover"
             src={imageSrc}
@@ -70,7 +70,7 @@ export default function RequestedOrderDetails({
             <button
             type="button"
             onClick={() => navigate("/consumer/orders")}
-            className="flex items-center gap-1 rounded-full font-regular bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
+            className="ml-4 flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[13px] font-light shadow-sm transition-all duration-500 active:scale-95"
           >
             <ArrowIcon className="w-3 h-3" />
             <span>Orders</span>
@@ -78,8 +78,8 @@ export default function RequestedOrderDetails({
           </div>
         </div>
 
-        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-13 pt-7">
-          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-[10px] bg-maroon px-[10px] font-medium text-[22px] font-sofia text-white">
+        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-12 pt-7">
+          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-xl bg-maroon px-[10px] font-sofia text-[22px] font-medium text-white">
             x{quantity}
           </span>
 
@@ -96,12 +96,12 @@ export default function RequestedOrderDetails({
           </div>
 
           <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="flex min-h-[44px] items-center justify-center rounded-[10px] border border-maroon px-3 text-center  text-[rgba(27,27,27,0.82)]">
+            <div className="flex min-h-[44px] items-center justify-center rounded-xl border border-maroon px-3 text-center text-[rgba(27,27,27,0.82)]">
               <span className="truncate">{order.customer.name}</span>
             </div>
 
             <a
-              className="flex min-h-[44px] items-center justify-center gap-2 rounded-[10px] border border-maroon px-3 text-[rgba(27,27,27,0.82)]"
+              className="flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-maroon px-3 text-[rgba(27,27,27,0.82)]"
               href={`tel:${order.customer.phone}`}
             >
               <PhoneIcon className="h-[16px] w-[16px]" />
@@ -117,13 +117,16 @@ export default function RequestedOrderDetails({
           </p>
 
           {order.delivery_notes?.trim() ? (
-            <p className="mt-3 rounded-[12px] border border-[#ead9cf] px-4 py-3 text-[13px] leading-[1.35] text-[rgba(27,27,27,0.72)]">
+            <p className="mt-3 rounded-xl border border-[#ead9cf] px-4 py-3 text-[13px] leading-[1.35] text-[rgba(27,27,27,0.72)]">
               {order.delivery_notes}
             </p>
           ) : null}
 
-          <div className="mt-6 overflow-hidden rounded-[18px] p-2">
-            <LocationMap className="relative h-[132px] w-full overflow-hidden rounded-[14px]" />
+          <div className="mt-6 overflow-hidden rounded-xl border border-maroon/20 p-2 shadow-[0_8px_22px_rgba(80,3,17,0.06)]">
+            <LocationMap
+              pinClassName="bg-maroon"
+              className="relative h-[132px] w-full overflow-hidden rounded-xl border border-maroon/15 bg-[#f4ebe3]"
+            />
 
             <div className="flex items-center justify-between px-2 pt-1 text-[14px] text-[rgba(27,27,27,0.82)]">
             <span className="inline-flex items-center gap-1.5">
@@ -144,7 +147,7 @@ export default function RequestedOrderDetails({
 
           <div className="mt-8 flex flex-col gap-3">
             <button
-              className="min-h-[52px] rounded-[12px] bg-maroon px-4 text-[16px] font-light text-white disabled:opacity-60"
+              className="min-h-[52px] rounded-xl bg-maroon px-4 text-[16px] font-light text-white transition-all duration-500 active:scale-95 disabled:opacity-60"
               type="button"
               disabled={isSubmitting}
               onClick={onAccept}
@@ -153,7 +156,7 @@ export default function RequestedOrderDetails({
             </button>
 
             <button
-              className="min-h-[52px] rounded-[12px] border border-maroon bg-transparent px-4 text-[16px] font-light text-maroon disabled:opacity-60"
+              className="min-h-[52px] rounded-xl border border-maroon bg-transparent px-4 text-[16px] font-light text-maroon transition-all duration-500 active:scale-95 disabled:opacity-60"
               type="button"
               disabled={isSubmitting}
               onClick={() => setShowDeclineModal(true)}
@@ -173,7 +176,7 @@ export default function RequestedOrderDetails({
         Decline order?
       </h2>
 
-      <p className="mt-2 text-[15px] font-light leading-tight text-[#7A716D]">
+      <p className="mt-2 text-[15px] font-light leading-tight text-black/60">
         Let the customer know why this order cannot be accepted.
       </p>
 
@@ -184,7 +187,7 @@ export default function RequestedOrderDetails({
           setDeclineError("");
         }}
         placeholder="Write a short reason..."
-        className="mt-5 h-[110px] w-full resize-none rounded-[12px] border border-maroon bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-[#9B928E]"
+        className="mt-5 h-[110px] w-full resize-none rounded-xl border border-maroon bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-[#9B928E]"
       />
 
       {declineError && (
@@ -201,7 +204,7 @@ export default function RequestedOrderDetails({
             setDeclineReason("");
             setDeclineError("");
           }}
-          className="h-[50px] flex-1 rounded-[12px] border border-[#DCD6D3] text-[15px]"
+          className="h-[50px] flex-1 rounded-xl border border-black/15 text-[15px]"
         >
           Cancel
         </button>
@@ -210,7 +213,7 @@ export default function RequestedOrderDetails({
           type="button"
           disabled={isSubmitting}
           onClick={handleConfirmDecline}
-          className="h-[50px] flex-1 rounded-[12px] bg-maroon text-[15px] text-white disabled:opacity-60"
+          className="h-[50px] flex-1 rounded-xl bg-maroon text-[15px] text-white disabled:opacity-60"
         >
           Send
         </button>

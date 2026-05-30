@@ -69,8 +69,8 @@ const ConsumerLogin = () => {
   };
 
   return (
-    <main className="flex max-h-screen items-center justify-center w-full bg-background p-12">
-      <section className="w-full">
+    <main className="app-shell">
+      <section className="app-screen max-h-screen flex flex-col justify-center">
         <div className="mb-6 flex min-h-40 items-center justify-center">
           <img
             className="block h-auto w-50"
@@ -80,16 +80,16 @@ const ConsumerLogin = () => {
         </div>
 
         <header>
-          <h2 className="mb-4 text-2xl font-semibold leading-[0.2] text-black">
+          <h2 className="mb-2 text-2xl font-semibold leading-tight text-black">
             Welcome back!
           </h2>
-          <p className="text-black font-light">Log in as Consumer</p>
+          <p className="app-subtitle">Log in as Consumer</p>
         </header>
 
         <form className="mt-8 flex flex-col gap-4" onSubmit={handleSubmit}>
           <label className="flex flex-col gap-2">
             <span className="text-sm font-light">Email</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500 ">
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 transition-all duration-500 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
               <MailIcon className="h-5 w-5 shrink-0" />
               <input
                 className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
@@ -105,7 +105,7 @@ const ConsumerLogin = () => {
 
           <label className="flex flex-col gap-2">
             <span className="text-sm font-light">Password</span>
-            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)] transition-all duration-500 ">
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-orange bg-transparent px-4 transition-all duration-500 focus-within:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]">
               <LockIcon className="h-5 w-5 shrink-0" />
               <input
                 className="w-full bg-transparent py-4 font-light text-black outline-none placeholder:text-black/50"
@@ -140,7 +140,7 @@ const ConsumerLogin = () => {
           </p>
 
           <button
-            className="rounded-xl cursor-pointer bg-orange p-4 text-sm text-white transition-all duration-500 active:scale-90 disabled:cursor-wait disabled:opacity-70"
+            className="app-action cursor-pointer bg-orange"
             type="submit"
             disabled={isSubmitting}
           >

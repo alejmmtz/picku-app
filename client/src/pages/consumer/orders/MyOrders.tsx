@@ -21,15 +21,15 @@ const statusLabelMap: Record<OrderStatus, string> = {
 
 const statusClassMap: Record<OrderStatus, string> = {
   requested:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
   declined:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
   delivered:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-regular border border-[#78aa38] bg-[#eef8df] px-3 text-[13px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#78aa38] bg-[#eef8df] px-3 text-[13px] text-[#78aa38]",
 };
 
 const emptyOrdersMessage =
@@ -104,8 +104,8 @@ const MyOrders = () => {
 }, [activeTab, orders]);
 
   return (
-    <main className="flex min-h-screen justify-center font-sofia">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[220px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[220px]">
          <header className="flex items-center justify-between mb-10 mt-1.5">
           <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
         </header>
@@ -162,7 +162,7 @@ const MyOrders = () => {
             No orders here yet
           </p>
 
-          <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-[#7A716D]">
+          <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-black/60">
             Your orders will appear here.
           </p>
         </div>
@@ -177,7 +177,7 @@ const MyOrders = () => {
             return (
               <article
                 key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-[#DCD6D3] p-3"
+                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-black/15 p-3"
                 onClick={() => {
                   if (
                     order.status === "requested" ||
@@ -194,7 +194,7 @@ const MyOrders = () => {
                 }}
               >
                 <img
-                  className="h-[94px] w-[102px] rounded-[14px] bg-[#f2e7de] object-cover"
+                  className="h-[94px] w-[102px] rounded-xl bg-[#f2e7de] object-cover"
                   src={getOrderImage(order)}
                   alt={getOrderTitle(order)}
                 />

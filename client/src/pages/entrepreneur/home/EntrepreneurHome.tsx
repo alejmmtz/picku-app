@@ -131,8 +131,8 @@ const EntrepreneurHome = () => {
   };
 
   return (
-    <main className="flex min-h-screen justify-center bg-background font-sofia text-black">
-      <section className="w-full max-w-[430px] min-h-screen px-13 pt-16 pb-[140px]">
+    <main className="app-shell">
+      <section className="app-screen pb-[140px]">
         <header className="flex items-center justify-between mb-7">
             <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] " />
           <button
@@ -167,7 +167,7 @@ const EntrepreneurHome = () => {
           </h2>
 
           <div className="mt-[12px] grid grid-cols-2 gap-[8px]">
-  <article className="h-[82px] rounded-[14px] border-[1.5px] border-maroon px-[14px] py-[10px]">
+  <article className="h-[82px] rounded-xl border-[1.5px] border-maroon px-[14px] py-[10px]">
     <div className="flex items-start justify-between">
       <p className="text-[14px] font-light leading-[1.1] text-black">
         Orders Fulfilled
@@ -181,7 +181,7 @@ const EntrepreneurHome = () => {
     </strong>
   </article>
 
-  <article className="h-[82px] rounded-[14px] border-[1.5px] border-maroon px-[14px] py-[10px]">
+  <article className="h-[82px] rounded-xl border-[1.5px] border-maroon px-[14px] py-[10px]">
     <div className="flex items-start justify-between">
       <p className="text-[13px] font-light leading-[1.1] text-black">
         Incoming orders
@@ -200,7 +200,7 @@ const EntrepreneurHome = () => {
         {/*recent orders*/}
 
         <section className="mt-[45px]">
-          <h2 className="m-0 !font-sofia text-[18px] font-regular leading-[1.1]">
+          <h2 className="m-0 !font-sofia text-[18px] font-light leading-[1.1]">
             Recent Orders
           </h2>
 
@@ -222,11 +222,11 @@ const EntrepreneurHome = () => {
             orders.map((order) => (
               <article
                 key={order.id}
-                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[3px] rounded-[18px] border border-[#DCD6D3] px-[14px] py-[14px]"
+                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[3px] rounded-[18px] border border-black/15 px-[14px] py-[14px]"
                 onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img
-                  className="h-[94px] w-[102px] rounded-[14px] object-cover"
+                  className="h-[94px] w-[102px] rounded-xl object-cover"
                   src={order.img}
                   alt=""
                   onError={(event) => {
@@ -251,7 +251,7 @@ const EntrepreneurHome = () => {
 
                   <div className="mt-auto flex items-center justify-between gap-3">
                     <span
-                      className={`rounded-full border mt-1 px-[13px] py-[2px] text-[15px] font-regular ${statusClasses[order.status]}`}
+                      className={`rounded-full border mt-1 px-[13px] py-[2px] text-[15px] font-light ${statusClasses[order.status]}`}
                     >
                       {order.status}
                     </span>
