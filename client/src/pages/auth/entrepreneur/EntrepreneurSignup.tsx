@@ -7,6 +7,7 @@ import type { AuthData } from "../../../types/authData";
 import { setStoredAuth } from "../../../utils/storage";
 
 import UserIcon from "../../../assets/user.svg?react";
+import PhoneIcon from "../../../assets/phone.svg?react";
 import MailIcon from "../../../assets/mail.svg?react";
 
 import LockIcon from "../../../assets/lock.svg?react";
@@ -28,10 +29,6 @@ const EntrepreneurSignup = () => {
     event.preventDefault();
     setIsSubmitting(true);
     setErrorMessage("");
-
-    const randomNumber = Math.floor(1000000000 + Math.random() * 9999999999);
-
-    setPhone(randomNumber.toString());
 
     try {
       await axios.post(`${API_URL}/picku/api/auth/register`, {
@@ -105,6 +102,22 @@ const EntrepreneurSignup = () => {
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 autoComplete="name"
+                required
+              />
+            </span>
+          </label>
+
+          <label className="flex flex-col gap-2">
+            <span className="text-sm font-light">Phone</span>
+            <span className="flex min-h-12 items-center gap-3 rounded-xl border border-maroon bg-transparent px-4 focus-within:shadow-[0_0_0_3px_rgba(80,3,17,0.12)] transition-all duration-500">
+              <PhoneIcon className="h-5 w-5 shrink-0" />
+              <input
+                className="w-full bg-transparent font-light py-4 outline-none placeholder:text-black/25"
+                type="tel"
+                placeholder="Your number"
+                value={phone}
+                onChange={(event) => setPhone(event.target.value)}
+                autoComplete="tel"
                 required
               />
             </span>
