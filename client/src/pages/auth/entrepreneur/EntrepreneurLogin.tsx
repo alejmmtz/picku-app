@@ -104,7 +104,7 @@ const EntrepreneurLogin = () => {
         </div>
 
         <header>
-          <h2 className="mb-4 text-2xl font-semibold leading-tight text-black">
+          <h2 className="mb-2 text-2xl font-semibold leading-tight text-black">
             Welcome back!
           </h2>
           <p className="app-subtitle">Log in as Entrepreneur</p>

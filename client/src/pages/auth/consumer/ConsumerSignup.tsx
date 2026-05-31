@@ -57,13 +57,17 @@ const ConsumerSignup = () => {
   return (
     <main className="app-shell">
       <section className="app-screen max-h-screen flex flex-col justify-center">
-        <div className="flex min-h-40 right-10 top-14 absolute z-50">
+        <div
+          className={`flex min-h-40 right-10 transition-all duration-500 absolute z-50 m-0 ${errorMessage ? "top-11" : "top-14"} `}
+        >
           <img
             className="block h-auto w-35"
             src="/resources/Image-SignUp-Consumer.svg"
           />
         </div>
-        <div className="mb-6 flex min-h-40 right-8 top-0 absolute z-30">
+        <div
+          className={`mb-6 flex min-h-40 right-8 transition-all duration-500  absolute z-30 ${errorMessage ? "-top-3" : "top-0"}`}
+        >
           <img
             className="block h-auto w-12.5"
             src="/resources/sign-up-colors.svg"

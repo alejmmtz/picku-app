@@ -1,4 +1,5 @@
 import type { UUID } from '../../shared/storage/shared.types.js';
+import type { ConsumerOrderLocationInput } from './location/order-location.types.js';
 
 export enum OrderStatus {
   REQUESTED = 'requested',
@@ -41,6 +42,12 @@ export interface CreateOrderDTO {
   entrepreneur_id: UUID;
   delivery_notes?: string | null;
   products: CreateOrderProductDTO[];
+  /**
+   * Optional at creation time; may also be persisted later via
+   * `saveConsumerOrderLocation`. Immutable once stored on the order row.
+   */
+  user_position?: ConsumerOrderLocationInput['user_position'];
+  campus_location_id?: ConsumerOrderLocationInput['campus_location_id'];
 }
 
 export interface UpdateOrderDTO {

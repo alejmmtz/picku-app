@@ -87,7 +87,7 @@ const EntrepreneurSignup = () => {
         </div>
 
         <header>
-          <h2 className="mb-4 text-2xl font-semibold leading-tight">
+          <h2 className="mb-2 text-2xl font-semibold leading-tight">
             Start your own pick!
           </h2>
           <p className="app-subtitle">Join PickU as Entrepreneur</p>
