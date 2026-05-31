@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { createServer } from 'node:http';
 import { env } from './config/index.js';
 import { authRouter } from './features/auth/auth.router.js';
 import { chatbotRouter } from './features/chatbot/chatbot.router.js';
@@ -7,6 +8,7 @@ import { errorsMiddleware } from './middlewares/errorsMiddleware.js';
 import { productRouter } from './features/product/product.router.js';
 import { entrepreneurRouter } from './features/entrepreneurs/ent.router.js';
 import { orderRouter } from './features/order/order.router.js';
+import { initRealtimeServer } from './realtime/socket.js';
 
 //Express Configuration
 const app = express();
@@ -28,11 +30,15 @@ app.use("/picku/api/orders", orderRouter);
 //Error middleware
 app.use(errorsMiddleware);
 
+const server = createServer(app);
+initRealtimeServer(server);
+
 //App Env
 if (env.NODE_ENV !== 'production') {
-  app.listen(env.PORT, () => {
+  server.listen(env.PORT, () => {
     console.log(`Server is running on http://localhost:${env.PORT}`);
   });
 }
 
 export default app;
+export { server };

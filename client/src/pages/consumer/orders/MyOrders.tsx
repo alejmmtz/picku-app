@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
+import { useOrderRealtime } from "../../../providers/SocketProvider";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
@@ -60,10 +61,22 @@ const MyOrders = () => {
   const [orders, setOrders] = useState<ConsumerOrder[]>([]);
   const [feedbackMessage, setFeedbackMessage] = useState(emptyOrdersMessage);
 
+  const loadOrders = useCallback(async () => {
+    try {
+      const data = await getOrders(api);
+
+      setOrders(data);
+      setFeedbackMessage(data.length > 0 ? "" : emptyOrdersMessage);
+    } catch {
+      setOrders([]);
+      setFeedbackMessage(emptyOrdersMessage);
+    }
+  }, [api]);
+
   useEffect(() => {
     let isMounted = true;
 
-    const loadOrders = async () => {
+    const loadInitialOrders = async () => {
       try {
         const data = await getOrders(api);
 
@@ -79,12 +92,16 @@ const MyOrders = () => {
       }
     };
 
-    void loadOrders();
+    void loadInitialOrders();
 
     return () => {
       isMounted = false;
     };
   }, [api]);
+
+  useOrderRealtime(() => {
+    void loadOrders();
+  });
 
   const filteredOrders = useMemo(() => {
   if (activeTab === "delivered") {

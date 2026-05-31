@@ -1,10 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import BottomNav from "../../../components/common/BottomNav";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { OrderResponse, OrderStatus } from "../../../types/order.types";
+import { useOrderRealtime } from "../../../providers/SocketProvider";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
@@ -58,10 +59,24 @@ const EntrepreneurOrders = () => {
   const [orders, setOrders] = useState<OrderResponse[]>([]);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
+  const loadOrders = useCallback(async () => {
+    try {
+      const data = await getOrders(api);
+
+      setOrders(data);
+      setFeedbackMessage("");
+    } catch {
+      setOrders([]);
+      setFeedbackMessage(
+        "We could not load your orders right now. Please try again in a moment.",
+      );
+    }
+  }, [api]);
+
   useEffect(() => {
     let isMounted = true;
 
-    const loadOrders = async () => {
+    const loadInitialOrders = async () => {
       try {
         const data = await getOrders(api);
 
@@ -79,12 +94,16 @@ const EntrepreneurOrders = () => {
       }
     };
 
-    void loadOrders();
+    void loadInitialOrders();
 
     return () => {
       isMounted = false;
     };
   }, [api]);
+
+  useOrderRealtime(() => {
+    void loadOrders();
+  });
 
   const filteredOrders = useMemo(() => {
     if (activeTab === "accepted") {

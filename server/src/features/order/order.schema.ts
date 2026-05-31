@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-import { consumerOrderLocationBodySchema } from './location/order-location.schema.js';
+import { optionalConsumerOrderLocationBodySchema } from './location/order-location.schema.js';
 import { OrderStatus } from './order.types.js';
 
 export const orderStatusSchema = z.enum(OrderStatus);
@@ -16,7 +16,7 @@ export const createOrderBodySchema = z
     delivery_notes: z.string().trim().min(1).nullable().optional(),
     products: z.array(productItemSchema).min(1),
   })
-  .and(consumerOrderLocationBodySchema.partial());
+  .and(optionalConsumerOrderLocationBodySchema);
 
 export const createOrderSchema = z.object({
   body: createOrderBodySchema,

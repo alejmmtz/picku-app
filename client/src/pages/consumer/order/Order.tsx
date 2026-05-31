@@ -10,6 +10,7 @@ import {
 } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
 import Loader from "../../../components/common/Loader";
+import { useOrderRealtime } from "../../../providers/SocketProvider";
 
 const isActiveOrder = (order: OrderResponse) =>
   order.status === "requested" ||
@@ -26,6 +27,20 @@ export default function OrderFlow() {
 
   const orderIdParam = searchParams.get("orderId");
   const orderId = orderIdParam ? Number(orderIdParam) : null;
+
+  useOrderRealtime((updatedOrder) => {
+    setOrder((current) => {
+      if (current && current.id === updatedOrder.id) {
+        return updatedOrder;
+      }
+
+      if (orderId !== null && updatedOrder.id === orderId) {
+        return updatedOrder;
+      }
+
+      return current;
+    });
+  });
 
   useEffect(() => {
     let isMounted = true;

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
@@ -6,6 +6,7 @@ import { getOrders } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
 import { getStoredAuth } from "../../../utils/storage";
 import BottomNav from "../../../components/common/BottomNav";
+import { useOrderRealtime } from "../../../providers/SocketProvider";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
 import CheckIcon from "../../../assets/check icon.svg?react";
@@ -75,33 +76,37 @@ const EntrepreneurHome = () => {
 
   const auth = useMemo(() => getStoredAuth(), []);
 
+  const loadHome = useCallback(async () => {
+    try {
+      const [entrepreneurResponse, ordersResponse] = await Promise.all([
+        api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
+        getOrders(api),
+      ]);
+
+      setEntrepreneur(entrepreneurResponse.data);
+      setOrders(ordersResponse.map(mapOrder));
+    } catch (error) {
+      setOrders([]);
+      if (axios.isAxiosError(error) && error.response?.status === 404) {
+        navigate("/entrepreneur/onboarding", { replace: true });
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [api, navigate]);
+
   useEffect(() => {
     if (!auth) {
       navigate("/entrepreneur/login", { replace: true });
       return;
     }
 
-    const loadHome = async () => {
-      try {
-        const [entrepreneurResponse, ordersResponse] = await Promise.all([
-          api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
-          getOrders(api),
-        ]);
-
-        setEntrepreneur(entrepreneurResponse.data);
-        setOrders(ordersResponse.map(mapOrder));
-      } catch (error) {
-        setOrders([]);
-        if (axios.isAxiosError(error) && error.response?.status === 404) {
-          navigate("/entrepreneur/onboarding", { replace: true });
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
     void loadHome();
-  }, [api, auth, navigate]);
+  }, [auth, loadHome, navigate]);
+
+  useOrderRealtime(() => {
+    void loadHome();
+  });
 
   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
   const incomingCount = orders.filter((order) =>

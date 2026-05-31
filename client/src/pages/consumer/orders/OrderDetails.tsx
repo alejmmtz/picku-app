@@ -4,6 +4,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrderById } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
+import { useOrderRealtime } from "../../../providers/SocketProvider";
 
 import ArrowIcon from "../../../assets/arrow.svg?react";
 
@@ -56,6 +57,13 @@ const OrderDetails = () => {
         ? "Todavía no pudimos cargar este pedido. Cuando el backend lo envíe correctamente, se mostrará aquí."
         : "Este pedido no es válido o todavía no está disponible.",
   );
+
+  useOrderRealtime((updatedOrder) => {
+    if (updatedOrder.id === orderId) {
+      setOrder(updatedOrder as ConsumerOrder);
+      setFeedbackMessage("");
+    }
+  });
 
   useEffect(() => {
     let isMounted = true;

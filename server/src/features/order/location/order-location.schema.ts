@@ -44,29 +44,44 @@ export const campusLocationIdSchema = z.coerce
   .int()
   .positive('campus_location_id must be a positive integer');
 
+const validateKnownCampusLocation = (
+  body: { campus_location_id?: number | undefined },
+  context: z.RefinementCtx
+) => {
+  if (
+    body.campus_location_id !== undefined &&
+    !isKnownCampusLocationId(body.campus_location_id)
+  ) {
+    context.addIssue({
+      code: 'custom',
+      message:
+        'campus_location_id is not a known campus location (mock catalog)',
+      path: ['campus_location_id'],
+    });
+  }
+};
+
 export const consumerOrderLocationBodySchema = z
   .object({
     user_position: coordinatesSchema,
     campus_location_id: campusLocationIdSchema.optional(),
   })
-  .superRefine((body, context) => {
-    if (
-      body.campus_location_id !== undefined &&
-      !isKnownCampusLocationId(body.campus_location_id)
-    ) {
-      context.addIssue({
-        code: 'custom',
-        message:
-          'campus_location_id is not a known campus location (mock catalog)',
-        path: ['campus_location_id'],
-      });
-    }
-  });
+  .superRefine(validateKnownCampusLocation);
 
-export const saveConsumerOrderLocationBodySchema =
-  consumerOrderLocationBodySchema.extend({
+export const optionalConsumerOrderLocationBodySchema = z
+  .object({
+    user_position: coordinatesSchema.optional(),
+    campus_location_id: campusLocationIdSchema.optional(),
+  })
+  .superRefine(validateKnownCampusLocation);
+
+export const saveConsumerOrderLocationBodySchema = z
+  .object({
+    user_position: coordinatesSchema,
+    campus_location_id: campusLocationIdSchema.optional(),
     order_id: z.coerce.number().int().positive(),
-  });
+  })
+  .superRefine(validateKnownCampusLocation);
 
 export const saveConsumerOrderLocationSchema = z.object({
   body: saveConsumerOrderLocationBodySchema,
