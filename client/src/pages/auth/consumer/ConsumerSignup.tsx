@@ -38,7 +38,7 @@ const ConsumerSignup = () => {
 
       navigate("/consumer/login", {
         state: {
-          message: "Cuenta creada correctamente. Ahora inicia sesión.",
+          message: "Your account was created successfully. Please log in!",
         },
       });
     } catch (error) {
@@ -46,7 +46,7 @@ const ConsumerSignup = () => {
         axios.isAxiosError(error) &&
         typeof error.response?.data?.message === "string"
           ? error.response.data.message
-          : "No se pudo crear la cuenta";
+          : "We couldn't create your account";
 
       setErrorMessage(message);
     } finally {

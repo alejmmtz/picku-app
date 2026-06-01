@@ -1,8 +1,7 @@
 import { z } from 'zod';
 
-import { isKnownCampusLocationId } from './campus-locations.mock.js';
+import { isKnownCampusLocationId } from './campus-locations.js';
 
-/** WGS84 bounds for campus-scale validation. */
 const LATITUDE_MIN = -90;
 const LATITUDE_MAX = 90;
 const LONGITUDE_MIN = -180;
@@ -22,18 +21,11 @@ export const coordinatesSchema = z.object({
 export const geoJsonPointSchema = z.object({
   type: z.literal('Point'),
   coordinates: z.tuple([
-    z
-      .number()
-      .min(LONGITUDE_MIN)
-      .max(LONGITUDE_MAX),
-    z
-      .number()
-      .min(LATITUDE_MIN)
-      .max(LATITUDE_MAX),
+    z.number().min(LONGITUDE_MIN).max(LONGITUDE_MAX),
+    z.number().min(LATITUDE_MIN).max(LATITUDE_MAX),
   ]),
 });
 
-/** Accepts either `{ latitude, longitude }` or GeoJSON Point. */
 export const geoPointInputSchema = z.union([
   coordinatesSchema,
   geoJsonPointSchema,
@@ -44,7 +36,12 @@ export const campusLocationIdSchema = z.coerce
   .int()
   .positive('campus_location_id must be a positive integer');
 
-const validateKnownCampusLocation = (
+export const consumerOrderLocationBaseSchema = z.object({
+  user_position: coordinatesSchema,
+  campus_location_id: campusLocationIdSchema.optional(),
+});
+
+const campusLocationRefinement = (
   body: { campus_location_id?: number | undefined },
   context: z.RefinementCtx
 ) => {
@@ -61,27 +58,15 @@ const validateKnownCampusLocation = (
   }
 };
 
-export const consumerOrderLocationBodySchema = z
-  .object({
-    user_position: coordinatesSchema,
-    campus_location_id: campusLocationIdSchema.optional(),
-  })
-  .superRefine(validateKnownCampusLocation);
+export const consumerOrderLocationBodySchema =
+  consumerOrderLocationBaseSchema.superRefine(campusLocationRefinement);
 
-export const optionalConsumerOrderLocationBodySchema = z
-  .object({
-    user_position: coordinatesSchema.optional(),
-    campus_location_id: campusLocationIdSchema.optional(),
-  })
-  .superRefine(validateKnownCampusLocation);
-
-export const saveConsumerOrderLocationBodySchema = z
-  .object({
-    user_position: coordinatesSchema,
-    campus_location_id: campusLocationIdSchema.optional(),
-    order_id: z.coerce.number().int().positive(),
-  })
-  .superRefine(validateKnownCampusLocation);
+export const saveConsumerOrderLocationBodySchema =
+  consumerOrderLocationBaseSchema
+    .extend({
+      order_id: z.coerce.number().int().positive(),
+    })
+    .superRefine(campusLocationRefinement);
 
 export const saveConsumerOrderLocationSchema = z.object({
   body: saveConsumerOrderLocationBodySchema,
