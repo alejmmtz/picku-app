@@ -3,7 +3,7 @@ export {
   assertKnownCampusLocationId,
   getMockCampusLocationById,
   isKnownCampusLocationId,
-} from './campus-locations.mock.js';
+} from './campus-locations.js';
 
 export {
   coordinatesSchema,

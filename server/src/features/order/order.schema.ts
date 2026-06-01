@@ -1,6 +1,9 @@
 import { z } from 'zod';
 
-import { consumerOrderLocationBodySchema } from './location/order-location.schema.js';
+import {
+  consumerOrderLocationBodySchema,
+  consumerOrderLocationBaseSchema, // 👈 Importamos el esquema base limpio
+} from './location/order-location.schema.js';
 import { OrderStatus } from './order.types.js';
 
 export const orderStatusSchema = z.enum(OrderStatus);
@@ -16,7 +19,7 @@ export const createOrderBodySchema = z
     delivery_notes: z.string().trim().min(1).nullable().optional(),
     products: z.array(productItemSchema).min(1),
   })
-  .and(consumerOrderLocationBodySchema.partial());
+  .and(consumerOrderLocationBaseSchema.partial()); // 👈 Solución al error: aplicamos el partial al base
 
 export const createOrderSchema = z.object({
   body: createOrderBodySchema,
@@ -85,7 +88,7 @@ export const entrepreneurSchema = z.object({
   name: z.string().trim().min(1),
   category: z.string().trim().min(1),
   contact_info: z.string().trim().min(1),
-  img: z.url(),
+  img: z.string().url(), // 👈 Corregido: z.url() no existe, se usa z.string().url()
 });
 
 export const orderItemsSchema = z.object({
@@ -95,7 +98,7 @@ export const orderItemsSchema = z.object({
   quantity: z.number().int().positive(),
   unit_price: z.number().int().nonnegative(),
   subtotal: z.number().int().nonnegative(),
-  img: z.url(),
+  img: z.string().url(), // 👈 Corregido: z.string().url()
 });
 
 export const orderSchema = z.object({

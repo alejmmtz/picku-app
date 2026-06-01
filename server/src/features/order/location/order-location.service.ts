@@ -5,16 +5,12 @@ import {
   distanceMeters,
   estimateTravelTimeSeconds,
   fromGeoJsonPoint,
-  isWithinRadius,
   toCoordinates,
   toPostgisPointParams,
 } from '../../../shared/geo/index.js';
 import type { UUID } from '../../../shared/storage/shared.types.js';
 import { OrderStatus } from '../order.types.js';
-import {
-  assertKnownCampusLocationId,
-  isKnownCampusLocationId,
-} from './campus-locations.mock.js';
+import { isKnownCampusLocationId } from './campus-locations.js';
 import type {
   EntrepreneurLocationBurstDTO,
   EntrepreneurLocationUpdate,
@@ -67,29 +63,6 @@ const pickLatestEntrepreneurUpdate = (
     latest: sorted[0]!,
     discarded: sorted.length - 1,
   };
-};
-
-const validateConsumerPositionAgainstCampus = (
-  userPosition: SaveConsumerOrderLocationDTO['user_position'],
-  campusLocationId: number | undefined
-): void => {
-  if (campusLocationId === undefined) {
-    return;
-  }
-
-  const campus = assertKnownCampusLocationId(campusLocationId);
-
-  if (
-    !isWithinRadius(
-      campus.location,
-      userPosition,
-      campus.radius
-    )
-  ) {
-    throw Boom.badRequest(
-      `Consumer position is outside the coverage radius of "${campus.name}"`
-    );
-  }
 };
 
 const fetchOrderLocationRow = async (
@@ -155,14 +128,12 @@ export const saveConsumerOrderLocation = async (
   consumerId: UUID,
   dto: SaveConsumerOrderLocationDTO
 ): Promise<SaveConsumerOrderLocationResult> => {
-  if (dto.campus_location_id !== undefined && !isKnownCampusLocationId(dto.campus_location_id)) {
+  if (
+    dto.campus_location_id !== undefined &&
+    !isKnownCampusLocationId(dto.campus_location_id)
+  ) {
     throw Boom.badRequest('Invalid campus location');
   }
-
-  validateConsumerPositionAgainstCampus(
-    dto.user_position,
-    dto.campus_location_id
-  );
 
   const order = await fetchOrderLocationRow(dto.order_id);
 
@@ -175,9 +146,7 @@ export const saveConsumerOrderLocation = async (
   }
 
   if (order.user_position !== null) {
-    throw Boom.conflict(
-      'Consumer location is immutable once set for an order'
-    );
+    throw Boom.conflict('Consumer location is immutable once set for an order');
   }
 
   const { longitude, latitude } = toPostgisPointParams(dto.user_position);
@@ -253,9 +222,7 @@ export const processEntrepreneurLocationBurst = async (
 
     if (consumerPosition) {
       estimatedDistanceMeters = distanceMeters(position, consumerPosition);
-      estimatedTimeSeconds = estimateTravelTimeSeconds(
-        estimatedDistanceMeters
-      );
+      estimatedTimeSeconds = estimateTravelTimeSeconds(estimatedDistanceMeters);
 
       await client.query(
         `UPDATE orders
