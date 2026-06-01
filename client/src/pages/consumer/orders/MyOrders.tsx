@@ -1,11 +1,14 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
-import { useOrderRealtime } from "../../../providers/SocketProvider";
+import {
+  applyOrderBroadcastPayload,
+  useOrdersListRealtime,
+} from "../../../providers/OrdersRealtimeProvider";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
@@ -15,6 +18,7 @@ type OrderTab = "ongoing" | "delivered" | "declined";
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
   accepted: "Ongoing",
+  preparing: "Preparing",
   declined: "Declined",
   delivering: "Ongoing",
   delivered: "Delivered",
@@ -24,6 +28,8 @@ const statusClassMap: Record<OrderStatus, string> = {
   requested:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
   accepted:
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
+  preparing:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
@@ -61,18 +67,6 @@ const MyOrders = () => {
   const [orders, setOrders] = useState<ConsumerOrder[]>([]);
   const [feedbackMessage, setFeedbackMessage] = useState(emptyOrdersMessage);
 
-  const loadOrders = useCallback(async () => {
-    try {
-      const data = await getOrders(api);
-
-      setOrders(data);
-      setFeedbackMessage(data.length > 0 ? "" : emptyOrdersMessage);
-    } catch {
-      setOrders([]);
-      setFeedbackMessage(emptyOrdersMessage);
-    }
-  }, [api]);
-
   useEffect(() => {
     let isMounted = true;
 
@@ -99,8 +93,14 @@ const MyOrders = () => {
     };
   }, [api]);
 
-  useOrderRealtime(() => {
-    void loadOrders();
+  useOrdersListRealtime(orders.map((order) => order.id), (payload) => {
+    setOrders((current) =>
+      current.map((order) =>
+        order.id === payload.orderId
+          ? applyOrderBroadcastPayload(order, payload)
+          : order,
+      ),
+    );
   });
 
   const filteredOrders = useMemo(() => {
@@ -116,6 +116,7 @@ const MyOrders = () => {
     (order) =>
       order.status === "requested" ||
       order.status === "accepted" ||
+      order.status === "preparing" ||
       order.status === "delivering",
   );
 }, [activeTab, orders]);
@@ -199,6 +200,7 @@ const MyOrders = () => {
                   if (
                     order.status === "requested" ||
                     order.status === "accepted" ||
+                    order.status === "preparing" ||
                     order.status === "delivering" 
                   ) {
                     navigate(`/consumer/order?orderId=${order.id}`);

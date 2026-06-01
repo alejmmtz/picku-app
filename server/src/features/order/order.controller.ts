@@ -12,7 +12,10 @@ import type {
   UpdateOrderDTO,
 } from './order.types.js';
 import type { UUID } from '../../shared/storage/shared.types.js';
-import { emitOrderChanged } from '../../realtime/socket.js';
+import {
+  broadcastOrderCreated,
+  broadcastOrderStatusUpdated,
+} from './order.realtime.js';
 
 const resolveActor = (req: Request): { userId: UUID; role: OrderActorRole } => {
   if (!req.authUser) {
@@ -70,7 +73,7 @@ export const createOrderController = async (
     }
 
     const order = await createOrderService(dto, consumerId);
-    emitOrderChanged(order);
+    await broadcastOrderCreated(order);
     res.status(201).json(order);
   } catch (error) {
     next(error);
@@ -88,7 +91,7 @@ export const updateOrderController = async (
     const actor = resolveActor(req);
 
     const order = await updateOrderService(orderId, dto, actor);
-    emitOrderChanged(order);
+    await broadcastOrderStatusUpdated(order);
     res.status(200).json(order);
   } catch (error) {
     next(error);

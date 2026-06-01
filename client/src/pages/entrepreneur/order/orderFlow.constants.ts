@@ -20,6 +20,7 @@ export const ACTIVE_MAP_STYLE = MAP_STYLE_EXAMPLES.entrepreneur;
 export const STATUSES = [
   { label: "Requested", icon: "clipboard" },
   { label: "Accepted", icon: "check-circle" },
+  { label: "Preparing", icon: "clipboard" },
   { label: "Delivering", icon: "navigation" },
   { label: "Delivered", icon: "thumbs-up" },
 ] satisfies Array<{ label: string; icon: AppIconName }>;
@@ -27,7 +28,8 @@ export const STATUSES = [
 export const ORDER_STATUS_STEP_INDEX: Record<OrderStatus, number> = {
   requested: 0,
   accepted: 1,
+  preparing: 2,
   declined: 0,
-  delivering: 2,
-  delivered: 3,
+  delivering: 3,
+  delivered: 4,
 };

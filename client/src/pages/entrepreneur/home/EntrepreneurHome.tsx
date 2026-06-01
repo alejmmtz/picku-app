@@ -6,7 +6,7 @@ import { getOrders } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
 import { getStoredAuth } from "../../../utils/storage";
 import BottomNav from "../../../components/common/BottomNav";
-import { useOrderRealtime } from "../../../providers/SocketProvider";
+import { useEntrepreneurOrdersRealtime } from "../../../providers/OrdersRealtimeProvider";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
 import CheckIcon from "../../../assets/check icon.svg?react";
@@ -38,7 +38,7 @@ const formatCurrency = (value: number) =>
   }).format(value);
 
 const mapStatus = (status: OrderResponse["status"]): DisplayOrder["status"] => {
-  if (status === "accepted" || status === "delivering") return "Accepted";
+  if (status === "accepted" || status === "preparing" || status === "delivering") return "Accepted";
   if (status === "delivered") return "Delivered";
   if (status === "declined") return "Declined";
   return "Pending";
@@ -104,7 +104,7 @@ const EntrepreneurHome = () => {
     void loadHome();
   }, [auth, loadHome, navigate]);
 
-  useOrderRealtime(() => {
+  useEntrepreneurOrdersRealtime(entrepreneur?.id ?? null, () => {
     void loadHome();
   });
 

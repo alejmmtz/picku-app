@@ -22,6 +22,14 @@ const normalizeOrder = (order: OrderResponse): OrderResponse => ({
   ...order,
   id: toNumber(order.id),
   total_price: toNumber(order.total_price),
+  estimated_distance:
+    order.estimated_distance === null || order.estimated_distance === undefined
+      ? null
+      : Number(order.estimated_distance),
+  estimated_time:
+    order.estimated_time === null || order.estimated_time === undefined
+      ? null
+      : Number(order.estimated_time),
   items: order.items.map((item) => ({
     ...item,
     id: toNumber(item.id),

@@ -4,6 +4,7 @@ import type { ConsumerOrderLocationInput } from './location/order-location.types
 export enum OrderStatus {
   REQUESTED = 'requested',
   ACCEPTED = 'accepted',
+  PREPARING = 'preparing',
   DECLINED = 'declined',
   DELIVERING = 'delivering',
   DELIVERED = 'delivered',
@@ -26,6 +27,8 @@ export type Order = {
   status: OrderStatus;
   total_price: number;
   pickup_code: string;
+  estimated_distance: number | null;
+  estimated_time: number | null;
   delivery_notes: string | null;
   cancel_reason: string | null;
   created_at: Date;
@@ -63,6 +66,8 @@ export interface OrderResponseDTO {
   status: OrderStatus;
   total_price: number;
   pickup_code: string;
+  estimated_distance: number | null;
+  estimated_time: number | null;
   delivery_notes: string | null;
   cancel_reason: string | null;
   customer: {

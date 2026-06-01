@@ -6,20 +6,20 @@ import "./index.css";
 import router from "./routes/Router";
 import { AxiosProvider } from "./providers/AxiosProvider";
 import { MapsProvider } from "./providers/MapsProvider";
-import { SocketProvider } from "./providers/SocketProvider";
+import { OrdersRealtimeProvider } from "./providers/OrdersRealtimeProvider";
 import { StrictMode } from "react";
 
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <AxiosProvider>
-      <SocketProvider>
+      <OrdersRealtimeProvider>
         <MapsProvider>
           <CartProvider>
             <RouterProvider router={router} />
           </CartProvider>
         </MapsProvider>
-      </SocketProvider>
+      </OrdersRealtimeProvider>
     </AxiosProvider>
   </StrictMode>
 );

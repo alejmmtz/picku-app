@@ -4,13 +4,17 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrderById } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
-import { useOrderRealtime } from "../../../providers/SocketProvider";
+import {
+  applyOrderBroadcastPayload,
+  useOrderRealtime,
+} from "../../../providers/OrdersRealtimeProvider";
 
 import ArrowIcon from "../../../assets/arrow.svg?react";
 
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
   accepted: "Ongoing",
+  preparing: "Preparing",
   declined: "Declined",
   delivering: "Ongoing",
   delivered: "Delivered",
@@ -21,6 +25,8 @@ const statusClassMap: Record<OrderStatus, string> = {
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3  py-1  text-[14px] text-[#ecb100]",
   accepted:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3  py-1  text-[14px] text-orange",
+  preparing:
+    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3 py-1 text-[14px] text-orange",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 py-1 text-[14px] text-[#b4202f]",
   delivering:
@@ -58,9 +64,11 @@ const OrderDetails = () => {
         : "Este pedido no es válido o todavía no está disponible.",
   );
 
-  useOrderRealtime((updatedOrder) => {
-    if (updatedOrder.id === orderId) {
-      setOrder(updatedOrder as ConsumerOrder);
+  useOrderRealtime(orderId, (payload) => {
+    if (payload.orderId === orderId) {
+      setOrder((current) =>
+        current ? applyOrderBroadcastPayload(current, payload) : current,
+      );
       setFeedbackMessage("");
     }
   });
