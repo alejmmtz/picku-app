@@ -21,22 +21,28 @@ export default function ReceiptCard({ order }: ReceiptCardProps) {
 
       <div className="mb-6 flex items-baseline justify-between">
         <h2 className="text-[23px] font-semibold text-black">Order receipt</h2>
-        <span className="text-[17px]  text-black/25">#{String(order.id).padStart(4, "0")}</span>
+        <span className="text-[17px]  text-black/25">
+          #{String(order.id).padStart(4, "0")}
+        </span>
       </div>
 
       <div className="grid gap-2 font-light">
         <ReceiptRow label="Name:" value={order.customer.name} />
-        <ReceiptRow label="Amount:" value={formatCurrency(order.total_price)} accent />
+        <ReceiptRow
+          label="Amount:"
+          value={formatCurrency(order.total_price)}
+          accent
+        />
       </div>
 
       <div className="my-16 border-t-2 border-dashed border-black/25" />
 
-      <div className="mb-8 grid gap-2 font-light">
+      <div className="mb-8 grid gap-2 ">
         <ReceiptRow label="Product:" value={firstItem?.name ?? "Order"} />
         <ReceiptRow label="Date:" value={formatDate(order.created_at)} accent />
         <div className="flex items-center justify-between ">
           <span className="text-black">Status:</span>
-          <span className="inline-flex w-fit items-center rounded-full border border-[#3D7B00]/53 bg-[#93E47A]/10 px-3 py-1 text-sm font-light text-[#3D7B00]">
+          <span className="inline-flex w-fit items-center rounded-full text-[17px] f">
             {order.status === "delivered" ? "Delivered" : "Completed"}
           </span>
         </div>

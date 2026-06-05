@@ -198,7 +198,7 @@ const Chatbot = () => {
   };
 
   return (
-    <main className="app-shell mb-24">
+    <main className="app-shell ">
       <header className="fixed w-full px-12 pt-16 top-0 z-50 bg-white pb-8 shadow-sm">
         <div className="flex items-center justify-between ">
           <img
@@ -218,7 +218,7 @@ const Chatbot = () => {
         </div>
       </header>
 
-      <section className="app-screen">
+      <section className="app-screen mb-24">
         <div className="flex flex-col mt-22 gap-4 transition-all duration-500">
           {loading ? (
             <div className="flex flex-col items-center justify-center py-48 w-full gap-3">

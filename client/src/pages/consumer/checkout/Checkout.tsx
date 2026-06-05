@@ -2,7 +2,6 @@ import { useCallback, useMemo, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ArrowIcon from "../../../assets/arrow.svg?react";
-import ClockIcon from "../../../assets/clock.svg?react";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
 import LocationMap from "../../../components/common/LocationMap";
 import {
@@ -149,33 +148,20 @@ const Checkout = () => {
             className="relative h-56 w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3] shadow-[0_8px_22px_rgba(80,3,17,0.06)]"
           />
 
-          <label className="mt-3 flex flex-col gap-2">
-            <span className="text-sm font-light text-black/65">
+          <label className="mt-3 flex flex-col gap-2   ">
+            <span className="text-sm font-light text-black">
               Delivery address
             </span>
-            <input
-              readOnly
-              value={addressFieldValue}
-              placeholder="Tap the map or drag the pin"
-              className="app-field w-full rounded-xl border-black/15 bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-black/45"
-            />
+            <div className="flex  items-center rounded-xl border px-4  border-black/15 bg-transparent">
+              <MapPinIcon className="h-4 w-4 shrink-0 text-orange" />{" "}
+              <input
+                readOnly
+                value={addressFieldValue}
+                placeholder="Tap the map or drag the pin"
+                className="app-field w-full text-[14px] border-0 placeholder:text-black/45"
+              />
+            </div>
           </label>
-
-          <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-black/15 px-4 py-3 text-[14px] font-light text-black/75">
-            <span className="inline-flex min-w-0 items-center gap-2">
-              <MapPinIcon className="h-4 w-4 shrink-0 text-orange" />
-              <span className="truncate">
-                {deliveryLocation
-                  ? `${deliveryLocation.lat.toFixed(6)}, ${deliveryLocation.lng.toFixed(6)}`
-                  : "No point selected"}
-              </span>
-            </span>
-
-            <span className="inline-flex shrink-0 items-center gap-2">
-              <ClockIcon className="h-4 w-4 shrink-0 text-orange" />
-              Manual
-            </span>
-          </div>
         </div>
 
         {errorMessage ? (

@@ -1,11 +1,8 @@
-import { useNavigate } from "react-router-dom";
-import LocationMap from "../../../../components/common/LocationMap";
-import type { OrderResponse } from "../../../../types/order.types";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import type { OrderResponse } from "../../../../types/order.types";
 
 import ArrowIcon from "../../../../assets/arrow.svg?react";
-import MapPinIcon from "../../../../assets/map-pin.svg?react";
-import ClockIcon from "../../../../assets/clock.svg?react";
 import PhoneIcon from "../../../../assets/phone.svg?react";
 
 type RequestedOrderDetailsProps = {
@@ -19,11 +16,9 @@ type RequestedOrderDetailsProps = {
 const formatPrice = (price: number) =>
   `$${price.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;
 
-
-
 export default function RequestedOrderDetails({
   order,
-  isSubmitting,
+
   feedbackMessage,
   onAccept,
   onDecline,
@@ -32,195 +27,148 @@ export default function RequestedOrderDetails({
   const [declineReason, setDeclineReason] = useState("");
   const [declineError, setDeclineError] = useState("");
   const navigate = useNavigate();
+
   const primaryItem = order.items[0];
   const imageSrc =
-    primaryItem?.img || order.entrepreneur.img || "/resources/img-2-onboarding.svg";
+    primaryItem?.img ||
+    order.entrepreneur.img ||
+    "/resources/img-2-onboarding.svg";
   const itemName = primaryItem?.name || "Order";
   const quantity = primaryItem?.quantity ?? 1;
 
   const handleConfirmDecline = () => {
-  if (!declineReason.trim()) {
-    setDeclineError("Please write a reason.");
-    return;
-  }
-
-  onDecline(declineReason.trim());
-  setShowDeclineModal(false);
-  setDeclineReason("");
-  setDeclineError("");
-};
+    if (!declineReason.trim()) {
+      setDeclineError("Please write a reason.");
+      return;
+    }
+    onDecline(declineReason.trim());
+    setShowDeclineModal(false);
+  };
 
   return (
     <main className="app-shell">
-      <section className="min-h-screen w-full max-w-[430px] bg-background">
-        <div className="relative h-[324px] overflow-hidden px-12 pt-7">
+      <section className="relative h-screen w-full flex flex-col bg-background overflow-y-auto">
+        <div className="relative h-96 w-full">
           <img
-            className="absolute inset-0 h-full w-full object-cover"
             src={imageSrc}
             alt={itemName}
-            onError={(event) => {
-              event.currentTarget.src = "/resources/img-2-onboarding.svg";
-            }}
+            className="h-full w-full object-cover"
           />
+          <div className="absolute inset-0 bg-white/10" />
 
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,250,244,0.04),rgba(255,250,244,0.34))]" />
-
-          <div className="relative z-10 left-[-20px] top-10">
-
+          <div className="absolute left-8 top-14">
             <button
-            type="button"
-            onClick={() => navigate("/consumer/orders")}
-            className="ml-4 flex items-center gap-1 rounded-full bg-white/80 px-3 py-1 text-[13px] font-light shadow-sm transition-all duration-500 active:scale-95"
-          >
-            <ArrowIcon className="w-3 h-3" />
-            <span>Orders</span>
-          </button>
+              type="button"
+              onClick={() => navigate("/consumer/orders")}
+              className="flex items-center gap-1 rounded-lg font-light bg-white px-3 py-2 text-sm shadow-xs active:scale-95 transition-transform"
+            >
+              <ArrowIcon className="w-3 h-3" />
+              <span>Back</span>
+            </button>
           </div>
         </div>
 
-        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-12 pt-7">
-          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-xl bg-maroon px-[10px] font-sofia text-[22px] font-medium text-white">
-            x{quantity}
-          </span>
+        <div className="-mt-10 relative z-10 flex-1 rounded-t-[28px] bg-background px-12 pt-8 pb-10 flex flex-col justify-between gap-8">
+          <div>
+            <div className="flex items-start justify-between gap-4 mb-4">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[22px] font-medium text-black leading-tight">
+                  {itemName} <span className="font-bold">x{quantity}</span>
+                </h2>
+                <p className="mt-2 text-3xl font-semibold text-orange">
+                  {formatPrice(order.total_price)}
+                </p>
+              </div>
 
-          <div className="flex items-start justify-between gap-[14px] mt-4">
-            <div>
-              <h1 className="!font-sofia text-[22px] font-medium text-black">
-                {itemName}
-              </h1>
+              <span className="rounded-full border border-[#ecb100] bg-[#fff8da] px-4 py-1 text-[13px] font-light whitespace-nowrap text-[#ecb100]">
+                Pending
+              </span>
             </div>
 
-            <span className="inline-flex min-h-7 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3 text-[14px] text-[#ecb100]">
-              Pending
-            </span>
-          </div>
-
-          <div className="mt-5 grid grid-cols-2 gap-3">
-            <div className="flex min-h-[44px] items-center justify-center rounded-xl border border-maroon px-3 text-center text-[rgba(27,27,27,0.82)]">
-              <span className="truncate">{order.customer.name}</span>
+            <div className="">
+              <div className="flex flex-col gap-2 bg-orange border rounded-xl border-black/25 p-4">
+                <div className="mb-2 text-white">@{order.customer.name}</div>
+                <a
+                  href={`tel:${order.customer.phone}`}
+                  className="flex items-center justify-center gap-2 rounded-xl border border-maroon/20 bg-white p-4  font-semibold text-orange"
+                >
+                  <PhoneIcon className="w-4 h-4 fill-current" />
+                  {order.customer.phone}
+                </a>
+              </div>
             </div>
 
-            <a
-              className="flex min-h-[44px] items-center justify-center gap-2 rounded-xl border border-maroon px-3 text-[rgba(27,27,27,0.82)]"
-              href={`tel:${order.customer.phone}`}
-            >
-              <PhoneIcon className="h-[16px] w-[16px]" />
-              <span className="truncate">{order.customer.phone}</span>
-            </a>
+            {order.delivery_notes?.trim() && (
+              <div className="mt-6">
+                <h3 className="text-[17px] font-medium mb-2 text-black">
+                  Notes
+                </h3>
+                <p className="text-[15px] font-light leading-relaxed text-black/60 bg-black/5 p-4 rounded-xl">
+                  {order.delivery_notes}
+                </p>
+              </div>
+            )}
           </div>
 
-          <p className="mt-3 font-light text-[18px] text-black">
-            Total:{" "}
-            <strong className="text-[25px] font-semibold text-orange">
-              {formatPrice(order.total_price)}
-            </strong>
-          </p>
+          {feedbackMessage && (
+            <p className="text-sm text-red-600">{feedbackMessage}</p>
+          )}
 
-          {order.delivery_notes?.trim() ? (
-            <p className="mt-3 rounded-xl border border-[#ead9cf] px-4 py-3 text-[13px] leading-[1.35] text-[rgba(27,27,27,0.72)]">
-              {order.delivery_notes}
-            </p>
-          ) : null}
-
-          <div className="mt-6 overflow-hidden rounded-xl border border-maroon/20 p-2 shadow-[0_8px_22px_rgba(80,3,17,0.06)]">
-            <LocationMap
-              pinClassName="bg-maroon"
-              className="relative h-[132px] w-full overflow-hidden rounded-xl border border-maroon/15 bg-[#f4ebe3]"
-            />
-
-            <div className="flex items-center justify-between px-2 pt-1 text-[14px] text-[rgba(27,27,27,0.82)]">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPinIcon className="h-[16px] w-[16px]" />
-              Near 10 mt.
-            </span>
-
-            <span className="inline-flex items-center gap-1.5">
-              <ClockIcon className="h-[16px] w-[16px]" />
-              3 min
-            </span>
-          </div>
-          </div>
-
-          {feedbackMessage ? (
-            <p className="mt-4 text-[13px] text-[#b4202f]">{feedbackMessage}</p>
-          ) : null}
-
-          <div className="mt-8 flex flex-col gap-3">
+          <div className="w-full flex flex-col gap-2 mt-auto">
             <button
-              className="min-h-[52px] rounded-xl bg-maroon px-4 text-[16px] font-light text-white transition-all duration-500 active:scale-95 disabled:opacity-60"
               type="button"
-              disabled={isSubmitting}
               onClick={onAccept}
+              className="w-full rounded-xl border text-sm text-white bg-maroon py-4 active:scale-95 transition-transform"
             >
-              {isSubmitting ? "Updating..." : "Confirm"}
+              Accept Order
             </button>
 
             <button
-              className="min-h-[52px] rounded-xl border border-maroon bg-transparent px-4 text-[16px] font-light text-maroon transition-all duration-500 active:scale-95 disabled:opacity-60"
               type="button"
-              disabled={isSubmitting}
               onClick={() => setShowDeclineModal(true)}
+              className="w-full rounded-xl border text-sm text-maroon bg-background  border-maroon py-4 active:scale-95 transition-transform"
             >
               Decline
             </button>
           </div>
         </div>
-
-        {/*decline modal */}
-
       </section>
+
       {showDeclineModal && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-8 backdrop-blur-[2px]">
-    <div className="w-full max-w-[340px] rounded-2xl bg-background p-6 shadow-xl">
-      <h2 className="text-[22px] font-semibold text-black">
-        Decline order?
-      </h2>
-
-      <p className="mt-2 text-[15px] font-light leading-tight text-black/60">
-        Let the customer know why this order cannot be accepted.
-      </p>
-
-      <textarea
-        value={declineReason}
-        onChange={(event) => {
-          setDeclineReason(event.target.value);
-          setDeclineError("");
-        }}
-        placeholder="Write a short reason..."
-        className="mt-5 h-[110px] w-full resize-none rounded-xl border border-maroon bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-black/50"
-      />
-
-      {declineError && (
-        <p className="mt-2 text-[13px] text-[#b4202f]">
-          {declineError}
-        </p>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-8 backdrop-blur-[2px]">
+          <div className="w-full max-w-[340px] rounded-2xl bg-background p-6 shadow-xl">
+            <h2 className="text-[22px] font-semibold text-black">
+              Decline order?
+            </h2>
+            <textarea
+              value={declineReason}
+              onChange={(e) => {
+                setDeclineReason(e.target.value);
+                setDeclineError("");
+              }}
+              placeholder="Write a reason..."
+              className="mt-5 h-[110px] w-full resize-none rounded-xl border border-maroon bg-transparent px-4 py-3 text-[14px] outline-none"
+            />
+            {declineError && (
+              <p className="mt-2 text-[13px] text-red-600">{declineError}</p>
+            )}
+            <div className="mt-5 flex gap-3">
+              <button
+                onClick={() => setShowDeclineModal(false)}
+                className="flex-1 py-3 rounded-xl border border-black/15 text-[15px]"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDecline}
+                className="flex-1 py-3 rounded-xl bg-maroon text-[15px] text-white"
+              >
+                Send
+              </button>
+            </div>
+          </div>
+        </div>
       )}
-
-      <div className="mt-5 flex gap-3">
-        <button
-          type="button"
-          onClick={() => {
-            setShowDeclineModal(false);
-            setDeclineReason("");
-            setDeclineError("");
-          }}
-          className="h-[50px] flex-1 rounded-xl border border-black/15 text-[15px]"
-        >
-          Cancel
-        </button>
-
-        <button
-          type="button"
-          disabled={isSubmitting}
-          onClick={handleConfirmDecline}
-          className="h-[50px] flex-1 rounded-xl bg-maroon text-[15px] text-white disabled:opacity-60"
-        >
-          Send
-        </button>
-      </div>
-    </div>
-  </div>
-)}
     </main>
   );
 }

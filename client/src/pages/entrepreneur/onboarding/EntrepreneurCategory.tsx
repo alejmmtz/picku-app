@@ -25,7 +25,7 @@ const CategoryButton = ({
 }) => (
   <button
     className={`border border-maroon/0 text-maroon px-4 py-2 text-sm rounded-2xl transition-all duration-300  ${
-      selected ? " bg-orange text-black " : "  border-maroon/100"
+      selected ? " bg-orange text-white " : "  border-maroon/100"
     }`}
     type="button"
     onClick={onClick}
