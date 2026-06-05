@@ -17,7 +17,13 @@ export type MapTileStyle = {
 };
 
 export type LeafletMapInstance = {
+  fitBounds: (
+    bounds: Array<[number, number]>,
+    options?: { padding?: [number, number]; maxZoom?: number },
+  ) => void;
   invalidateSize: () => void;
+  off: (event: string, handler: (event: LeafletMapEvent) => void) => void;
+  on: (event: string, handler: (event: LeafletMapEvent) => void) => void;
   remove: () => void;
   setView: (
     center: [number, number],
@@ -26,10 +32,26 @@ export type LeafletMapInstance = {
   ) => void;
 };
 
+export type LeafletMapEvent = {
+  latlng: {
+    lat: number;
+    lng: number;
+  };
+};
+
 export type LeafletMarkerInstance = {
   addTo: (map: LeafletMapInstance) => LeafletMarkerInstance;
+  getLatLng: () => { lat: number; lng: number };
+  off: (event: string, handler: () => void) => void;
+  on: (event: string, handler: () => void) => void;
   remove: () => void;
   setLatLng: (center: [number, number]) => void;
+};
+
+export type LeafletPolylineInstance = {
+  addTo: (map: LeafletMapInstance) => LeafletPolylineInstance;
+  remove: () => void;
+  setLatLngs: (points: Array<[number, number]>) => void;
 };
 
 type LeafletNamespace = {
@@ -50,7 +72,13 @@ type LeafletNamespace = {
   };
   marker: (
     center: [number, number],
-    options?: { icon?: unknown; keyboard?: boolean; interactive?: boolean },
+    options?: {
+      autoPan?: boolean;
+      draggable?: boolean;
+      icon?: unknown;
+      keyboard?: boolean;
+      interactive?: boolean;
+    },
   ) => LeafletMarkerInstance;
   divIcon: (options: {
     className?: string;
@@ -58,6 +86,15 @@ type LeafletNamespace = {
     iconSize?: [number, number];
     iconAnchor?: [number, number];
   }) => unknown;
+  polyline: (
+    points: Array<[number, number]>,
+    options?: {
+      color?: string;
+      dashArray?: string;
+      opacity?: number;
+      weight?: number;
+    },
+  ) => LeafletPolylineInstance;
 };
 
 type LeafletMapOptions = {

@@ -355,9 +355,7 @@ export const createOrderService = async (
     });
 
     const pickupCode = generatePickupCode();
-    const userPosition = dto.user_position
-      ? toPostgisPointParams(dto.user_position)
-      : null;
+    const userPosition = toPostgisPointParams(dto.user_position);
 
     const {
       rows: [newOrder],
@@ -380,10 +378,7 @@ export const createOrderService = async (
          $4,
          $5,
          $6,
-         CASE
-           WHEN $7::double precision IS NULL THEN NULL
-           ELSE ST_SetSRID(ST_MakePoint($7, $8), 4326)::geography
-         END,
+         ST_SetSRID(ST_MakePoint($7, $8), 4326)::geography,
          $9,
          NOW()
        )
@@ -395,8 +390,8 @@ export const createOrderService = async (
         calculatedTotal,
         pickupCode,
         dto.delivery_notes ?? null,
-        userPosition?.longitude ?? null,
-        userPosition?.latitude ?? null,
+        userPosition.longitude,
+        userPosition.latitude,
         dto.campus_location_id ?? null,
       ]
     );

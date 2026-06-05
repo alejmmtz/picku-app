@@ -20,12 +20,10 @@ const normalizeCreateOrder = (
     })),
   };
 
-  if (order.location) {
-    payload.user_position = {
-      latitude: order.location.lat,
-      longitude: order.location.lng,
-    };
-  }
+  payload.user_position = {
+    latitude: order.location.lat,
+    longitude: order.location.lng,
+  };
 
   return payload;
 };

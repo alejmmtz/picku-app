@@ -22,7 +22,7 @@ export interface CreateOrderDTO {
   delivery_notes?: string | null;
   products: CreateOrderProductDTO[];
   // Campo añadido para la geolocalización inicial al hacer checkout
-  location?: GeoLocation;
+  location: GeoLocation;
 }
 
 export interface UpdateOrderDTO {

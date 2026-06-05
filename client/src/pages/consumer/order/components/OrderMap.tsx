@@ -38,6 +38,21 @@ function OrderMap({ orderId, orderStatus }: OrderMapProps) {
       ].filter((marker): marker is NonNullable<typeof marker> => Boolean(marker)),
     [consumerLocation, entrepreneurLocation],
   );
+  const routeLines = useMemo(
+    () =>
+      entrepreneurLocation && consumerLocation
+        ? [
+            {
+              id: "delivery-route",
+              points: [entrepreneurLocation, consumerLocation],
+              color: "#500311",
+              opacity: 0.82,
+              weight: 4,
+            },
+          ]
+        : [],
+    [consumerLocation, entrepreneurLocation],
+  );
 
   return (
     <LocationMap
@@ -47,6 +62,8 @@ function OrderMap({ orderId, orderStatus }: OrderMapProps) {
       overlayClassName={ACTIVE_MAP_STYLE.overlayClass}
       markerMode="leaflet"
       markers={markers}
+      polylines={routeLines}
+      fitToMarkers
       className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-[#f4ebe3]"
     />
   );

@@ -45,7 +45,21 @@ function OrderMap({ orderId: orderIdProp, orderStatus }: OrderMapProps) {
       ].filter((marker): marker is NonNullable<typeof marker> => Boolean(marker)),
     [consumerLocation, entrepreneurLocation],
   );
-
+  const routeLines = useMemo(
+    () =>
+      entrepreneurLocation && consumerLocation
+        ? [
+            {
+              id: "delivery-route",
+              points: [entrepreneurLocation, consumerLocation],
+              color: "#500311",
+              opacity: 0.82,
+              weight: 4,
+            },
+          ]
+        : [],
+    [consumerLocation, entrepreneurLocation],
+  );
   return (
     <LocationMap
       center={mapCenter}
@@ -55,6 +69,8 @@ function OrderMap({ orderId: orderIdProp, orderStatus }: OrderMapProps) {
       pinClassName="bg-maroon"
       markerMode="leaflet"
       markers={markers}
+      polylines={routeLines}
+      fitToMarkers
       className="absolute inset-0 z-0 h-full w-full overflow-hidden bg-[#f4ebe3]"
     />
   );
