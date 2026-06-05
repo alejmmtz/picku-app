@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import BottomNav from "../../../components/common/BottomNav";
@@ -70,55 +70,40 @@ const EntrepreneurOrders = () => {
   const [entrepreneurId, setEntrepreneurId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
-  const loadOrders = useCallback(async () => {
-    try {
-      const [entrepreneurResponse, data] = await Promise.all([
-        api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
-        getOrders(api),
-      ]);
-
-      setEntrepreneurId(entrepreneurResponse.data.id);
-      setOrders(data);
-      setFeedbackMessage("");
-    } catch {
-      setOrders([]);
-      setFeedbackMessage(
-        "We could not load your orders right now. Please try again in a moment.",
-      );
-    }
-  }, [api]);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    const loadOrders = async () => {
+  const loadOrders = useCallback(
+    async (isMounted: () => boolean = () => true) => {
       try {
         const [entrepreneurResponse, data] = await Promise.all([
           api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
           getOrders(api),
         ]);
 
-        if (!isMounted) return;
+        if (!isMounted()) return;
 
         setEntrepreneurId(entrepreneurResponse.data.id);
         setOrders(data);
         setFeedbackMessage("");
       } catch {
-        if (!isMounted) return;
+        if (!isMounted()) return;
 
         setOrders([]);
         setFeedbackMessage(
           "We could not load your orders right now. Please try again in a moment.",
         );
       }
-    };
+    },
+    [api],
+  );
 
-    void loadOrders();
+  useEffect(() => {
+    let isMounted = true;
+
+    void Promise.resolve().then(() => loadOrders(() => isMounted));
 
     return () => {
       isMounted = false;
     };
-  }, [api]);
+  }, [loadOrders]);
 
   useEntrepreneurOrdersRealtime(entrepreneurId, () => {
     void loadOrders();

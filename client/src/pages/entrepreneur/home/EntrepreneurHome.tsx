@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
@@ -76,34 +76,52 @@ const EntrepreneurHome = () => {
 
   const auth = useMemo(() => getStoredAuth(), []);
 
-  useEffect(() => {
-    if (!auth) {
-      navigate("/entrepreneur/login", { replace: true });
-      return;
-    }
-
-    const loadHome = async () => {
+  const loadHome = useCallback(
+    async (isMounted: () => boolean = () => true) => {
       try {
         const [entrepreneurResponse, ordersResponse] = await Promise.all([
           api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
           getOrders(api),
         ]);
 
+        if (!isMounted()) return;
+
         setEntrepreneur(entrepreneurResponse.data);
         setOrders(ordersResponse.map(mapOrder));
       } catch (error) {
+        if (!isMounted()) return;
+
         setOrders([]);
         if (axios.isAxiosError(error) && error.response?.status === 404) {
           navigate("/entrepreneur/onboarding", { replace: true });
         }
       } finally {
-        setIsLoading(false);
+        if (isMounted()) {
+          setIsLoading(false);
+        }
       }
+    },
+    [api, navigate],
+  );
+
+  useEffect(() => {
+    if (!auth) {
+      navigate("/entrepreneur/login", { replace: true });
+      return;
+    }
+
+    let isMounted = true;
+
+    void Promise.resolve().then(() => loadHome(() => isMounted));
+
+    return () => {
+      isMounted = false;
     };
+  }, [auth, loadHome, navigate]);
 
   useEntrepreneurOrdersRealtime(entrepreneur?.id ?? null, () => {
     void loadHome();
-  }, [api, auth, navigate]);
+  });
 
   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
   const incomingCount = orders.filter((order) =>

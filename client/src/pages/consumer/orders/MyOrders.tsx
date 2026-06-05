@@ -31,6 +31,8 @@ const statusClassMap: Record<OrderStatus, string> = {
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-blue bg-blue/10 px-3 text-[13px] text-blue",
   accepted:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-yellow bg-yellow/10 px-3 text-[13px] text-yellow",
+  preparing:
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
@@ -96,33 +98,19 @@ const MyOrders = () => {
     };
   }, [api]);
 
-  useOrdersListRealtime(orders.map((order) => order.id), (payload) => {
-    setOrders((current) =>
-      current.map((order) =>
-        order.id === payload.orderId
-          ? applyOrderBroadcastPayload(order, payload)
-          : order,
-      ),
-    );
-  });
-
-  const filteredOrders = useMemo(() => {
-  if (activeTab === "delivered") {
-    return orders.filter((order) => order.status === "delivered");
-  }
-
-  if (activeTab === "declined") {
-    return orders.filter((order) => order.status === "declined");
-  }
-
-  return orders.filter(
-    (order) =>
-      order.status === "requested" ||
-      order.status === "accepted" ||
-      order.status === "preparing" ||
-      order.status === "delivering",
+  useOrdersListRealtime(
+    orders.map((order) => order.id),
+    (payload) => {
+      setOrders((current) =>
+        current.map((order) =>
+          order.id === payload.orderId
+            ? applyOrderBroadcastPayload(order, payload)
+            : order,
+        ),
+      );
+    },
   );
-}, [activeTab, orders]);
+
   const filteredOrders = useMemo(() => {
     if (activeTab === "delivered") {
       return orders.filter((order) => order.status === "delivered");
@@ -136,6 +124,7 @@ const MyOrders = () => {
       (order) =>
         order.status === "requested" ||
         order.status === "accepted" ||
+        order.status === "preparing" ||
         order.status === "delivering",
     );
   }, [activeTab, orders]);

@@ -25,6 +25,8 @@ const statusClassMap: Record<OrderStatus, string> = {
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-blue bg-blue/10 px-3 text-[13px] text-blue",
   accepted:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-yellow bg-yellow/10 px-3 text-[13px] text-yellow",
+  preparing:
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
