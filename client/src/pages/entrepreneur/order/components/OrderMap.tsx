@@ -42,7 +42,9 @@ function OrderMap({ orderId: orderIdProp, orderStatus }: OrderMapProps) {
               pinClassName: "bg-maroon",
             }
           : null,
-      ].filter((marker): marker is NonNullable<typeof marker> => Boolean(marker)),
+      ].filter((marker): marker is NonNullable<typeof marker> =>
+        Boolean(marker),
+      ),
     [consumerLocation, entrepreneurLocation],
   );
   const routeLines = useMemo(
@@ -52,9 +54,8 @@ function OrderMap({ orderId: orderIdProp, orderStatus }: OrderMapProps) {
             {
               id: "delivery-route",
               points: [entrepreneurLocation, consumerLocation],
-              color: "#500311",
-              opacity: 0.82,
-              weight: 4,
+              color: "maroon",
+              weight: 2,
             },
           ]
         : [],
@@ -63,7 +64,7 @@ function OrderMap({ orderId: orderIdProp, orderStatus }: OrderMapProps) {
   return (
     <LocationMap
       center={mapCenter}
-      zoom={17}
+      zoom={18}
       tileStyle={ACTIVE_MAP_STYLE}
       overlayClassName={ACTIVE_MAP_STYLE.overlayClass}
       pinClassName="bg-maroon"

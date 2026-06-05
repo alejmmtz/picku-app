@@ -85,7 +85,6 @@ const ConsumerHome = () => {
     loadEntrepreneurs();
   }, [axios]);
 
-  // Modificado para filtrar por término de búsqueda Y por categoría seleccionada
   const filteredEntrepreneurs = useMemo(() => {
     const searchFiltered = filterEntrepreneurs(
       entrepreneurs,
@@ -128,7 +127,6 @@ const ConsumerHome = () => {
           className="w-full mb-6 rounded-lg shadow-sm"
         />
 
-        {/*search input*/}
         <div className="relative mb-2">
           <SearchIcon className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4" />
 

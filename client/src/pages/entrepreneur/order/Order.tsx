@@ -16,7 +16,7 @@ import {
   useOrderRealtime,
 } from "../../../providers/OrdersRealtimeProvider";
 
-import Loader from "../../../components/common/LoaderEntrepreneur";
+import Loader from "../../../components/common/Loader";
 
 const isActiveOrder = (order: OrderResponse) =>
   order.status === "requested" ||
@@ -101,9 +101,7 @@ export default function Order() {
     };
   }, [api, orderId]);
 
-  const submitUpdate = async (
-    payload: Parameters<typeof updateOrder>[2],
-  ) => {
+  const submitUpdate = async (payload: Parameters<typeof updateOrder>[2]) => {
     if (!order) return;
 
     try {
@@ -134,16 +132,16 @@ export default function Order() {
   };
 
   const handleDecline = (reasonFromModal?: string) => {
-  const reason =
-    reasonFromModal?.trim() ||
-    declineReason.trim() ||
-    "Declined by entrepreneur.";
+    const reason =
+      reasonFromModal?.trim() ||
+      declineReason.trim() ||
+      "Declined by entrepreneur.";
 
-  void submitUpdate({
-    status: "declined",
-    cancel_reason: reason,
-  });
-};
+    void submitUpdate({
+      status: "declined",
+      cancel_reason: reason,
+    });
+  };
 
   const handleComplete = () => {
     const normalizedPickupCode = pickupCode.trim().toUpperCase();
@@ -161,14 +159,14 @@ export default function Order() {
   };
 
   if (isLoading) {
-  return (
-    <main className="app-shell sm:px-6 sm:py-6">
-      <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
-        <Loader message="Loading order..." />
-      </section>
-    </main>
-  );
-}
+    return (
+      <main className="app-shell sm:px-6 sm:py-6">
+        <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
+          <Loader message="Loading order..." />
+        </section>
+      </main>
+    );
+  }
 
   if (!order) {
     return (

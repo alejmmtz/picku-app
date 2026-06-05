@@ -13,7 +13,6 @@ import Loader from "../../../components/common/Loader";
 
 import ShoppingCartIcon from "../../../assets/shopping cart consumer.svg?react";
 import LogoConsumer from "../../../assets/logo consumer.png";
-import MapPinIcon from "../../../assets/map-pin.svg?react";
 
 type OrderTab = "ongoing" | "delivered" | "declined";
 
@@ -53,12 +52,6 @@ const getOrderTitle = (order: ConsumerOrder) =>
 
 const getOrderSubtitle = (order: ConsumerOrder) =>
   order.delivery_notes || order.entrepreneur.name || "PickU order";
-
-const getDistanceLabel = (order: ConsumerOrder) => {
-  return order.delivery_notes?.trim()
-    ? "Pickup details added"
-    : "Campus pickup";
-};
 
 const MyOrders = () => {
   const api = useAxios();
@@ -131,7 +124,7 @@ const MyOrders = () => {
 
   return (
     <main className="app-shell">
-      <section className="app-screen">
+      <section className="app-screen mb-24">
         <header className="flex items-center justify-between mb-8 h-6">
           <img
             src={LogoConsumer}
@@ -255,13 +248,6 @@ const MyOrders = () => {
                         <p className="text-[15px] font-light text-black/60 line-clamp-1">
                           {getOrderSubtitle(order)}
                         </p>
-
-                        <div className="flex items-center gap-1 text-[13px] font-light text-black/40 mt-2">
-                          <MapPinIcon className="h-4 w-4 shrink-0 text-black/40" />
-                          <span className="line-clamp-1">
-                            {getDistanceLabel(order)}
-                          </span>
-                        </div>
                       </div>
 
                       <div className="mt-3 flex items-center justify-between gap-3">

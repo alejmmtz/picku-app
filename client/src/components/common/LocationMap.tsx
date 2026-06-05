@@ -7,10 +7,7 @@ import type {
   MapCenter,
   MapTileStyle,
 } from "../../providers/MapsProvider";
-import {
-  DEFAULT_MAP_CENTER,
-  useMaps,
-} from "../../providers/MapsProvider";
+import { DEFAULT_MAP_CENTER, useMaps } from "../../providers/MapsProvider";
 import { isSameMapCenter } from "../../utils/geo";
 
 type LocationMapProps = {
@@ -54,7 +51,7 @@ type LocationMapPolyline = {
 
 const markerHtml = (pinClassName: string) => `
   <div class="pointer-events-none flex h-9 w-7 flex-col items-center">
-    <span class="h-5 w-5 rounded-full border-[3px] border-white shadow-[0_6px_18px_rgba(27,27,27,0.18)] ${pinClassName}"></span>
+    <span class="h-5 w-5 rounded-full border-4 border-white  ${pinClassName}"></span>
     <span class="h-3 w-3 -translate-y-1 rotate-45 bg-white/90 shadow-sm"></span>
   </div>
 `;
@@ -67,7 +64,7 @@ const toLatLngTuple = (center: MapCenter): [number, number] => [
 const LocationMap = ({
   className = "relative mb-6 h-64 w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3]",
   center,
-  zoom = 16,
+  zoom = 8,
   tileStyle,
   overlayClassName = "bg-[linear-gradient(180deg,rgba(255,255,255,0.04),rgba(255,250,244,0.26))]",
   pinClassName = "bg-orange",
@@ -248,8 +245,8 @@ const LocationMap = ({
       }
       current?.marker.remove();
 
-      const marker = window.L!
-        .marker([nextMarker.center.lat, nextMarker.center.lng], {
+      const marker = window
+        .L!.marker([nextMarker.center.lat, nextMarker.center.lng], {
           autoPan: isDraggable,
           draggable: isDraggable,
           icon: window.L!.divIcon({
@@ -291,7 +288,9 @@ const LocationMap = ({
     }
 
     const nextPolylines = polylines ?? [];
-    const nextPolylineIds = new Set(nextPolylines.map((polyline) => polyline.id));
+    const nextPolylineIds = new Set(
+      nextPolylines.map((polyline) => polyline.id),
+    );
 
     polylineRefs.current.forEach((polyline, polylineId) => {
       if (!nextPolylineIds.has(polylineId)) {
@@ -316,8 +315,8 @@ const LocationMap = ({
         return;
       }
 
-      const polyline = window.L!
-        .polyline(points, {
+      const polyline = window
+        .L!.polyline(points, {
           color: nextPolyline.color ?? "#500311",
           dashArray: nextPolyline.dashArray,
           opacity: nextPolyline.opacity ?? 0.78,
@@ -368,7 +367,7 @@ const LocationMap = ({
           className={`pointer-events-none absolute left-1/2 top-1/2 z-30 flex -translate-x-1/2 -translate-y-full flex-col items-center transition-opacity duration-500 ${mapStatus === "ready" ? "opacity-100" : "opacity-0"}`}
         >
           <span
-            className={`h-5 w-5 rounded-full border-[3px] border-white shadow-[0_6px_18px_rgba(27,27,27,0.18)] ${pinClassName}`}
+            className={`h-5 w-5 rounded-full border-8 border-white shadow-[0_6px_18px_rgba(27,27,27,0.18)] ${pinClassName}`}
           />
           <span className="h-3 w-3 -translate-y-1 rotate-45 bg-white/90 shadow-sm" />
         </div>

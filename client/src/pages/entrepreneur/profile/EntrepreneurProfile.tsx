@@ -21,13 +21,12 @@ type EntrepreneurProfileData = {
   id: string;
   name: string;
 };
+
 const EntrepreneurProfile = () => {
   const axios = useAxios();
   const navigate = useNavigate();
   const auth = useMemo(() => getStoredAuth(), []);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [businessProfile, setBusinessProfile] =
-    useState<EntrepreneurProfileData | null>(null);
 
   useEffect(() => {
     if (!auth) {
@@ -38,7 +37,7 @@ const EntrepreneurProfile = () => {
     let isMounted = true;
 
     const loadProfile = async () => {
-      const [userResult, businessResult] = await Promise.allSettled([
+      const [userResult] = await Promise.allSettled([
         axios.get<UserProfile>("/picku/api/auth/me"),
         axios.get<EntrepreneurProfileData>("/picku/api/entrepreneurs/me"),
       ]);
@@ -47,10 +46,6 @@ const EntrepreneurProfile = () => {
 
       if (userResult.status === "fulfilled") {
         setUserProfile(userResult.value.data);
-      }
-
-      if (businessResult.status === "fulfilled") {
-        setBusinessProfile(businessResult.value.data);
       }
     };
 
@@ -62,11 +57,11 @@ const EntrepreneurProfile = () => {
   }, [auth, axios, navigate]);
 
   const displayName =
-    businessProfile?.name ??
     userProfile?.name ??
     (typeof auth?.user.user_metadata?.name === "string"
       ? auth.user.user_metadata.name
       : "Entrepreneur");
+
   const displayEmail =
     userProfile?.email ?? auth?.user.email ?? "entrepreneur@picku.app";
 
@@ -81,35 +76,40 @@ const EntrepreneurProfile = () => {
 
   return (
     <main className="app-shell">
-      <section className="app-screen pb-[140px]">
-        <header className="relative mb-[45px] flex items-start justify-between">
-          <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] mt-2" />
+      <section className="app-screen">
+        <header className="flex items-center justify-between mb-8">
           <img
-            className="absolute right-[5px] top-[4px] h-[78px] w-[108px] object-contain"
-            src="/resources/Image-profile-entrepeneurs.svg"
-            alt=""
+            src={LogoEntrepreneur}
+            onClick={() => navigate("/consumer/home")}
+            alt="PickU"
+            className="w-16 cursor-pointer"
           />
         </header>
 
-        {/* card profile */}
-        <section className="app-card px-[18px] py-[22px]">
-          <div className="mb-[26px] flex items-center gap-[14px]">
-            <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[50px] bg-blue/10">
-              <UserBlueIcon className="h-[26px] w-[26px]" />
+        <img
+          className="absolute right-24 top-9 h-21 object-contain"
+          src="/resources/Image-profile-entrepeneurs.svg"
+          alt=""
+        />
+
+        <section className="app-card px-6 py-6">
+          <div className="mb-6 flex items-center gap-3">
+            <div className="flex p-3 shrink-0 items-center justify-center rounded-lg bg-blue/10">
+              <UserBlueIcon className="h-6 w-6" />
             </div>
 
             <div className="min-w-0">
-              <h1 className="m-0 truncate !font-sofia text-[16px] font-semibold leading-[1.25]">
+              <h2 className="truncate text-[16px] font-medium text-black">
                 {displayName}
-              </h1>
-              <p className="mt-[4px] truncate text-[15px] font-light leading-[1.25] text-black/45">
+              </h2>
+              <p className="truncate text-[15px] font-light text-black/45 mt-1">
                 {displayEmail}
               </p>
             </div>
           </div>
 
           <button
-            className="app-action flex min-h-[50px] w-full items-center justify-center gap-[18px] bg-maroon px-4 text-[15px]"
+            className="app-action flex w-full items-center justify-center gap-4 bg-maroon text-[14px]"
             type="button"
             onClick={() => navigate("/consumer/login")}
           >
@@ -122,48 +122,47 @@ const EntrepreneurProfile = () => {
           </button>
         </section>
 
-        {/* edit info */}
         <button
-          className="app-card mt-[12px] flex w-full items-center px-[18px] py-[18px] text-left transition-all duration-500 active:scale-95"
+          className="app-card mt-2 flex w-full items-center p-6 text-left transition-all duration-500 active:scale-95"
           type="button"
           onClick={handleEditBusiness}
         >
-          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl bg-maroon/10">
-            <Edit className="h-[24px] w-[24px]" />
+          <span className="mr-4 flex p-3 shrink-0 items-center justify-center rounded-lg bg-maroon/5">
+            <Edit className="h-6 w-6 text-maroon" />
           </span>
 
           <span className="min-w-0">
-            <span className="block text-[15px] font-medium leading-[1.25]">
+            <span className="block truncate text-[16px] font-medium text-black">
               Edit business information
             </span>
-            <span className="mt-[5px] block truncate font-light text-[15px] text-black/45">
+            <span className="block truncate font-light text-[15px] text-black/50 mt-1">
               Update your business details
             </span>
           </span>
         </button>
 
         <button
-          className="app-card mt-[12px] flex w-full items-center px-[18px] py-[18px] text-left transition-all duration-500 active:scale-95"
+          className="app-card mt-2 flex w-full items-center p-6 text-left transition-all duration-500 active:scale-95"
           type="button"
           onClick={handleLogout}
         >
-          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl bg-[#ffe8e5]">
-            <LogoutIcon className="h-[24px] w-[24px]" />
+          <span className="mr-4 flex p-3 shrink-0 items-center justify-center rounded-lg bg-red-800/5">
+            <LogoutIcon className="h-6 w-6" />
           </span>
 
           <span className="min-w-0">
-            <span className="block text-[15px] font-medium leading-[1.25]">
+            <span className="block truncate text-[16px] font-medium text-black">
               Log Out
             </span>
-            <span className="mt-[5px] block truncate text-[15px] font-light text-black/45">
+            <span className="block truncate font-light text-[15px] text-black/50 mt-1">
               Sign out of your account.
             </span>
           </span>
         </button>
 
-        <footer className="absolute bottom-[126px] left-0 right-0 text-center text-black/20">
+        <footer className="absolute bottom-28 left-0 right-0 text-center text-black/20">
           <img
-            className="mx-auto mb-[8px] w-[58px] opacity-12 grayscale"
+            className="mx-auto mb-2 w-16 opacity-12 grayscale"
             src="/logos/picku-logo.svg"
             alt="PickU"
           />

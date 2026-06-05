@@ -11,8 +11,6 @@ import {
 import { uploadProductImage } from "../../../services/storage.service";
 import ConfirmModal from "../../../components/common/ConfirmModal";
 
-
-import Logo from "../../../assets/logo entrepeneur color.svg";
 import ArrowIcon from "../../../assets/arrow.svg?react";
 import UploadImageIcon from "../../../assets/upload image.svg?react";
 
@@ -21,7 +19,7 @@ const EditProduct = () => {
   const navigate = useNavigate();
   const { id } = useParams();
 
-  // validation form
+  // Validation form state
   const [name, setName] = useState("");
   const [price, setPrice] = useState("");
   const [currentImg, setCurrentImg] = useState("");
@@ -75,28 +73,28 @@ const EditProduct = () => {
   };
 
   const handleToggleAvailability = async () => {
-  if (!id || updatingAvailability) return;
+    if (!id || updatingAvailability) return;
 
-  const nextAvailability = !isAvailable;
+    const nextAvailability = !isAvailable;
 
-  try {
-    setUpdatingAvailability(true);
-    setError("");
+    try {
+      setUpdatingAvailability(true);
+      setError("");
 
-    const updatedProduct = await updateProductAvailability(
-      axios,
-      id,
-      nextAvailability
-    );
+      const updatedProduct = await updateProductAvailability(
+        axios,
+        id,
+        nextAvailability,
+      );
 
-    setIsAvailable(updatedProduct.is_available);
-  } catch (error) {
-    console.error("Error updating availability:", error);
-    setError("Could not update product availability.");
-  } finally {
-    setUpdatingAvailability(false);
-  }
-};
+      setIsAvailable(updatedProduct.is_available);
+    } catch (error) {
+      console.error("Error updating availability:", error);
+      setError("Could not update product availability.");
+    } finally {
+      setUpdatingAvailability(false);
+    }
+  };
 
   const handleSubmit = async () => {
     if (!id) return;
@@ -132,12 +130,10 @@ const EditProduct = () => {
     }
   };
 
-  //only opens the modal
   const handleDelete = () => {
     setShowDeleteModal(true);
   };
 
-  //actually deletes after confirmation
   const confirmDeleteProduct = async () => {
     if (!id) return;
 
@@ -159,121 +155,130 @@ const EditProduct = () => {
   return (
     <>
       <main className="app-shell">
-        <section className="app-screen">
-          <header className="mb-7 flex items-center justify-between">
-            <img src={Logo} alt="PickU" className="w-[72px]" />
-
+        <section className="app-screen pb-16">
+          <header className="mb-6 flex items-center justify-between">
+            <button
+              type="button"
+              onClick={() => navigate("/entrepreneur/products")}
+              className=" flex items-center gap-2 font-light text-[17px] text-black/70 hover:text-black transition-colors"
+            >
+              <ArrowIcon className="w-4 h-4" />
+              <span>Products</span>
+            </button>
             <button
               type="button"
               disabled={updatingAvailability}
               onClick={handleToggleAvailability}
-              className={`flex min-h-[40px] min-w-[92px] items-center justify-center rounded-xl px-[18px] text-[14px] font-light text-white transition-opacity disabled:opacity-70 ${
-                isAvailable ? "bg-[#48aa00]" : "bg-[#9d9d9d]"
+              className={`px-4 py-2 rounded-xl text-sm font-medium text-white transition-all active:scale-95 disabled:opacity-70 ${
+                isAvailable ? "bg-blue " : "bg-blue/50"
               }`}
             >
               {isAvailable ? "Available" : "Hidden"}
             </button>
           </header>
 
-          <button
-            type="button"
-            onClick={() => navigate("/entrepreneur/products")}
-            className="mb-2 flex items-center gap-2 text-[17px]"
-          >
-            <ArrowIcon className="w-4 h-4" />
-            <span>Products</span>
-          </button>
-
-          <h2 className="mb-7 text-[28px] font-semibold">Edit product</h2>
+          <h2 className="text-2xl font-semibold mb-6">Edit product</h2>
 
           {error && (
-            <p className="mb-4 rounded-xl border border-maroon px-4 py-3 text-[14px] text-maroon">
-              {error}
-            </p>
+            <div className="mb-6 rounded-xl border border-red-500/20 bg-red-50 px-4 py-3">
+              <p className="font-medium text-red-600">{error}</p>
+            </div>
           )}
 
-          {/* product name */}
-          <div className="mb-5 grid grid-cols-[1fr_120px] gap-4">
-            <label className="flex flex-col gap-2 text-[15px]">
-              Product name
-              <input
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                className="h-[56px] rounded-xl border border-maroon bg-transparent px-4 outline-none"
-              />
-            </label>
-
-            {/* product price */}
-            <label className="flex flex-col gap-2 text-[15px]">
-              Product price
-              <input
-                type="number"
-                min="1"
-                step="100"
-                value={price}
-                onChange={(e) => setPrice(e.target.value)}
-                className="h-[56px] rounded-xl border border-maroon mr-2.5 bg-transparent px-4 outline-none"
-              />
-            </label>
-          </div>
-
-          {/* upload image */}
-          <label className="mb-6 flex flex-col gap-2 text-[15px]">
-            Upload photo
-
-            <input
-              id="edit-product-image"
-              type="file"
-              accept="image/*"
-              onChange={(e) => handleImageUpload(e.target.files?.[0])}
-              className="hidden"
-            />
-
-            <label
-              htmlFor="edit-product-image"
-              className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-maroon/30 bg-maroon/5"
-            >
-              {imagePreview ? (
-                <img
-                  src={imagePreview}
-                  alt="Product preview"
-                  className="h-full w-full object-cover"
+          <div className="flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <label className="flex flex-col gap-2 text-black">
+                Product name
+                <input
+                  required
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter product name"
+                  className="app-field text-sm w-full px-4 py-3 rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
                 />
-              ) : (
-                <UploadImageIcon className="h-16 w-16 text-maroon" />
-              )}
+              </label>
+
+              <label className="flex flex-col gap-2 text-black">
+                Price
+                <input
+                  required
+                  type="number"
+                  min="1"
+                  step="100"
+                  value={price}
+                  onChange={(e) => setPrice(e.target.value)}
+                  placeholder="Make it fair!"
+                  className="app-field text-sm w-full px-4 py-3 rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
+                />
+              </label>
+            </div>
+
+            <label className="flex flex-col gap-4 text-black">
+              Upload photo
+              <input
+                id="edit-product-image"
+                type="file"
+                accept="image/*"
+                onChange={(e) => handleImageUpload(e.target.files?.[0])}
+                className="hidden"
+              />
+              <div
+                className="relative flex h-64 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-maroon bg-white/25 transition-all duration-300 hover:border-maroon/60"
+                onClick={() =>
+                  document.getElementById("edit-product-image")?.click()
+                }
+              >
+                {imagePreview ? (
+                  <img
+                    src={imagePreview}
+                    alt="Product preview"
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <div className="flex flex-col items-center gap-2 text-maroon">
+                    <UploadImageIcon className="h-10 w-10" />
+                    <span className="text-sm font-light">Tap to upload</span>
+                  </div>
+                )}
+              </div>
             </label>
-          </label>
 
-          {/* product details */}
-          <label className="flex flex-col gap-2 text-[15px]">
-            Product details
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className="h-[126px] resize-none rounded-xl border border-maroon bg-transparent px-4 py-4 outline-none"
-            />
-          </label>
+            <label className="flex flex-col gap-2 font-medium text-black">
+              Product details
+              <textarea
+                required
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder="Enter product details, ingredients, etc."
+                className="app-field text-sm w-full px-4 py-3 h-32 resize-none rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
+              />
+            </label>
 
-          <button
-            type="button"
-            disabled={saving}
-            onClick={handleSubmit}
-            className={`mt-12 h-[58px] w-full rounded-xl text-[16px] text-white ${
-              saving ? "cursor-not-allowed bg-maroon/50" : "bg-maroon"
-            }`}
-          >
-            {saving ? "Saving..." : "Save changes"}
-          </button>
+            {/* Bloque de Acciones: Guardar y Eliminar unificados en diseño */}
+            <div className="mt-2 flex flex-col gap-4">
+              <button
+                type="button"
+                disabled={saving}
+                onClick={handleSubmit}
+                className={`app-action w-full rounded-xl py-4 text-base font-medium text-white transition-all ${
+                  saving
+                    ? "bg-maroon/50 cursor-not-allowed"
+                    : "bg-maroon hover:bg-maroon/90 active:scale-[0.98]"
+                }`}
+              >
+                {saving ? "Saving..." : "Save changes"}
+              </button>
 
-          <button
-            type="button"
-            disabled={deleting}
-            onClick={handleDelete}
-            className="mt-4 h-[58px] w-full rounded-xl border border-maroon text-[16px] text-maroon disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {deleting ? "Deleting..." : "Delete product"}
-          </button>
+              <button
+                type="button"
+                disabled={deleting}
+                onClick={handleDelete}
+                className="w-full rounded-xl py-4 text-base font-medium border border-maroon text-maroon bg-white hover:bg-maroon/5 transition-all active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {deleting ? "Deleting..." : "Delete product"}
+              </button>
+            </div>
+          </div>
         </section>
       </main>
 

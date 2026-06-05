@@ -10,14 +10,12 @@ import {
   useEntrepreneurOrdersRealtime,
   useOrdersListRealtime,
 } from "../../../providers/OrdersRealtimeProvider";
+import Loader from "../../../components/common/Loader";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
-import MapPinIcon from "../../../assets/map-pin.svg?react";
 
-type OrderTab = "incoming" | "accepted";
-type EntrepreneurProfile = {
-  id: string;
-};
+type OrderTab = "incoming" | "accepted" | "fulfilled";
+type EntrepreneurProfile = { id: string };
 
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
@@ -30,22 +28,26 @@ const statusLabelMap: Record<OrderStatus, string> = {
 
 const statusClassMap: Record<OrderStatus, string> = {
   requested:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3 text-[14px] text-[#ecb100]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#5ba7ff] bg-[#edf5ff] text-[#3478c9] px-3 text-[14px]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-blue-500 bg-blue-50 px-3 text-[13px] text-blue-500",
   preparing:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-maroon bg-[#f7e7eb] px-3 text-[14px] text-maroon",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-maroon bg-[#f7e7eb] px-3 text-[13px] text-maroon",
   declined:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 text-[14px] text-[#b4202f]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-maroon bg-[#f7e7eb] px-3 text-[14px] text-maroon",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-maroon bg-[#f7e7eb] px-3 text-[13px] text-maroon",
   delivered:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#78aa38] bg-[#eef8df] px-3 text-[14px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#78aa38] bg-[#eef8df] px-3 text-[13px] text-[#78aa38]",
 };
 
-const emptyMessages: Record<OrderTab, string> = {
-  incoming: "No incoming orders yet.",
-  accepted: "No accepted orders right now.",
+const formatOrderDate = (dateString: string) => {
+  return new Date(dateString).toLocaleDateString("es-CO", {
+    day: "numeric",
+    month: "short",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 };
 
 const formatPrice = (price: number) =>
@@ -59,37 +61,31 @@ const getOrderImage = (order: OrderResponse) =>
 const getOrderTitle = (order: OrderResponse) =>
   order.items[0]?.name || order.entrepreneur.name || "Order";
 
-const getOrderSubtitle = (order: OrderResponse) =>
-  order.delivery_notes?.trim() || order.customer.phone || "Campus pickup";
-
 const EntrepreneurOrders = () => {
   const api = useAxios();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("incoming");
   const [orders, setOrders] = useState<OrderResponse[]>([]);
-  const [entrepreneurId, setEntrepreneurId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const [feedbackMessage, setFeedbackMessage] = useState("");
 
   const loadOrders = useCallback(
     async (isMounted: () => boolean = () => true) => {
       try {
-        const [entrepreneurResponse, data] = await Promise.all([
+        const [, data] = await Promise.all([
           api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
           getOrders(api),
         ]);
 
         if (!isMounted()) return;
-
-        setEntrepreneurId(entrepreneurResponse.data.id);
         setOrders(data);
         setFeedbackMessage("");
       } catch {
         if (!isMounted()) return;
-
         setOrders([]);
-        setFeedbackMessage(
-          "We could not load your orders right now. Please try again in a moment.",
-        );
+        setFeedbackMessage("We could not load your orders right now.");
+      } finally {
+        if (isMounted()) setLoading(false);
       }
     },
     [api],
@@ -97,27 +93,28 @@ const EntrepreneurOrders = () => {
 
   useEffect(() => {
     let isMounted = true;
-
     void Promise.resolve().then(() => loadOrders(() => isMounted));
-
     return () => {
       isMounted = false;
     };
   }, [loadOrders]);
 
-  useEntrepreneurOrdersRealtime(entrepreneurId, () => {
+  useEntrepreneurOrdersRealtime(null, () => {
     void loadOrders();
   });
 
-  useOrdersListRealtime(orders.map((order) => order.id), (payload) => {
-    setOrders((current) =>
-      current.map((order) =>
-        order.id === payload.orderId
-          ? applyOrderBroadcastPayload(order, payload)
-          : order,
-      ),
-    );
-  });
+  useOrdersListRealtime(
+    orders.map((order) => order.id),
+    (payload) => {
+      setOrders((current) =>
+        current.map((order) =>
+          order.id === payload.orderId
+            ? applyOrderBroadcastPayload(order, payload)
+            : order,
+        ),
+      );
+    },
+  );
 
   const filteredOrders = useMemo(() => {
     if (activeTab === "accepted") {
@@ -125,113 +122,115 @@ const EntrepreneurOrders = () => {
         ["accepted", "preparing", "delivering"].includes(order.status),
       );
     }
-
+    if (activeTab === "fulfilled") {
+      return orders.filter((order) => order.status === "delivered");
+    }
     return orders.filter((order) => order.status === "requested");
   }, [activeTab, orders]);
 
   return (
     <main className="app-shell">
-      <section className="app-screen pb-[220px]">
-        <header className="flex items-center justify-between mb-10 mt-2">
-          <img src={LogoEntrepreneur} alt="PickU" className="w-[72px] " />
+      <section className="app-screen mb-16">
+        <header className="flex items-center justify-between mb-6">
+          <img
+            src={LogoEntrepreneur}
+            onClick={() => navigate("/consumer/home")}
+            alt="PickU"
+            className="w-16 cursor-pointer"
+          />
         </header>
 
-        <h1 className="mb-[20px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
-          Your orders
-        </h1>
+        <h2 className="mb-4 text-2xl font-semibold text-black">Your orders</h2>
 
-      {/*incoming or accepted*/}
-
-        <div className="mb-8 flex gap-3">
-          <button
-            className={`rounded-full px-4 py-2 text-[15px] ${
-              activeTab === "incoming"
-                ? "bg-[#f4e6e9] font-medium text-maroon"
-                : "bg-[#f4e6e9] text-[rgba(27,27,27,0.38)]"
-            }`}
-            type="button"
-            onClick={() => setActiveTab("incoming")}
-          >
-            Incoming
-          </button>
-
-          <button
-            className={`rounded-full px-4 py-2 text-[15px] ${
-              activeTab === "accepted"
-                ? "bg-[#f4e6e9] font-medium text-maroon"
-                : "bg-[#f4e6e9] text-[rgba(27,27,27,0.38)]"
-            }`}
-            type="button"
-            onClick={() => setActiveTab("accepted")}
-          >
-            Accepted orders
-          </button>
+        <div className="mb-6 flex w-full gap-2">
+          {(["incoming", "accepted", "fulfilled"] as OrderTab[]).map((tab) => (
+            <button
+              key={tab}
+              className={`flex-1 border text-center rounded-full py-2 text-sm transition-all capitalize ${
+                activeTab === tab
+                  ? "bg-maroon/10 font-medium text-maroon border-maroon"
+                  : "bg-black/5 text-black/75 border-transparent"
+              }`}
+              type="button"
+              onClick={() => setActiveTab(tab)}
+            >
+              {tab}
+            </button>
+          ))}
         </div>
 
-        {feedbackMessage ? (
-          <p className="mb-[14px] font-light text-[15px] text-[rgba(27,27,27,0.58)]">{feedbackMessage}</p>
-        ) : null}
+        {loading && (
+          <div className="flex items-center justify-center ">
+            <Loader message="Loading your orders..." />
+          </div>
+        )}
 
-        {!feedbackMessage && filteredOrders.length === 0 ? (
-          <p className="mb-[14px] ml-2 font-light text-[15px] text-[rgba(27,27,27,0.58)]">
-            {emptyMessages[activeTab]}
-          </p>
-        ) : null}
+        {!loading && !feedbackMessage && filteredOrders.length === 0 && (
+          <div className="mt-28 flex flex-col items-center justify-center text-center">
+            <div className="mb-6 flex h-full items-center justify-center">
+              <img
+                className="block h-auto w-20"
+                src="/resources/img-2-onboarding.svg"
+                alt="No orders available"
+              />
+            </div>
+            <p className="text-[18px] font-medium text-black">No orders yet!</p>
+            <p className="mt-1 text-[15px] font-light text-black/50">
+              Your orders will appear here.
+            </p>
+          </div>
+        )}
 
-        <div className="flex flex-col gap-4">
-          {filteredOrders.map((order) => {
-            const item = order.items[0];
+        {!loading && (
+          <div className="flex flex-col gap-5 bg-white">
+            {filteredOrders.map((order) => {
+              const item = order.items[0];
+              return (
+                <article
+                  key={order.id}
+                  className="app-card p-4 cursor-pointer transition-all duration-300 active:scale-[0.99]"
+                  onClick={() =>
+                    navigate(`/entrepreneur/order?orderId=${order.id}`)
+                  }
+                >
+                  <div className="flex gap-4">
+                    <img
+                      className="h-24 w-24 rounded-xl object-cover shrink-0 bg-[#f2e7de]"
+                      src={getOrderImage(order)}
+                      alt={getOrderTitle(order)}
+                    />
 
-            {/*orders card*/}
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-end justify-between gap-2">
+                          <h3 className="text-lg font-medium text-black line-clamp-1">
+                            {getOrderTitle(order)}
+                          </h3>
+                          <span className="rounded-md border text-sm px-2 py-1 font-light bg-maroon text-white whitespace-nowrap shrink-0">
+                            x{item?.quantity ?? 1}
+                          </span>
+                        </div>
 
-            return (
-              <article
-                key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-black/15 p-3"
-                onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
-              >
-                <img
-                  className="h-[94px] w-[102px] rounded-xl bg-[#f2e7de] object-cover"
-                  src={getOrderImage(order)}
-                  alt={getOrderTitle(order)}
-                  onError={(event) => {
-                    event.currentTarget.src = "/resources/img-2-onboarding.svg";
-                  }}
-                />
+                        <p className="text-xs text-black/50 font-medium mb-1">
+                          {formatOrderDate(order.created_at)}
+                        </p>
+                      </div>
 
-                <div className="flex min-w-0 flex-col">
-                  <div className="flex items-start justify-between gap-[10px]">
-                    <div>
-                      <h2 className="text-[16px] font-medium">{getOrderTitle(order)}</h2>
-                      <p className="mt-1 mb-1 text-[13px] text-black font-light">
-                        {getOrderSubtitle(order)}
-                      </p>
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <span className={statusClassMap[order.status]}>
+                          {statusLabelMap[order.status]}
+                        </span>
+                        <strong className="text-lg font-semibold text-black">
+                          {formatPrice(order.total_price)}
+                        </strong>
+                      </div>
                     </div>
-
-                    <span className="inline-flex h-7 min-w-[30px] items-center justify-center font-medium rounded-lg bg-maroon px-1.5 text-[14px] text-white">
-                      x{item?.quantity ?? 1}
-                    </span>
                   </div>
-
-                  <span className="inline-flex mb-1 items-center gap-1 text-[13px] font-light">
-                    <MapPinIcon className="h-[17px] w-[17px] shrink-0" />
-                    {order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup"}
-                  </span>
-
-                  <div className="mt-auto flex items-end justify-between gap-3">
-                    <span className={statusClassMap[order.status]}>
-                      {statusLabelMap[order.status]}
-                    </span>
-
-                    <strong className="text-[18px] font-semibold text-black">
-                      {formatPrice(order.total_price)}
-                    </strong>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
 
       <BottomNav variant="entrepreneur" />

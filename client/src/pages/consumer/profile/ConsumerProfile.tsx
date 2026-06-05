@@ -64,7 +64,7 @@ const ConsumerProfile = () => {
 
   const handleLogout = () => {
     removeStoredAuth();
-    navigate("/consumer/login", { replace: true });
+    navigate("/", { replace: true });
   };
 
   const displayName = profile?.name ?? fallbackName;
@@ -146,14 +146,14 @@ const ConsumerProfile = () => {
           </p>
         ) : null}
 
-        <footer className="absolute bottom-32 left-0 right-0 text-center text-black/20">
+        <footer className="absolute bottom-28 left-0 right-0 text-center text-black/20">
           <img
-            className="mx-auto mb-4 w-16 opacity-12 grayscale"
+            className="mx-auto mb-2 w-16 opacity-12 grayscale"
             src="/logos/picku-logo.svg"
             alt="PickU"
           />
           <p className="m-0 text-[14px] leading-[1.8] font-light">
-            Version 1.0.2
+            Version 1.0.0
           </p>
           <p className="m-0 text-[14px] font-light leading-[1.8]">
             Supporting student entrepreneurs

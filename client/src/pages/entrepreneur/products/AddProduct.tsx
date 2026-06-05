@@ -7,7 +7,6 @@ import { getCurrentEntrepreneur } from "../../../services/entrepreneur.service";
 import { createProduct } from "../../../services/product.service";
 import { uploadProductImage } from "../../../services/storage.service";
 
-import Logo from "../../../assets/logo entrepeneur color.svg";
 import ArrowIcon from "../../../assets/arrow.svg?react";
 import UploadImageIcon from "../../../assets/upload image.svg?react";
 
@@ -48,7 +47,6 @@ const AddProduct = () => {
     void loadEntrepreneur();
   }, [api, navigate]);
 
-  //handle image upload
   const handleImageUpload = (file?: File) => {
     if (!file) return;
 
@@ -56,30 +54,15 @@ const AddProduct = () => {
     setImagePreview(URL.createObjectURL(file));
   };
 
-  //form validation
   const validateForm = () => {
     if (!entrepreneurId) return "Complete your business profile first.";
-
-    if (!name.trim()) {
-      return "Product name is required.";
-    }
-
-    if (!price || Number(price) <= 0) {
-      return "Product price is required.";
-    }
-
-    if (!imageFile) {
-      return "Product photo is required.";
-    }
-
-    if (!description.trim()) {
-      return "Product details are required.";
-    }
-
+    if (!name.trim()) return "Product name is required.";
+    if (!price || Number(price) <= 0) return "Product price is required.";
+    if (!imageFile) return "Product photo is required.";
+    if (!description.trim()) return "Product details are required.";
     return "";
   };
 
-  //create product
   const handleSubmit = async () => {
     const validationError = validateForm();
 
@@ -92,26 +75,21 @@ const AddProduct = () => {
       setCreating(true);
       setError("");
 
-      //upload image to supabase storage
       const imageUrl = await uploadProductImage(imageFile as File);
 
-      //create product in database
       await createProduct(api, {
         entrepreneur_id: entrepreneurId as string,
         name: name.trim(),
         price: Number(price),
         description: description.trim(),
-
-        //temporary category
+        // Temporary category
         category: "General",
-
         img: imageUrl,
       });
 
       navigate("/entrepreneur/products");
     } catch (error) {
       console.error("Error creating product:", error);
-
       setError("Could not create product. Please try again.");
     } finally {
       setCreating(false);
@@ -120,116 +98,112 @@ const AddProduct = () => {
 
   return (
     <main className="app-shell">
-      <section className="app-screen pb-10">
+      <section className="app-screen pb-16">
+        <header className="flex flex-col items-start mb-2">
+          <button
+            type="button"
+            onClick={() => navigate(-1)}
+            className="mb-4 flex items-center gap-2 font-light text-[17px]"
+          >
+            <ArrowIcon className="w-4 h-4" />
+            <span>Go back</span>
+          </button>
+        </header>
 
-        <img src={Logo} alt="PickU" className="w-[72px] mb-10" />
-
-        <button
-          type="button"
-          onClick={() => navigate("/entrepreneur/products")}
-          className="mb-2 flex items-center gap-2 text-[17px] font-light"
-        >
-          <ArrowIcon className="w-4 h-4" />
-
-          <span>Products</span>
-        </button>
-
-        <h2 className="app-title mb-8">
-          Create new product
-        </h2>
+        <h2 className="text-2xl font-semibold mb-6">Create new product</h2>
 
         {error && (
-          <p className="mb-4 rounded-xl border border-maroon px-4 py-3 text-[14px] text-maroon">
-            {error}
-          </p>
+          <div className="mb-6 rounded-xl border border-red-500/20 bg-red-50 px-4 py-3">
+            <p className="font-medium text-red-600">{error}</p>
+          </div>
         )}
 
-        <div className="mb-5 grid grid-cols-[1fr_120px] gap-4">
-          {/* product name */}
-          <label className="flex flex-col gap-2 text-[15px]">
-            Product name
-
-            <input
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="Enter product name"
-              className="app-field h-[56px] w-[190px] border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
-            />
-          </label>
-
-          {/* product price */}
-          <label className="flex flex-col gap-2 text-[15px]">
-            Product price
-
-            <input
-              required
-              type="number"
-              min="1"
-              step="100"
-              value={price}
-              onChange={(e) => setPrice(e.target.value)}
-              placeholder="Enter price"
-              className="app-field h-[56px] border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
-            />
-          </label>
-        </div>
-
-        {/* upload image */}
-        <label className="mb-6 flex flex-col gap-2 text-[15px]">
-          Upload photo
-
-          <input
-            required
-            id="product-image"
-            type="file"
-            accept="image/*"
-            onChange={(e) => handleImageUpload(e.target.files?.[0])}
-            className="hidden"
-          />
-
-          <label
-            htmlFor="product-image"
-            className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-maroon/30 bg-maroon/5 transition-all duration-500 hover:border-maroon/60"
-          >
-            {imagePreview ? (
-              <img
-                src={imagePreview}
-                alt="Product preview"
-                className="h-full w-full object-cover"
+        <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-2">
+            <label className="flex flex-col gap-2  text-black">
+              Product name
+              <input
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter product name"
+                className="app-field text-sm w-full px-4 py-3 rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
               />
-            ) : (
-              <UploadImageIcon className="h-16 w-16 text-maroon" />
-            )}
+            </label>
+
+            <label className="flex flex-col gap-2  text-black">
+              Price
+              <input
+                required
+                type="number"
+                min="1"
+                step="100"
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
+                placeholder="Make it fair!"
+                className="app-field text-sm w-full px-4 py-3 rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
+              />
+            </label>
+          </div>
+
+          <label className="flex flex-col gap-4 text-black">
+            Upload photo
+            <input
+              id="edit-product-image"
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleImageUpload(e.target.files?.[0])}
+              className="hidden"
+            />
+            <div
+              className="relative flex h-64 cursor-pointer items-center justify-center overflow-hidden rounded-xl border-2 border-dashed border-maroon bg-white/25 transition-all duration-300 hover:border-maroon/60"
+              onClick={() =>
+                document.getElementById("edit-product-image")?.click()
+              }
+            >
+              {imagePreview ? (
+                <img
+                  src={imagePreview}
+                  alt="Product preview"
+                  className="h-full w-full object-cover"
+                />
+              ) : (
+                <div className="flex flex-col items-center gap-2 text-maroon">
+                  <UploadImageIcon className="h-10 w-10" />
+                  <span className="text-sm font-light">Tap to upload</span>
+                </div>
+              )}
+            </div>
           </label>
-        </label>
 
-        {/* description */}
-        <label className="flex flex-col gap-2 text-[15px]">
-          Product details
+          <label className="flex flex-col gap-2  font-medium text-black">
+            Product details
+            <textarea
+              required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter product details, ingredients, etc."
+              className="app-field text-sm w-full px-4 py-3 h-32 resize-none rounded-xl border border-black/10 bg-white font-light focus:border-maroon focus:ring-2 focus:ring-maroon/20 outline-none transition-all"
+            />
+          </label>
 
-          <textarea
-            required
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            placeholder="Enter details"
-            className="app-field h-[126px] resize-none border-maroon focus:shadow-[0_0_0_3px_rgba(80,3,17,0.12)]"
-          />
-        </label>
-
-        {/* button */}
-        <button
-          type="button"
-          disabled={creating || loadingEntrepreneur}
-          onClick={handleSubmit}
-          className={`app-action mt-26 h-[58px] w-full bg-maroon text-[16px] ${
-            creating || loadingEntrepreneur
-              ? "bg-maroon/50"
-              : "bg-maroon"
-          }`}
-        >
-          {loadingEntrepreneur ? "Loading..." : creating ? "Creating..." : "Create new product"}
-        </button>
+          <button
+            type="button"
+            disabled={creating || loadingEntrepreneur}
+            onClick={handleSubmit}
+            className={`app-action mt-2 w-full rounded-xl py-4 text-base font-medium text-white transition-all ${
+              creating || loadingEntrepreneur
+                ? "bg-maroon/50 cursor-not-allowed"
+                : "bg-maroon hover:bg-maroon/90 active:scale-[0.98]"
+            }`}
+          >
+            {loadingEntrepreneur
+              ? "Loading..."
+              : creating
+                ? "Creating..."
+                : "Create new product"}
+          </button>
+        </div>
       </section>
     </main>
   );
