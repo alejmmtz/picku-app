@@ -5,15 +5,24 @@ import BottomNav from "../../../components/common/BottomNav";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { OrderResponse, OrderStatus } from "../../../types/order.types";
+import {
+  applyOrderBroadcastPayload,
+  useEntrepreneurOrdersRealtime,
+  useOrdersListRealtime,
+} from "../../../providers/OrdersRealtimeProvider";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
 
 type OrderTab = "incoming" | "accepted";
+type EntrepreneurProfile = {
+  id: string;
+};
 
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
   accepted: "Accepted",
+  preparing: "Preparing",
   declined: "Declined",
   delivering: "Delivering",
   delivered: "Delivered",
@@ -24,6 +33,8 @@ const statusClassMap: Record<OrderStatus, string> = {
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3 text-[14px] text-[#ecb100]",
   accepted:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#5ba7ff] bg-[#edf5ff] text-[#3478c9] px-3 text-[14px]",
+  preparing:
+    "inline-flex min-h-6 items-center justify-center rounded-full border border-maroon bg-[#f7e7eb] px-3 text-[14px] text-maroon",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 text-[14px] text-[#b4202f]",
   delivering:
@@ -56,17 +67,40 @@ const EntrepreneurOrders = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("incoming");
   const [orders, setOrders] = useState<OrderResponse[]>([]);
+  const [entrepreneurId, setEntrepreneurId] = useState<string | null>(null);
   const [feedbackMessage, setFeedbackMessage] = useState("");
+
+  const loadOrders = useCallback(async () => {
+    try {
+      const [entrepreneurResponse, data] = await Promise.all([
+        api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
+        getOrders(api),
+      ]);
+
+      setEntrepreneurId(entrepreneurResponse.data.id);
+      setOrders(data);
+      setFeedbackMessage("");
+    } catch {
+      setOrders([]);
+      setFeedbackMessage(
+        "We could not load your orders right now. Please try again in a moment.",
+      );
+    }
+  }, [api]);
 
   useEffect(() => {
     let isMounted = true;
 
     const loadOrders = async () => {
       try {
-        const data = await getOrders(api);
+        const [entrepreneurResponse, data] = await Promise.all([
+          api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
+          getOrders(api),
+        ]);
 
         if (!isMounted) return;
 
+        setEntrepreneurId(entrepreneurResponse.data.id);
         setOrders(data);
         setFeedbackMessage("");
       } catch {
@@ -86,11 +120,24 @@ const EntrepreneurOrders = () => {
     };
   }, [api]);
 
+  useEntrepreneurOrdersRealtime(entrepreneurId, () => {
+    void loadOrders();
+  });
+
+  useOrdersListRealtime(orders.map((order) => order.id), (payload) => {
+    setOrders((current) =>
+      current.map((order) =>
+        order.id === payload.orderId
+          ? applyOrderBroadcastPayload(order, payload)
+          : order,
+      ),
+    );
+  });
+
   const filteredOrders = useMemo(() => {
     if (activeTab === "accepted") {
-      return orders.filter(
-        (order) =>
-          order.status === "accepted" || order.status === "delivering",
+      return orders.filter((order) =>
+        ["accepted", "preparing", "delivering"].includes(order.status),
       );
     }
 

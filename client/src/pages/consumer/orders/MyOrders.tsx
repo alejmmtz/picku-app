@@ -5,6 +5,10 @@ import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
+import {
+  applyOrderBroadcastPayload,
+  useOrdersListRealtime,
+} from "../../../providers/OrdersRealtimeProvider";
 import Loader from "../../../components/common/Loader";
 
 import ShoppingCartIcon from "../../../assets/shopping cart consumer.svg?react";
@@ -16,6 +20,7 @@ type OrderTab = "ongoing" | "delivered" | "declined";
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
   accepted: "Ongoing",
+  preparing: "Preparing",
   declined: "Declined",
   delivering: "Ongoing",
   delivered: "Delivered",
@@ -91,6 +96,33 @@ const MyOrders = () => {
     };
   }, [api]);
 
+  useOrdersListRealtime(orders.map((order) => order.id), (payload) => {
+    setOrders((current) =>
+      current.map((order) =>
+        order.id === payload.orderId
+          ? applyOrderBroadcastPayload(order, payload)
+          : order,
+      ),
+    );
+  });
+
+  const filteredOrders = useMemo(() => {
+  if (activeTab === "delivered") {
+    return orders.filter((order) => order.status === "delivered");
+  }
+
+  if (activeTab === "declined") {
+    return orders.filter((order) => order.status === "declined");
+  }
+
+  return orders.filter(
+    (order) =>
+      order.status === "requested" ||
+      order.status === "accepted" ||
+      order.status === "preparing" ||
+      order.status === "delivering",
+  );
+}, [activeTab, orders]);
   const filteredOrders = useMemo(() => {
     if (activeTab === "delivered") {
       return orders.filter((order) => order.status === "delivered");

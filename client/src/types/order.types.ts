@@ -1,6 +1,7 @@
 export type OrderStatus =
   | "requested"
   | "accepted"
+  | "preparing"
   | "declined"
   | "delivering"
   | "delivered";
@@ -53,6 +54,8 @@ export interface OrderResponse {
   status: OrderStatus;
   total_price: number;
   pickup_code: string;
+  estimated_distance: number | null;
+  estimated_time: number | null;
   delivery_notes: string | null;
   cancel_reason: string | null;
   customer: OrderCustomer;

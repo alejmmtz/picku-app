@@ -15,8 +15,12 @@ const getHeading = (status: OrderResponse["status"]) => {
     return "Your order is on the way!";
   }
 
-  if (status === "accepted") {
+  if (status === "preparing") {
     return "Your order is being prepared!";
+  }
+
+  if (status === "accepted") {
+    return "Your order was accepted!";
   }
 
   return "Your order was received!";

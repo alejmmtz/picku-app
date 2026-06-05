@@ -4,12 +4,17 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrderById } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
+import {
+  applyOrderBroadcastPayload,
+  useOrderRealtime,
+} from "../../../providers/OrdersRealtimeProvider";
 
 import ArrowIcon from "../../../assets/arrow.svg?react";
 
 const statusLabelMap: Record<OrderStatus, string> = {
   requested: "Pending",
   accepted: "Ongoing",
+  preparing: "Preparing",
   declined: "Declined",
   delivering: "Ongoing",
   delivered: "Delivered",
@@ -57,6 +62,15 @@ const OrderDetails = () => {
         ? "We couldn't load this order yet. Once the server processes it, it will appear here."
         : "This order is invalid or unavailable.",
   );
+
+  useOrderRealtime(orderId, (payload) => {
+    if (payload.orderId === orderId) {
+      setOrder((current) =>
+        current ? applyOrderBroadcastPayload(current, payload) : current,
+      );
+      setFeedbackMessage("");
+    }
+  });
 
   useEffect(() => {
     let isMounted = true;

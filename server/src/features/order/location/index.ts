@@ -1,5 +1,5 @@
 export {
-  MOCK_CAMPUS_LOCATIONS,
+  CAMPUS_LOCATIONS,
   assertKnownCampusLocationId,
   getMockCampusLocationById,
   isKnownCampusLocationId,

@@ -49,7 +49,8 @@ const generatePickupCode = (): string => {
 
 const VALID_TRANSITIONS: Record<OrderStatus, OrderStatus[]> = {
   [OrderStatusEnum.REQUESTED]: [OrderStatusEnum.ACCEPTED, OrderStatusEnum.DECLINED],
-  [OrderStatusEnum.ACCEPTED]: [OrderStatusEnum.DELIVERING],
+  [OrderStatusEnum.ACCEPTED]: [OrderStatusEnum.PREPARING, OrderStatusEnum.DELIVERING],
+  [OrderStatusEnum.PREPARING]: [OrderStatusEnum.DELIVERING],
   [OrderStatusEnum.DELIVERING]: [OrderStatusEnum.DELIVERED],
   [OrderStatusEnum.DECLINED]: [],
   [OrderStatusEnum.DELIVERED]: [],
@@ -197,6 +198,8 @@ const fetchOrdersQuery = async (
       o.status,
       o.total_price,
       o.pickup_code,
+      o.estimated_distance,
+      o.estimated_time,
       o.delivery_notes,
       o.cancel_reason,
       o.created_at,
