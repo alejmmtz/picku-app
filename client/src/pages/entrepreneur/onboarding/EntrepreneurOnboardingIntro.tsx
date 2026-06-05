@@ -6,21 +6,20 @@ const EntrepreneurOnboardingIntro = () => {
 
   return (
     <OnboardingShell>
-      <div className="mt-[15px]">
-        <h1 className="m-0 !font-sofia text-[30px] font-bold leading-[1.1]">
-          Ready to start selling?
-        </h1>
-        <p className="mt-[17px] font-light text-[16px] leading-[1.1]">
-          Create your shop, show what you offer, and let others discover your picks!
+      <div className="flex flex-col gap-4 mb-16">
+        <h2 className=" text-2xl font-semibold ">Ready to start selling?</h2>
+        <p className="font-light  leading-[1.1]">
+          Create your shop, show what you offer, and let others discover your
+          picks!
         </p>
       </div>
 
-      <div className="mt-[90px] flex justify-center">
-        <img className="w-[290px]" src="/resources/img-1-onboarding.svg" alt="" />
+      <div className="flex justify-center">
+        <img className="w-64" src="/resources/img-1-onboarding.svg" alt="" />
       </div>
 
       <button
-        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white"
+        className="app-action w-full text-md mt-16 bg-maroon  text-white"
         type="button"
         onClick={() => navigate("/entrepreneur/onboarding/category")}
       >

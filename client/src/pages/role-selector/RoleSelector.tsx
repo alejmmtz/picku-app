@@ -8,13 +8,13 @@ const RoleSelector = () => {
 
   return (
     <main className="app-shell">
-      <section className="app-screen flex flex-col justify-center">
-        <div className="mb-10">
+      <section className="app-screen flex flex-col justify-center ">
+        <div className="mb-8">
           <h2 className="app-title mb-2">Sooo...</h2>
           <p className="app-subtitle">How would you like to use PickU?</p>
         </div>
 
-        <div className="flex flex-col gap-5">
+        <div className="flex flex-col gap-4 mb-8">
           <button
             type="button"
             onClick={() => navigate("/consumer/login")}

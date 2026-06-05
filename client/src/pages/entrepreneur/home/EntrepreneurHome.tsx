@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAxios } from "../../../providers/AxiosProvider";
@@ -76,37 +76,34 @@ const EntrepreneurHome = () => {
 
   const auth = useMemo(() => getStoredAuth(), []);
 
-  const loadHome = useCallback(async () => {
-    try {
-      const [entrepreneurResponse, ordersResponse] = await Promise.all([
-        api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
-        getOrders(api),
-      ]);
-
-      setEntrepreneur(entrepreneurResponse.data);
-      setOrders(ordersResponse.map(mapOrder));
-    } catch (error) {
-      setOrders([]);
-      if (axios.isAxiosError(error) && error.response?.status === 404) {
-        navigate("/entrepreneur/onboarding", { replace: true });
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  }, [api, navigate]);
-
   useEffect(() => {
     if (!auth) {
       navigate("/entrepreneur/login", { replace: true });
       return;
     }
 
-    void loadHome();
-  }, [auth, loadHome, navigate]);
+    const loadHome = async () => {
+      try {
+        const [entrepreneurResponse, ordersResponse] = await Promise.all([
+          api.get<Entrepreneur>("/picku/api/entrepreneurs/me"),
+          getOrders(api),
+        ]);
+
+        setEntrepreneur(entrepreneurResponse.data);
+        setOrders(ordersResponse.map(mapOrder));
+      } catch (error) {
+        setOrders([]);
+        if (axios.isAxiosError(error) && error.response?.status === 404) {
+          navigate("/entrepreneur/onboarding", { replace: true });
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
 
   useEntrepreneurOrdersRealtime(entrepreneur?.id ?? null, () => {
     void loadHome();
-  });
+  }, [api, auth, navigate]);
 
   const deliveredCount = orders.filter((order) => order.status === "Delivered").length;
   const incomingCount = orders.filter((order) =>
@@ -218,7 +215,7 @@ const EntrepreneurHome = () => {
           ) : null}
 
             {orders.length === 0 && !isLoading ? (
-              <div className="py-[22px] text-[15px] text-[#8d8a87]">
+              <div className="py-[22px] text-[15px] text-black/45">
                 You do not have recent orders yet.
               </div>
             ) : null}
@@ -227,7 +224,7 @@ const EntrepreneurHome = () => {
             orders.map((order) => (
               <article
                 key={order.id}
-                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[3px] rounded-[18px] border border-black/15 px-[14px] py-[14px]"
+                className="grid min-h-[134px] cursor-pointer grid-cols-[112px_minmax(0,1fr)] gap-[3px] rounded-2xl border border-black/15 px-[14px] py-[14px]"
                 onClick={() => navigate(`/entrepreneur/order?orderId=${order.id}`)}
               >
                 <img

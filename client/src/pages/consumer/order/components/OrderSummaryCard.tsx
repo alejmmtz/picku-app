@@ -39,12 +39,14 @@ export default function OrderSummaryCard({ order }: OrderSummaryCardProps) {
     },
     {
       label: "Pickup:",
-      value: order.delivery_notes?.trim() ? "Review your notes" : "Confirmed in app",
+      value: order.delivery_notes?.trim()
+        ? "Review your notes"
+        : "Confirmed in app",
     },
   ];
 
   return (
-    <div className="absolute inset-x-0 bottom-0 top-[50%] z-20 overflow-y-auto rounded-t-[48px] bg-background px-12 pb-12 pt-10 shadow-[0_-8px_15px_-3px_rgba(0,0,0,0.1)]">
+    <div className="absolute inset-x-0 bottom-0 top-[50%] z-20 overflow-y-auto rounded-t-4xl bg-background px-12 pb-12 pt-10 shadow-[0_-8px_15px_-3px_rgba(0,0,0,0.1)]">
       <h2 className="mb-4 text-xl font-semibold text-black">
         {getHeading(order.status)}
       </h2>

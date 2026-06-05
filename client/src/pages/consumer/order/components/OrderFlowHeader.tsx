@@ -10,10 +10,10 @@ export default function OrderFlowHeader({ onBack }: OrderFlowHeaderProps) {
       <button
         type="button"
         onClick={onBack}
-        className="flex items-center gap-1 rounded-xl  backdrop-blur-sm px-2 py-3 "
+        className="flex items-center gap-1 rounded-lg font-light bg-white px-3 py-2 text-sm shadow-xs transition-all active:scale-95"
       >
-        <AppIcon name="chevron-left" className="h-4 w-4 text-black" />
-        <span className="text-sm font-semibold text-black">Orders</span>
+        <AppIcon name="chevron-left" className="h-3 w-3 text-black" />
+        <span>Orders</span>
       </button>
     </div>
   );

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import BottomNav from "../../../components/common/BottomNav";
@@ -91,7 +91,7 @@ const EntrepreneurOrders = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadInitialOrders = async () => {
+    const loadOrders = async () => {
       try {
         const [entrepreneurResponse, data] = await Promise.all([
           api.get<EntrepreneurProfile>("/picku/api/entrepreneurs/me"),
@@ -113,7 +113,7 @@ const EntrepreneurOrders = () => {
       }
     };
 
-    void loadInitialOrders();
+    void loadOrders();
 
     return () => {
       isMounted = false;

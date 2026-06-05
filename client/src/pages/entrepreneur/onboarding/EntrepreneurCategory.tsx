@@ -24,10 +24,8 @@ const CategoryButton = ({
   onClick: () => void;
 }) => (
   <button
-    className={`min-h-[34px] rounded-[8px] border px-[10px] text-[14px] font-medium ${
-      selected
-        ? "border-maroon bg-[#f4e9e6] text-maroon"
-        : "border-[#d6cec9] bg-transparent text-maroon"
+    className={`border border-maroon/0 text-maroon px-4 py-2 text-sm rounded-2xl transition-all duration-300  ${
+      selected ? " bg-orange text-black " : "  border-maroon/100"
     }`}
     type="button"
     onClick={onClick}
@@ -47,17 +45,19 @@ const EntrepreneurCategory = () => {
   };
 
   return (
-    <OnboardingShell progress={25}>
-      <header>
-        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
+    <OnboardingShell progress={25} showBack={true}>
+      <header className="flex flex-col gap-2 ">
+        <h2 className=" text-2xl font-semibold leading-[1.12]">
           Select Category
-        </h1>
-        <p className="mt-[8px] font-light text-[15px] leading-[1.2]">So people know what you sell.</p>
+        </h2>
+        <p className="font-light  leading-[1.2]">
+          So people know what you sell.
+        </p>
       </header>
 
-      <section className="mt-[42px]">
-        <p className="mb-[15px] text-[15px] font-light">Foods:</p>
-        <div className="flex flex-wrap gap-[8px]">
+      <section className="mt-8 items-center full-h justify-around">
+        <p className="mb-4 text-sm font-light">Foods:</p>
+        <div className="flex flex-wrap gap-2">
           {foodCategories.map((item) => (
             <CategoryButton
               key={item}
@@ -69,9 +69,9 @@ const EntrepreneurCategory = () => {
         </div>
       </section>
 
-      <section className="mt-[38px]">
-        <p className="mb-[16px] text-[15px] font-light">More categories:</p>
-        <div className="flex flex-wrap gap-[8px]">
+      <section className="mt-6">
+        <p className="mb-4 text-sm font-light">More categories:</p>
+        <div className="flex flex-wrap gap-2">
           {moreCategories.map((item) => (
             <CategoryButton
               key={item}
@@ -84,7 +84,7 @@ const EntrepreneurCategory = () => {
       </section>
 
       <button
-        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white disabled:opacity-45"
+        className="app-action mt-auto bg-maroon  text-white disabled:opacity-45"
         type="button"
         disabled={!category}
         onClick={continueToNext}

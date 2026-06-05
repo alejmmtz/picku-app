@@ -84,7 +84,7 @@ const EntrepreneurLogin = () => {
         axios.isAxiosError(error) &&
         typeof error.response?.data?.message === "string"
           ? error.response.data.message
-          : "We couldn't log you in";
+          : "No se pudo iniciar sesion";
 
       setErrorMessage(message);
     } finally {

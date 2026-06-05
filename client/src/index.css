@@ -10,6 +10,7 @@
   --color-yellow: #ffc64a;
   --color-light-yellow: #fff5d1;
   --color-black: #1b1b1b;
+  --color-white: #fefcff;
   --color-background: #fffaf4;
 
   --font-gliker: "Gliker", sans-serif;
@@ -31,7 +32,7 @@
 }
 
 @utility app-screen {
-  @apply relative min-h-screen w-full px-12 pb-16 pt-16;
+  @apply relative min-h-screen w-full px-12 py-16;
 }
 
 @utility app-title {
@@ -51,7 +52,7 @@
 }
 
 @utility app-action {
-  @apply rounded-xl px-4 py-4 text-sm font-light text-white transition-all duration-500 active:scale-95 disabled:cursor-wait disabled:opacity-70;
+  @apply rounded-xl px-4 py-4 text-sm text-white transition-all duration-500 active:scale-95 disabled:cursor-wait disabled:opacity-70;
 }
 
 @utility app-ghost-action {

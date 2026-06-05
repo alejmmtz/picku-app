@@ -6,7 +6,6 @@ import { useCart } from "../../../providers/CartProvider";
 import { createOrder } from "../../../services/order.service";
 import type { CreateOrderDTO } from "../../../types/order.types";
 
-import LogoConsumer from "../../../assets/logo consumer.png";
 import ArrowIcon from "../../../assets/arrow.svg?react";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
 import ClockIcon from "../../../assets/clock.svg?react";
@@ -101,8 +100,6 @@ const Checkout = () => {
   return (
     <main className="app-shell">
       <section className="app-screen pb-36">
-        <img src={LogoConsumer} alt="PickU" className="mb-8 mt-1.5 w-[72px]" />
-
         <button
           type="button"
           onClick={() => navigate("/consumer/cart")}
@@ -113,7 +110,7 @@ const Checkout = () => {
         </button>
 
         <header>
-          <h2 className="mb-2 text-[28px] font-semibold leading-tight">
+          <h2 className="mb-2 text-2xl  font-semibold leading-tight">
             Checkout
           </h2>
           <p className="font-light text-black/70">
@@ -122,17 +119,16 @@ const Checkout = () => {
         </header>
 
         <div className="mt-8">
-          <LocationMap className="relative h-[156px] w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3] shadow-[0_8px_22px_rgba(80,3,17,0.06)]" />
+          <LocationMap className="relative h-48 w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3] shadow-[0_8px_22px_rgba(80,3,17,0.06)]" />
 
-          <div className="mt-3 flex items-center justify-between rounded-xl border border-orange/20 px-4 py-3 text-[14px] font-light text-black/75">
+          <div className="mt-3 flex items-center justify-between rounded-xl border border-black/15 px-4 py-3 text-[14px] font-light text-black/75">
             <span className="inline-flex items-center gap-2">
               <MapPinIcon className="h-4 w-4 shrink-0 text-orange" />
               Campus pickup
             </span>
 
             <span className="inline-flex items-center gap-2">
-              <ClockIcon className="h-4 w-4 shrink-0 text-orange" />
-              3 min
+              <ClockIcon className="h-4 w-4 shrink-0 text-orange" />3 min
             </span>
           </div>
         </div>
@@ -143,13 +139,13 @@ const Checkout = () => {
 
         <div className="mt-8">
           <label className="flex flex-col gap-3">
-            <span className="text-[20px] font-light">Pickup Details</span>
+            <span className="text-lg ">Pickup Details</span>
 
             <textarea
               value={pickupDetails}
               onChange={(event) => setPickupDetails(event.target.value)}
               placeholder="e.g. I'm in the cafeteria, I have a blue shirt."
-              className="h-[126px] w-full resize-none rounded-xl border border-orange bg-transparent px-5 py-4 text-[14px] font-light outline-none transition-all duration-500 placeholder:text-black/50 focus:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]"
+              className="app-field min-h-36 w-full resize-none border-black/15 rounded-xl  bg-transparent px-5 py-4 text-[14px] font-light outline-none transition-all duration-500 placeholder:text-black/50 focus:shadow-[0_0_0_3px_rgba(255,112,45,0.12)]"
             />
           </label>
         </div>
@@ -158,10 +154,11 @@ const Checkout = () => {
           {cartItems.map((item) => (
             <div
               key={item.product.id}
-              className="flex items-center justify-between rounded-xl border border-black/15 px-4 py-3 text-[17px] font-light"
+              className="flex items-center justify-between rounded-xl   font-light"
             >
               <p className="min-w-0 pr-3">
-                {item.product.name} x{item.quantity}
+                <span className="font-semibold">x{item.quantity}</span>{" "}
+                {item.product.name}
               </p>
 
               <p className="shrink-0 font-medium">
@@ -172,17 +169,17 @@ const Checkout = () => {
 
           <div className="h-px bg-[#DCD6D3]" />
 
-          <div className="flex items-center justify-between text-[17px] font-medium">
+          <div className="flex items-center justify-between text-lg font-medium">
             <p>Subtotal</p>
             <p>${subtotal.toLocaleString("es-CO")}</p>
           </div>
         </div>
 
-        <div className="fixed bottom-0 left-1/2 w-full max-w-[430px] -translate-x-1/2 rounded-t-[18px] bg-white px-12 py-7 shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
-          <div className="flex items-center justify-between gap-5">
+        <div className="fixed bottom-0 left-1/2 w-full -translate-x-1/2 rounded-t-2xl border-t border-black/10 bg-white px-12 py-7 shadow-[0_-8px_30px_rgba(0,0,0,0.05)]">
+          <div className="flex items-center justify-between">
             <div>
-              <p className="text-[16px] font-light">Subtotal</p>
-              <p className="text-[28px] leading-none text-orange">
+              <p className="text-lg ">Subtotal</p>
+              <p className="text-2xl leading-none text-orange">
                 ${subtotal.toLocaleString("es-CO")}
               </p>
             </div>
@@ -191,7 +188,7 @@ const Checkout = () => {
               type="button"
               disabled={cartItems.length === 0 || isSubmitting}
               onClick={handlePlaceOrder}
-              className={`h-[50px] rounded-xl px-8 text-[16px] font-light text-white transition-all duration-500 active:scale-95 disabled:cursor-wait disabled:opacity-70 ${
+              className={`app-action px-9 text-[16px] ${
                 cartItems.length === 0 || isSubmitting
                   ? "bg-orange/40"
                   : "bg-orange"

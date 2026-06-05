@@ -37,6 +37,7 @@ export const createUserService = async (
 ): Promise<AuthResponse['data']> => {
   const signUpRes = await supabase.auth.signUp({
     email: user.email,
+    phone: user.phone,
     password: user.password,
     options: {
       data: {
@@ -56,17 +57,21 @@ export const createUserService = async (
   const newUserId = signUpRes.data.user?.id;
 
   if (newUserId) {
-    await pool.query(
-      `INSERT INTO public.users (id, email, phone, name, role)
-       VALUES ($1, $2, $3, $4, $5)
-       ON CONFLICT (id)
-       DO UPDATE SET
-         email = EXCLUDED.email,
-         phone = EXCLUDED.phone,
-         name = EXCLUDED.name,
-         role = EXCLUDED.role`,
-      [newUserId, user.email, user.phone, user.name, user.role]
-    );
+    const { error: insertionError } = await supabase.from('users').insert([
+      {
+        id: newUserId,
+        email: user.email,
+        phone: user.phone,
+        name: user.name,
+        role: user.role,
+      },
+    ]);
+
+    if (insertionError) {
+      throw Boom.internal(
+        'Could not create user profile' + insertionError.message
+      );
+    }
   }
 
   return signUpRes.data;

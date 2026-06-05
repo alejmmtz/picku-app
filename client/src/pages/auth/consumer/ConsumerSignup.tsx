@@ -38,7 +38,7 @@ const ConsumerSignup = () => {
 
       navigate("/consumer/login", {
         state: {
-          message: "Your account was created successfully. Please log in!",
+          message: "Cuenta creada correctamente. Ahora inicia sesión.",
         },
       });
     } catch (error) {
@@ -46,7 +46,7 @@ const ConsumerSignup = () => {
         axios.isAxiosError(error) &&
         typeof error.response?.data?.message === "string"
           ? error.response.data.message
-          : "We couldn't create your account";
+          : "No se pudo crear la cuenta";
 
       setErrorMessage(message);
     } finally {
@@ -58,7 +58,7 @@ const ConsumerSignup = () => {
     <main className="app-shell">
       <section className="app-screen max-h-screen flex flex-col justify-center">
         <div
-          className={`flex min-h-40 right-10 transition-all duration-500 absolute z-50 m-0 ${errorMessage ? "top-11" : "top-14"} `}
+          className={`flex min-h-40 right-10 transition-all duration-500 absolute z-50 m-0 ${errorMessage ? "top-7.5" : "top-13.5"} `}
         >
           <img
             className="block h-auto w-35"

@@ -22,17 +22,15 @@ const statusLabelMap: Record<OrderStatus, string> = {
 
 const statusClassMap: Record<OrderStatus, string> = {
   requested:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#ecb100] bg-[#fff8da] px-3  py-1  text-[14px] text-[#ecb100]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-blue bg-blue/10 px-3 text-[13px] text-blue",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3  py-1  text-[14px] text-orange",
-  preparing:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3 py-1 text-[14px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-yellow bg-yellow/10 px-3 text-[13px] text-yellow",
   declined:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#b4202f] bg-[#fff3f3] px-3 py-1 text-[14px] text-[#b4202f]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-orange bg-[#fff0e8] px-3 py-1  text-[14px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
   delivered:
-    "inline-flex min-h-6 items-center justify-center rounded-full border border-[#78aa38] bg-[#eef8df] px-3  py-1  text-[14px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
 };
 
 const formatPrice = (price: number) =>
@@ -48,6 +46,7 @@ const OrderDetails = () => {
   const params = useParams();
   const location = useLocation();
   const orderId = Number(params.id);
+
   const routedOrder =
     typeof location.state === "object" &&
     location.state !== null &&
@@ -60,8 +59,8 @@ const OrderDetails = () => {
     routedOrder
       ? ""
       : Number.isFinite(orderId)
-        ? "Todavía no pudimos cargar este pedido. Cuando el backend lo envíe correctamente, se mostrará aquí."
-        : "Este pedido no es válido o todavía no está disponible.",
+        ? "We couldn't load this order yet. Once the server processes it, it will appear here."
+        : "This order is invalid or unavailable.",
   );
 
   useOrderRealtime(orderId, (payload) => {
@@ -92,7 +91,7 @@ const OrderDetails = () => {
         if (!isMounted) return;
 
         setFeedbackMessage(
-          "Todavía no pudimos cargar este pedido. Cuando el backend lo envíe correctamente, se mostrará aquí.",
+          "We couldn't load this order yet. Once the server processes it, it will appear here.",
         );
       }
     };
@@ -111,25 +110,17 @@ const OrderDetails = () => {
   if (!order || !primaryItem) {
     return (
       <main className="app-shell">
-        <section className="min-h-screen w-full max-w-[430px] bg-background px-12 pb-9 pt-7">
-
+        <section className="app-screen flex flex-col items-center justify-center text-center">
+          <p className="text-[18px] font-medium text-black">
+            {feedbackMessage || "Order not found"}
+          </p>
           <button
-            className="mt-0 inline-flex min-h-10 items-center gap-2 rounded-xl bg-[rgba(255,255,255,0.86)] px-4 !font-sofia text-[16px] font-medium"
             type="button"
             onClick={() => navigate("/consumer/orders")}
+            className="mt-4 rounded-full bg-orange px-6 py-2 text-white text-sm font-medium transition-all active:scale-95"
           >
-            <img className="h-[18px] w-[18px]" src="/icons/arrow-left.svg" alt="" />
-            <span>Orders</span>
+            Go back to orders
           </button>
-
-          <div className="mt-10 rounded-[24px] border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] p-6">
-            <h1 className="!font-sofia text-[22px] font-semibold text-black">
-              Order details
-            </h1>
-            <p className="mt-3 text-[15px] leading-[1.35] text-[rgba(27,27,27,0.68)]">
-              {feedbackMessage}
-            </p>
-          </div>
         </section>
       </main>
     );
@@ -137,40 +128,38 @@ const OrderDetails = () => {
 
   return (
     <main className="app-shell">
-      <section className="min-h-screen w-full max-w-[430px] bg-background">
-        <div className="relative h-[324px] overflow-hidden px-12 pt-7">
+      <section className="relative min-h-screen w-full flex flex-col bg-background overflow-y-auto">
+        <div className="relative h-96 w-full">
           <img
-            className="absolute inset-0 h-full w-full object-cover"
+            className="h-full w-full object-cover"
             src={primaryItem.img || order.entrepreneur.img}
             alt={primaryItem.name}
           />
-
-          <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(180deg,rgba(255,250,244,0.04),rgba(255,250,244,0.34))]" />
+          <div className="absolute inset-0 bg-white/10" />
 
           <div className="absolute left-8 top-14">
-
-          <button
-            type="button"
-            onClick={() => navigate("/consumer/orders")}
-            className="flex items-center gap-1 rounded-full font-light bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
-          >
-            <ArrowIcon className="w-3 h-3" />
-            <span>Orders</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => navigate("/consumer/orders")}
+              className="flex items-center gap-1 rounded-lg font-light bg-white px-3 py-2 text-sm shadow-xs transition-all active:scale-95"
+            >
+              <ArrowIcon className="w-3 h-3" />
+              <span>Go back</span>
+            </button>
           </div>
         </div>
 
-        <div className="relative z-20 -mt-5 rounded-t-[28px] bg-background px-12 pt-7 pb-9">
-          <span className="absolute top-[-22px] right-[50px] inline-flex h-11 min-w-[54px] items-center justify-center rounded-xl bg-orange px-[10px] font-medium text-[22px] font-sofia text-white">
-            x{primaryItem.quantity}
+        <div className="-mt-10 relative z-10 flex-1 rounded-t-[28px] bg-background px-12 pt-8 pb-10 flex flex-col gap-8">
+          <span className="absolute -top-5 right-12 inline-flex px-4 py-2 items-center justify-center rounded-xl bg-orange  text-sm font-semibold text-white shadow-sm">
+            {primaryItem.quantity} items
           </span>
 
-          <div className="flex items-start justify-between gap-[14px] mt-5">
-            <div>
-              <h1 className="!font-sofia text-[22px] font-medium text-black">
+          <div className="flex items-start justify-between gap-4">
+            <div className="min-w-0 flex-1">
+              <h2 className="text-[22px] font-medium text-black leading-tight">
                 {primaryItem.name}
-              </h1>
-              <p className=" font-sofia text-[32px] font-medium text-orange">
+              </h2>
+              <p className="mt-2 text-3xl font-semibold text-orange">
                 {formatPrice(order.total_price)}
               </p>
             </div>
@@ -180,26 +169,28 @@ const OrderDetails = () => {
             </span>
           </div>
 
-          <h2 className="mt-[35px] mb-3 font-sofia text-[18px] font-light text-black">
-            Delivery notes
-          </h2>
-          <p className="m-0 font-sofia font-light text-[16px] leading-[1.15] text-black/60">
-            {getOrderDescription(order)}
-          </p>
+          <div>
+            <h2 className="text-[17px] font-medium mb-2 text-black">
+              Delivery notes
+            </h2>
+            <p className="text-[15px] font-light leading-relaxed text-black/60">
+              {getOrderDescription(order)}
+            </p>
+          </div>
 
           {order.cancel_reason ? (
-            <section className="mt-[30px] rounded-xl border-[1.5px] border-[#b4202f] p-[20px]">
-              <h3 className="mb-2 font-sofia text-[16px] font-medium text-[#b4202f]">
+            <div className="rounded-xl border border-[#b4202f]/30 bg-[#fff3f3]/50 p-4">
+              <h3 className="text-[16px] font-medium text-[#b4202f] mb-1.5">
                 Reason for order decline
               </h3>
-              <p className="m-0 font-sofia text-[15px] font-light leading-[1.1] text-[rgba(27,27,27,0.7)]">
+              <p className="text-[15px] font-light leading-normal text-black/75">
                 {order.cancel_reason}
               </p>
-            </section>
+            </div>
           ) : null}
 
           {feedbackMessage ? (
-            <p className="mt-[18px] font-sofia text-[13px] text-[rgba(27,27,27,0.58)]">
+            <p className="text-[13px] font-light text-black/40 mt-auto">
               {feedbackMessage}
             </p>
           ) : null}

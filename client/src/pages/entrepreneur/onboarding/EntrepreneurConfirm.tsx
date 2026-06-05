@@ -3,10 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useAxios } from "../../../providers/AxiosProvider";
 import OnboardingShell from "./OnboardingShell";
-import {
-  clearOnboardingData,
-  getOnboardingData,
-} from "./onboardingStorage";
+import { clearOnboardingData, getOnboardingData } from "./onboardingStorage";
 import { getStoredAuth } from "../../../utils/storage";
 import EditIcon from "../../../assets/edit-2.svg?react";
 const DEFAULT_SHOP_IMAGE = "/resources/img-2-onboarding.svg";
@@ -40,7 +37,9 @@ const isRetryableRegistrationError = (error: unknown) => {
   if (!axios.isAxiosError(error)) return false;
 
   const status = error.response?.status;
-  const message = String(error.response?.data?.message ?? error.message).toLowerCase();
+  const message = String(
+    error.response?.data?.message ?? error.message,
+  ).toLowerCase();
 
   return (
     !status ||
@@ -59,11 +58,18 @@ const EntrepreneurConfirm = () => {
   const registerBusiness = async () => {
     const auth = getStoredAuth();
     if (!auth) {
-      setErrorMessage("Inicia sesion como entrepreneur antes de registrar tu negocio.");
+      setErrorMessage(
+        "Inicia sesion como entrepreneur antes de registrar tu negocio.",
+      );
       return;
     }
 
-    if (!data.name || !data.contact_info || !data.description || !data.category) {
+    if (
+      !data.name ||
+      !data.contact_info ||
+      !data.description ||
+      !data.category
+    ) {
       navigate("/entrepreneur/onboarding/category");
       return;
     }
@@ -108,67 +114,67 @@ const EntrepreneurConfirm = () => {
 
   return (
     <OnboardingShell progress={100} showBack>
-      <header>
-        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
-          Ready to go live?
-        </h1>
-        <p className="mt-[8px] font-light text-[15px] leading-[1.05]">
+      <header className="flex flex-col gap-2">
+        <h2 className=" text-[25px] font-semibold ">Ready to go live?</h2>
+        <p className="font-light text-[15px] leading-[1.05]">
           Your shop is almost ready. Just review and start selling.
         </p>
       </header>
 
-      <div className="mb-[-37px] ml-[150px] flex justify-center">
-      <img
-        className="h-[90px] w-[58px]"
-        src="/resources/img-2-onboarding.svg"
-        alt=""
-      />
-    </div>
+      <div className="-mb-10 ml-37.5 flex justify-center">
+        <img className="h-21 " src="/resources/img-2-onboarding.svg" alt="" />
+      </div>
 
-      <section className="mt-[2px] flex flex-col gap-[16px]">
-        <label className="flex flex-col gap-[8px]">
+      <section className="mt-2 flex flex-col gap-4">
+        <label className="flex flex-col gap-2">
           <span className="text-[14px] font-light">Company Name</span>
           <button
-            className="flex min-h-[52px] items-center justify-between rounded-xl border border-maroon px-[18px] text-left text-[14px]"
+            className="flex py-2 items-center justify-between rounded-xl border border-maroon px-4 text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
-            <span className="truncate font-light">{data.name || "Company Name"}</span>
-            <EditIcon className="h-[20px] w-[20px]" />
+            <span className="truncate font-light">
+              {data.name || "Company Name"}
+            </span>
+            <EditIcon className="h-4 w-4" />
           </button>
         </label>
 
-        <label className="flex flex-col gap-[8px]">
+        <label className="flex flex-col gap-2">
           <span className="text-[14px] font-light">Contact Information</span>
           <button
-            className="flex min-h-[52px] items-center justify-between rounded-xl border border-maroon px-[18px] font-light text-left text-[14px]"
+            className="flex py-2 items-center justify-between rounded-xl border border-maroon px-4 font-light text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
-            <span className="truncate">{data.contact_info || "Contact Information"}</span>
-            <EditIcon className="h-[20px] w-[20px]" />
+            <span className="truncate">
+              {data.contact_info || "Contact Information"}
+            </span>
+            <EditIcon className="h-4 w-4" />
           </button>
         </label>
 
-        <label className="flex flex-col gap-[8px]">
+        <label className="flex flex-col gap-2">
           <span className="text-[14px] font-light">Description</span>
           <button
-            className="flex min-h-[112px] items-start justify-between rounded-xl border  font-light border-maroon px-[18px] py-[17px] text-left text-[14px]"
+            className="flex  items-start justify-between rounded-xl border  font-light border-maroon px-4 py-4 text-left text-[14px]"
             type="button"
             onClick={() => navigate("/entrepreneur/onboarding/business")}
           >
-            <span className="line-clamp-4 ">{data.description || "Description"}</span>
-            <EditIcon className="h-[20px] w-[20px]" />
+            <span className="line-clamp-4 ">
+              {data.description || "Description"}
+            </span>
+            <EditIcon className="h-4 w-4" />
           </button>
         </label>
       </section>
 
       {errorMessage ? (
-        <p className="mt-[14px] text-[13px] text-[#c43e14]">{errorMessage}</p>
+        <p className="mt-4 text-[13px] text-orange">{errorMessage}</p>
       ) : null}
 
       <button
-        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white disabled:opacity-60"
+        className="app-action mt-auto  bg-maroon  text-white disabled:opacity-60"
         type="button"
         disabled={isSubmitting}
         onClick={registerBusiness}

@@ -6,7 +6,7 @@ import BottomNav from "../../../components/common/BottomNav";
 
 import LogoEntrepreneur from "../../../assets/logo entrepeneur color.svg";
 import UserBlueIcon from "../../../assets/user blue.svg?react";
-import Edit from "../../../assets/edit.svg?react"
+import Edit from "../../../assets/edit.svg?react";
 import LogoutIcon from "../../../assets/log-out.svg?react";
 
 type UserProfile = {
@@ -67,7 +67,8 @@ const EntrepreneurProfile = () => {
     (typeof auth?.user.user_metadata?.name === "string"
       ? auth.user.user_metadata.name
       : "Entrepreneur");
-  const displayEmail = userProfile?.email ?? auth?.user.email ?? "entrepreneur@picku.app";
+  const displayEmail =
+    userProfile?.email ?? auth?.user.email ?? "entrepreneur@picku.app";
 
   const handleLogout = () => {
     removeStoredAuth();
@@ -91,15 +92,14 @@ const EntrepreneurProfile = () => {
         </header>
 
         {/* card profile */}
-        <section className="rounded-xl border border-black/15 px-[18px] py-[22px]">
+        <section className="app-card px-[18px] py-[22px]">
           <div className="mb-[26px] flex items-center gap-[14px]">
             <div className="flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[50px] bg-blue/10">
               <UserBlueIcon className="h-[26px] w-[26px]" />
             </div>
 
-          
             <div className="min-w-0">
-              <h1 className="m-0 truncate !font-sofia font-light text-[16px] font-semibold leading-[1.25]">
+              <h1 className="m-0 truncate !font-sofia text-[16px] font-semibold leading-[1.25]">
                 {displayName}
               </h1>
               <p className="mt-[4px] truncate text-[15px] font-light leading-[1.25] text-black/45">
@@ -109,23 +109,26 @@ const EntrepreneurProfile = () => {
           </div>
 
           <button
-            className="flex min-h-[50px] w-full items-center justify-center gap-[18px] rounded-xl bg-maroon px-4 text-[15px] font-light text-white"
+            className="app-action flex min-h-[50px] w-full items-center justify-center gap-[18px] bg-maroon px-4 text-[15px]"
             type="button"
             onClick={() => navigate("/consumer/login")}
           >
             <span className="truncate">Switch to Consumer Mode</span>
-            <img className="h-6 w-6 brightness-0 invert" src="/icons/arrow-right.svg" alt="" 
+            <img
+              className="h-6 w-6 brightness-0 invert"
+              src="/icons/arrow-right.svg"
+              alt=""
             />
           </button>
         </section>
 
-      {/* edit info */}
+        {/* edit info */}
         <button
-          className="mt-[12px] flex w-full items-center rounded-xl border border-black/15 px-[18px] py-[18px] text-left"
+          className="app-card mt-[12px] flex w-full items-center px-[18px] py-[18px] text-left transition-all duration-500 active:scale-95"
           type="button"
           onClick={handleEditBusiness}
         >
-          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[8px] bg-[#eadbd9]">
+          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl bg-maroon/10">
             <Edit className="h-[24px] w-[24px]" />
           </span>
 
@@ -140,30 +143,36 @@ const EntrepreneurProfile = () => {
         </button>
 
         <button
-          className="mt-[12px] flex w-full items-center rounded-xl border border-black/15  px-[18px] py-[18px] text-left"
+          className="app-card mt-[12px] flex w-full items-center px-[18px] py-[18px] text-left transition-all duration-500 active:scale-95"
           type="button"
           onClick={handleLogout}
         >
-          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-[8px] bg-[#ffe8e5]">
+          <span className="mr-[14px] flex h-[52px] w-[52px] shrink-0 items-center justify-center rounded-xl bg-[#ffe8e5]">
             <LogoutIcon className="h-[24px] w-[24px]" />
           </span>
 
           <span className="min-w-0">
-            <span className="block text-[15px] font-medium leading-[1.25]">Log Out</span>
-            <span className="mt-[5px] block truncate text-[15px] font-light text-[#aaa4a0]">
+            <span className="block text-[15px] font-medium leading-[1.25]">
+              Log Out
+            </span>
+            <span className="mt-[5px] block truncate text-[15px] font-light text-black/45">
               Sign out of your account.
             </span>
           </span>
         </button>
 
-        <footer className="absolute bottom-[126px] left-0 right-0 text-center text-[#D9D9D9]">
+        <footer className="absolute bottom-[126px] left-0 right-0 text-center text-black/20">
           <img
             className="mx-auto mb-[8px] w-[58px] opacity-12 grayscale"
             src="/logos/picku-logo.svg"
             alt="PickU"
           />
-          <p className="m-0 text-[14px] leading-[1.8] font-light">Version 1.0.0</p>
-          <p className="m-0 text-[14px] font-light leading-[1.8]">Supporting student entrepreneurs</p>
+          <p className="m-0 text-[14px] leading-[1.8] font-light">
+            Version 1.0.0
+          </p>
+          <p className="m-0 text-[14px] font-light leading-[1.8]">
+            Supporting student entrepreneurs
+          </p>
         </footer>
       </section>
 

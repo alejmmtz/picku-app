@@ -29,7 +29,7 @@ export default function OrderStatusStepper({
               />
             </div>
             <span
-              className={`mt-1 text-center text-sm ${
+              className={`mt-1 text-center text-xs ${
                 index <= currentStatusIndex ? "text-orange" : "text-black/40"
               }`}
             >

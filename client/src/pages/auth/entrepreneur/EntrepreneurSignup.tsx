@@ -55,7 +55,7 @@ const EntrepreneurSignup = () => {
           replace: true,
           state: {
             message:
-              "Your account was created successfully. Log in to continue onboarding!",
+              "Cuenta creada correctamente. Inicia sesion para continuar con el onboarding.",
           },
         });
       }
@@ -64,7 +64,7 @@ const EntrepreneurSignup = () => {
         axios.isAxiosError(error) &&
         typeof error.response?.data?.message === "string"
           ? error.response.data.message
-          : "We couldn't create your account";
+          : "No se pudo crear la cuenta";
 
       setErrorMessage(message);
     } finally {
@@ -184,7 +184,7 @@ const EntrepreneurSignup = () => {
           </button>
         </form>
 
-        <p className="mt-4 font-light text-center text-[16px]">
+        <p className="font-light text-center text-[16px]">
           Already have an account?{" "}
           <button
             className="bg-transparent p-0 font-medium text-maroon"

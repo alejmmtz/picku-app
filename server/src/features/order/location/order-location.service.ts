@@ -281,6 +281,7 @@ export const getOrderLocationSnapshot = async (
   };
 };
 
+/** Default implementation — inject or replace in tests. */
 export const orderLocationService: OrderLocationService = {
   saveConsumerOrderLocation,
   processEntrepreneurLocationBurst,
