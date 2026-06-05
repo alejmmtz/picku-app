@@ -1,4 +1,5 @@
-import { supabase } from '../../config/supabase.js';
+import { broadcastHttp } from '../../shared/realtime/broadcast.js';
+import { orderLocationChannel } from './location/order-location.constants.js';
 import type { OrderResponseDTO, OrderStatus } from './order.types.js';
 
 type OrderBroadcastPayload = {
@@ -58,11 +59,7 @@ const sendBroadcast = async (
   event: string,
   payload: OrderBroadcastPayload
 ) => {
-  await supabase.channel(channelName).send({
-    type: 'broadcast',
-    event,
-    payload,
-  });
+  await broadcastHttp(channelName, event, payload);
 };
 
 export const broadcastOrderCreated = async (
@@ -81,7 +78,7 @@ export const broadcastOrderStatusUpdated = async (
   order: OrderResponseDTO
 ): Promise<void> => {
   const payload = buildOrderPayload(order);
-  const orderChannel = `order-${order.id}`;
+  const orderChannel = orderLocationChannel(order.id);
 
   await sendBroadcast(orderChannel, 'order-status-updated', payload);
 

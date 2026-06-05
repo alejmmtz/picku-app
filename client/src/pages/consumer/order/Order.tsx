@@ -133,7 +133,7 @@ export default function OrderFlow() {
   return (
     <main className="app-shell sm:px-6 sm:py-6">
       <section className="relative h-dvh w-full overflow-hidden sm:mx-auto sm:w-100 ">
-        <OrderMap />
+        <OrderMap orderId={order.id} orderStatus={order.status} />
         <OrderFlowHeader onBack={() => navigate("/consumer/orders")} />
         <OrderSummaryCard order={order} />
       </section>

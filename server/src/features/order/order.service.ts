@@ -2,6 +2,7 @@ import Boom from '@hapi/boom';
 import type { PoolClient } from 'pg';
 import { pool } from '../../config/database.js';
 import type { UUID } from '../../shared/storage/shared.types.js';
+import { toPostgisPointParams } from '../../shared/geo/index.js';
 import type {
   CreateOrderDTO,
   OrderActorRole,
@@ -354,6 +355,9 @@ export const createOrderService = async (
     });
 
     const pickupCode = generatePickupCode();
+    const userPosition = dto.user_position
+      ? toPostgisPointParams(dto.user_position)
+      : null;
 
     const {
       rows: [newOrder],
@@ -365,9 +369,24 @@ export const createOrderService = async (
          total_price,
          pickup_code,
          delivery_notes,
+         user_position,
+         campus_location_id,
          created_at
        )
-       VALUES ($1, $2, $3, $4, $5, $6, NOW())
+       VALUES (
+         $1,
+         $2,
+         $3,
+         $4,
+         $5,
+         $6,
+         CASE
+           WHEN $7::double precision IS NULL THEN NULL
+           ELSE ST_SetSRID(ST_MakePoint($7, $8), 4326)::geography
+         END,
+         $9,
+         NOW()
+       )
        RETURNING id`,
       [
         consumerId,
@@ -376,6 +395,9 @@ export const createOrderService = async (
         calculatedTotal,
         pickupCode,
         dto.delivery_notes ?? null,
+        userPosition?.longitude ?? null,
+        userPosition?.latitude ?? null,
+        dto.campus_location_id ?? null,
       ]
     );
 

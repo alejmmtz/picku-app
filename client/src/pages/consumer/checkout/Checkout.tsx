@@ -10,21 +10,39 @@ import ArrowIcon from "../../../assets/arrow.svg?react";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
 import ClockIcon from "../../../assets/clock.svg?react";
 import LocationMap from "../../../components/common/LocationMap";
-
 const Checkout = () => {
   const api = useAxios();
   const navigate = useNavigate();
   const { cartItems, subtotal, clearCart } = useCart();
-
   const [pickupDetails, setPickupDetails] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
   const handlePlaceOrder = () => {
-    if (cartItems.length === 0 || isSubmitting) {
-      return;
-    }
+    if (cartItems.length === 0 || isSubmitting) return;
 
+    setIsSubmitting(true);
+    setErrorMessage("");
+
+    // Obtener geolocalización antes de enviar el pedido
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        const location = {
+          lat: position.coords.latitude,
+          lng: position.coords.longitude,
+        };
+        processOrder(location);
+      },
+      (error) => {
+        console.error("Error GPS:", error);
+        setErrorMessage("Por favor, habilita tu ubicación para continuar.");
+        setIsSubmitting(false);
+      },
+      { enableHighAccuracy: true },
+    );
+  };
+
+  const processOrder = async (coords: { lat: number; lng: number }) => {
     const orderGroups = new Map<string, CreateOrderDTO>();
 
     for (const item of cartItems) {
@@ -32,69 +50,38 @@ const Checkout = () => {
       const productId = Number(item.product.id);
       const quantity = Number(item.quantity);
 
-      if (!Number.isFinite(productId) || !Number.isFinite(quantity)) {
-        setErrorMessage(
-          "There is an invalid product in your cart. Please update your cart and try again.",
-        );
-        return;
-      }
-
       const currentGroup = orderGroups.get(entrepreneurId);
-
       if (currentGroup) {
-        currentGroup.products.push({
-          product_id: productId,
-          quantity,
+        currentGroup.products.push({ product_id: productId, quantity });
+      } else {
+        orderGroups.set(entrepreneurId, {
+          entrepreneur_id: entrepreneurId,
+          delivery_notes: pickupDetails.trim() || null,
+          location: coords,
+          products: [{ product_id: productId, quantity }],
         });
-        continue;
       }
-
-      orderGroups.set(entrepreneurId, {
-        entrepreneur_id: entrepreneurId,
-        delivery_notes: pickupDetails.trim() ? pickupDetails.trim() : null,
-        products: [
-          {
-            product_id: productId,
-            quantity,
-          },
-        ],
-      });
     }
 
-    const submitOrder = async () => {
-      try {
-        setIsSubmitting(true);
-        setErrorMessage("");
-        const createdOrders = [];
-
-        for (const orderPayload of orderGroups.values()) {
-          const order = await createOrder(api, orderPayload);
-          createdOrders.push(order);
-        }
-
-        clearCart();
-
-        if (createdOrders.length === 1) {
-          navigate(`/consumer/order?orderId=${createdOrders[0].id}`, {
-            replace: true,
-          });
-          return;
-        }
-
-        navigate("/consumer/orders", { replace: true });
-      } catch (error) {
-        console.error("Error creating order:", error);
-        setErrorMessage(
-          error instanceof Error
-            ? error.message
-            : "Could not create your order. Please try again.",
-        );
-      } finally {
-        setIsSubmitting(false);
+    try {
+      const createdOrders = [];
+      for (const orderPayload of orderGroups.values()) {
+        const order = await createOrder(api, orderPayload);
+        createdOrders.push(order);
       }
-    };
-
-    void submitOrder();
+      clearCart();
+      navigate(
+        createdOrders.length === 1
+          ? `/consumer/order?orderId=${createdOrders[0].id}`
+          : "/consumer/orders",
+        { replace: true },
+      );
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (error) {
+      setErrorMessage("No pudimos crear tu pedido. Intenta de nuevo.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (

@@ -102,6 +102,18 @@ export const orderLocationByIdSchema = z.object({
   query: z.object({}),
 });
 
+export const postOrderLocationTrackingBodySchema = z.object({
+  updates: entrepreneurLocationBurstBodySchema.shape.updates,
+});
+
+export const postOrderLocationTrackingSchema = z.object({
+  body: postOrderLocationTrackingBodySchema,
+  params: z.object({
+    id: z.coerce.number().int().positive(),
+  }),
+  query: z.object({}),
+});
+
 export type CoordinatesInput = z.infer<typeof coordinatesSchema>;
 export type ConsumerOrderLocationBody = z.infer<
   typeof consumerOrderLocationBodySchema

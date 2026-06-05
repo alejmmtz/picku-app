@@ -6,6 +6,12 @@ export type OrderStatus =
   | "delivering"
   | "delivered";
 
+// Interfaz para compartir coordenadas entre frontend y backend
+export interface GeoLocation {
+  lat: number;
+  lng: number;
+}
+
 export interface CreateOrderProductDTO {
   product_id: number;
   quantity: number;
@@ -15,6 +21,8 @@ export interface CreateOrderDTO {
   entrepreneur_id: string;
   delivery_notes?: string | null;
   products: CreateOrderProductDTO[];
+  // Campo añadido para la geolocalización inicial al hacer checkout
+  location?: GeoLocation;
 }
 
 export interface UpdateOrderDTO {
@@ -47,6 +55,23 @@ export interface OrderEntrepreneur {
   img: string;
 }
 
+export interface OrderCoordinates {
+  latitude: number;
+  longitude: number;
+}
+
+export interface OrderLocationSnapshot {
+  order_id: number;
+  consumer_id: string;
+  entrepreneur_id: string;
+  status: OrderStatus;
+  campus_location_id: number | null;
+  user_position: OrderCoordinates | null;
+  entrepreneur_position: OrderCoordinates | null;
+  estimated_distance_meters: number | null;
+  estimated_time_seconds: number | null;
+}
+
 export interface OrderResponse {
   id: number;
   consumer_id: string;
@@ -58,6 +83,8 @@ export interface OrderResponse {
   estimated_time: number | null;
   delivery_notes: string | null;
   cancel_reason: string | null;
+  // Si el backend también devuelve la ubicación inicial:
+  location?: GeoLocation;
   customer: OrderCustomer;
   entrepreneur: OrderEntrepreneur;
   items: OrderItem[];

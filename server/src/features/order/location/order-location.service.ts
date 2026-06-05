@@ -1,6 +1,7 @@
 import Boom from '@hapi/boom';
 import type { PoolClient } from 'pg';
 import { pool } from '../../../config/database.js';
+import { broadcastOrderLocationUpdate } from './order-location.broadcast.js';
 import {
   distanceMeters,
   estimateTravelTimeSeconds,
@@ -24,6 +25,7 @@ import type {
 
 const ACTIVE_ENTREPRENEUR_TRACKING_STATUSES: OrderStatus[] = [
   OrderStatus.ACCEPTED,
+  OrderStatus.PREPARING,
   OrderStatus.DELIVERING,
 ];
 
@@ -235,6 +237,13 @@ export const processEntrepreneurLocationBurst = async (
     }
 
     await client.query('COMMIT');
+
+    await broadcastOrderLocationUpdate(
+      dto.order_id,
+      position,
+      estimatedDistanceMeters,
+      estimatedTimeSeconds
+    );
 
     return {
       entrepreneur_id: entrepreneurId,

@@ -1,9 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import { createContext, useContext, useEffect, useMemo, useRef } from "react";
+import { createContext, useContext, useEffect, useRef } from "react";
 import type { ReactNode } from "react";
-import type { RealtimeChannel } from "@supabase/supabase-js";
 import { supabase } from "../hooks/useSupabase";
+import { acquireOrderChannel } from "../lib/orderChannelManager";
 import type { OrderResponse, OrderStatus } from "../types/order.types";
 
 export type OrderBroadcastPayload = {
@@ -20,69 +20,15 @@ export type OrderBroadcastPayload = {
   message?: string;
 };
 
-type OrderRealtimeContextValue = {
-  subscribeToOrder: (
-    orderId: number,
-    handler: (payload: OrderBroadcastPayload) => void,
-  ) => RealtimeChannel;
-  subscribeToEntrepreneurOrders: (
-    entrepreneurId: string,
-    handler: (payload: OrderBroadcastPayload) => void,
-  ) => RealtimeChannel;
-  removeChannel: (channel: RealtimeChannel) => void;
-};
-
-const orderStatusEvents = [
-  "order-status-updated",
-  "order-accepted",
-  "order-preparing",
-  "order-delivering",
-  "order-delivered",
-  "order-declined",
-] as const;
-
-const OrdersRealtimeContext = createContext<OrderRealtimeContextValue | null>(
-  null,
-);
+const OrdersRealtimeContext = createContext(true);
 
 export const OrdersRealtimeProvider = ({
   children,
 }: {
   children: ReactNode;
 }) => {
-  const value = useMemo<OrderRealtimeContextValue>(
-    () => ({
-      subscribeToOrder: (orderId, handler) => {
-        const channel = supabase.channel(`order-${orderId}`);
-
-        orderStatusEvents.forEach((event) => {
-          channel.on("broadcast", { event }, ({ payload }) => {
-            handler(payload as OrderBroadcastPayload);
-          });
-        });
-
-        channel.subscribe();
-        return channel;
-      },
-      subscribeToEntrepreneurOrders: (entrepreneurId, handler) => {
-        const channel = supabase
-          .channel(`entrepreneur-${entrepreneurId}`)
-          .on("broadcast", { event: "order-created" }, ({ payload }) => {
-            handler(payload as OrderBroadcastPayload);
-          });
-
-        channel.subscribe();
-        return channel;
-      },
-      removeChannel: (channel) => {
-        void supabase.removeChannel(channel);
-      },
-    }),
-    [],
-  );
-
   return (
-    <OrdersRealtimeContext.Provider value={value}>
+    <OrdersRealtimeContext.Provider value={true}>
       {children}
     </OrdersRealtimeContext.Provider>
   );
@@ -96,15 +42,13 @@ export const useOrdersRealtime = () => {
       "useOrdersRealtime must be used within OrdersRealtimeProvider",
     );
   }
-
-  return context;
 };
 
 export const useOrderRealtime = (
   orderId: number | null | undefined,
   handler: (payload: OrderBroadcastPayload) => void,
 ) => {
-  const { removeChannel, subscribeToOrder } = useOrdersRealtime();
+  useOrdersRealtime();
   const handlerRef = useRef(handler);
 
   useEffect(() => {
@@ -112,23 +56,57 @@ export const useOrderRealtime = (
   }, [handler]);
 
   useEffect(() => {
-    if (!orderId || !Number.isFinite(orderId)) return;
+    if (!orderId || !Number.isFinite(orderId)) {
+      return;
+    }
 
-    const channel = subscribeToOrder(orderId, (payload) => {
+    const subscription = acquireOrderChannel(orderId);
+
+    const removeStatusListener = subscription.addStatusListener((payload) => {
       handlerRef.current(payload);
     });
 
     return () => {
-      removeChannel(channel);
+      removeStatusListener();
+      subscription.release();
     };
-  }, [orderId, removeChannel, subscribeToOrder]);
+  }, [orderId]);
+};
+
+export const useOrderLocationRealtime = (
+  orderId: number | null | undefined,
+  handler: (payload: unknown) => void,
+) => {
+  useOrdersRealtime();
+  const handlerRef = useRef(handler);
+
+  useEffect(() => {
+    handlerRef.current = handler;
+  }, [handler]);
+
+  useEffect(() => {
+    if (!orderId || !Number.isFinite(orderId)) {
+      return;
+    }
+
+    const subscription = acquireOrderChannel(orderId);
+
+    const removeLocationListener = subscription.addLocationListener((payload) => {
+      handlerRef.current(payload);
+    });
+
+    return () => {
+      removeLocationListener();
+      subscription.release();
+    };
+  }, [orderId]);
 };
 
 export const useOrdersListRealtime = (
   orderIds: number[],
   handler: (payload: OrderBroadcastPayload) => void,
 ) => {
-  const { removeChannel, subscribeToOrder } = useOrdersRealtime();
+  useOrdersRealtime();
   const handlerRef = useRef(handler);
   const orderIdsKey = Array.from(new Set(orderIds))
     .filter((orderId) => Number.isFinite(orderId))
@@ -140,28 +118,36 @@ export const useOrdersListRealtime = (
   }, [handler]);
 
   useEffect(() => {
-    if (!orderIdsKey) return;
+    if (!orderIdsKey) {
+      return;
+    }
 
     const normalizedOrderIds = orderIdsKey
       .split(",")
       .map((orderId) => Number(orderId));
-    const channels = normalizedOrderIds.map((orderId) =>
-      subscribeToOrder(orderId, (payload) => {
+    const subscriptions = normalizedOrderIds.map((orderId) => {
+      const subscription = acquireOrderChannel(orderId);
+      const removeStatusListener = subscription.addStatusListener((payload) => {
         handlerRef.current(payload);
-      }),
-    );
+      });
+
+      return { subscription, removeStatusListener };
+    });
 
     return () => {
-      channels.forEach(removeChannel);
+      subscriptions.forEach(({ subscription, removeStatusListener }) => {
+        removeStatusListener();
+        subscription.release();
+      });
     };
-  }, [orderIdsKey, removeChannel, subscribeToOrder]);
+  }, [orderIdsKey]);
 };
 
 export const useEntrepreneurOrdersRealtime = (
   entrepreneurId: string | null | undefined,
   handler: (payload: OrderBroadcastPayload) => void,
 ) => {
-  const { removeChannel, subscribeToEntrepreneurOrders } = useOrdersRealtime();
+  useOrdersRealtime();
   const handlerRef = useRef(handler);
 
   useEffect(() => {
@@ -169,19 +155,22 @@ export const useEntrepreneurOrdersRealtime = (
   }, [handler]);
 
   useEffect(() => {
-    if (!entrepreneurId) return;
+    if (!entrepreneurId) {
+      return;
+    }
 
-    const channel = subscribeToEntrepreneurOrders(
-      entrepreneurId,
-      (payload) => {
-        handlerRef.current(payload);
-      },
-    );
+    const channel = supabase.channel(`entrepreneur-${entrepreneurId}`);
+
+    channel.on("broadcast", { event: "order-created" }, ({ payload }) => {
+      handlerRef.current(payload as OrderBroadcastPayload);
+    });
+
+    channel.subscribe();
 
     return () => {
-      removeChannel(channel);
+      void supabase.removeChannel(channel);
     };
-  }, [entrepreneurId, removeChannel, subscribeToEntrepreneurOrders]);
+  }, [entrepreneurId]);
 };
 
 export const applyOrderBroadcastPayload = <T extends OrderResponse>(
@@ -196,5 +185,3 @@ export const applyOrderBroadcastPayload = <T extends OrderResponse>(
   delivery_notes: payload.deliveryNotes,
   updated_at: payload.updatedAt,
 });
-
-// TODO: realtime location will be implemented by another teammate

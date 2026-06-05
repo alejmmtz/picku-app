@@ -19,6 +19,17 @@ export type MapTileStyle = {
 export type LeafletMapInstance = {
   invalidateSize: () => void;
   remove: () => void;
+  setView: (
+    center: [number, number],
+    zoom?: number,
+    options?: { animate?: boolean },
+  ) => void;
+};
+
+export type LeafletMarkerInstance = {
+  addTo: (map: LeafletMapInstance) => LeafletMarkerInstance;
+  remove: () => void;
+  setLatLng: (center: [number, number]) => void;
 };
 
 type LeafletNamespace = {
@@ -37,6 +48,16 @@ type LeafletNamespace = {
   ) => {
     addTo: (map: LeafletMapInstance) => unknown;
   };
+  marker: (
+    center: [number, number],
+    options?: { icon?: unknown; keyboard?: boolean; interactive?: boolean },
+  ) => LeafletMarkerInstance;
+  divIcon: (options: {
+    className?: string;
+    html: string;
+    iconSize?: [number, number];
+    iconAnchor?: [number, number];
+  }) => unknown;
 };
 
 type LeafletMapOptions = {

@@ -1,14 +1,17 @@
 import type { AxiosInstance } from "axios";
 import type {
   CreateOrderDTO,
+  OrderLocationSnapshot,
   OrderResponse,
   UpdateOrderDTO,
 } from "../types/order.types";
 
 const toNumber = (value: unknown): number => Number(value);
 
-const normalizeCreateOrder = (order: CreateOrderDTO): CreateOrderDTO => {
-  return {
+const normalizeCreateOrder = (
+  order: CreateOrderDTO,
+): Record<string, unknown> => {
+  const payload: Record<string, unknown> = {
     entrepreneur_id: String(order.entrepreneur_id),
     delivery_notes: order.delivery_notes ?? null,
     products: order.products.map((product) => ({
@@ -16,6 +19,15 @@ const normalizeCreateOrder = (order: CreateOrderDTO): CreateOrderDTO => {
       quantity: toNumber(product.quantity),
     })),
   };
+
+  if (order.location) {
+    payload.user_position = {
+      latitude: order.location.lat,
+      longitude: order.location.lng,
+    };
+  }
+
+  return payload;
 };
 
 const normalizeOrder = (order: OrderResponse): OrderResponse => ({
@@ -107,4 +119,34 @@ export const updateOrder = async (
   );
 
   return normalizeOrder(response.data);
+};
+
+export const getOrderLocationSnapshot = async (
+  axiosInstance: AxiosInstance,
+  orderId: number,
+): Promise<OrderLocationSnapshot> => {
+  const response = await axiosInstance.get<OrderLocationSnapshot>(
+    `/picku/api/orders/${orderId}/location`,
+  );
+
+  return response.data;
+};
+
+export const postOrderLocationTracking = async (
+  axiosInstance: AxiosInstance,
+  orderId: number,
+  payload: {
+    updates: Array<{
+      position: { latitude: number; longitude: number };
+      captured_at?: string;
+      accuracy_meters?: number;
+    }>;
+  },
+): Promise<unknown> => {
+  const response = await axiosInstance.post(
+    `/picku/api/orders/${orderId}/location/tracking`,
+    payload,
+  );
+
+  return response.data;
 };
