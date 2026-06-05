@@ -34,7 +34,9 @@ export default function OrderReceipt() {
         if (!isMounted) return;
 
         setFeedbackMessage(
-          error instanceof Error ? error.message : "We could not load this receipt.",
+          error instanceof Error
+            ? error.message
+            : "We could not load this receipt.",
         );
       }
     };
@@ -56,7 +58,7 @@ export default function OrderReceipt() {
           <button
             type="button"
             onClick={() => navigate("/consumer/orders")}
-            className="mt-6 rounded-xl bg-orange px-6 py-4 text-[15px] text-[15px] text-white transition-transform active:scale-[0.99]"
+            className="mt-6 rounded-xl bg-orange px-6 py-4  text-white transition-transform active:scale-[0.99]"
           >
             Go back to orders
           </button>

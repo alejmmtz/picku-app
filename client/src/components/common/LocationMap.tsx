@@ -16,7 +16,7 @@ type LocationMapProps = {
 };
 
 const LocationMap = ({
-  className = "relative mb-6 h-[128px] w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3]",
+  className = "relative mb-6 h-64 w-full overflow-hidden rounded-xl border border-orange/20 bg-[#f4ebe3]",
   center,
   zoom,
   tileStyle,
@@ -50,10 +50,7 @@ const LocationMap = ({
         setMapStatus("ready");
       })
       .catch((error: unknown) => {
-        if (
-          error instanceof DOMException &&
-          error.name === "AbortError"
-        ) {
+        if (error instanceof DOMException && error.name === "AbortError") {
           return;
         }
 
@@ -71,24 +68,23 @@ const LocationMap = ({
     <div className={`${className} isolate`}>
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_35%,rgba(255,112,45,0.18),transparent_38%),linear-gradient(135deg,#fffaf4,#f1e2d8)]" />
 
+      <div ref={mapRef} className="absolute inset-0 z-10" />
+
       <div
-        ref={mapRef}
-        className={`absolute inset-0 z-10 transition-opacity duration-500 ${
-          mapStatus === "ready" ? "opacity-100" : "opacity-0"
-        }`}
+        className={`pointer-events-none absolute inset-0 z-20 ${overlayClassName}`}
       />
 
-      <div className={`pointer-events-none absolute inset-0 z-20 ${overlayClassName}`} />
-
-      <div className="pointer-events-none absolute left-1/2 top-1/2 z-30 flex -translate-x-1/2 -translate-y-full flex-col items-center">
+      <div
+        className={`pointer-events-none absolute left-1/2 top-1/2 z-30 flex -translate-x-1/2 -translate-y-full flex-col items-center transition-opacity duration-500 ${mapStatus === "ready" ? "opacity-100" : "opacity-0"}`}
+      >
         <span
           className={`h-5 w-5 rounded-full border-[3px] border-white shadow-[0_6px_18px_rgba(27,27,27,0.18)] ${pinClassName}`}
         />
-        <span className="h-3 w-3 -translate-y-1 rotate-45 rounded-[2px] bg-white/90 shadow-sm" />
+        <span className="h-3 w-3 -translate-y-1 rotate-45 bg-white/90 shadow-sm" />
       </div>
 
       {mapStatus !== "ready" ? (
-        <div className="absolute inset-0 z-40 flex items-center justify-center px-4 text-center text-[13px] font-light text-black/55">
+        <div className="absolute inset-0 z-40 flex items-center justify-center bg-[#f4ebe3] transition-opacity duration-500 px-4 text-center text-[13px] font-light text-black/55">
           {mapStatus === "error" ? "Map unavailable" : "Loading map..."}
         </div>
       ) : null}

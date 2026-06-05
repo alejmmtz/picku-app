@@ -4,10 +4,7 @@ import OrderFlowHeader from "./components/OrderFlowHeader";
 import OrderMap from "./components/OrderMap";
 import OrderSummaryCard from "./components/OrderSummaryCard";
 import { useAxios } from "../../../providers/AxiosProvider";
-import {
-  getOrderById,
-  getOrders,
-} from "../../../services/order.service";
+import { getOrderById, getOrders } from "../../../services/order.service";
 import type { OrderResponse } from "../../../types/order.types";
 import Loader from "../../../components/common/Loader";
 import {
@@ -95,15 +92,23 @@ export default function OrderFlow() {
     };
   }, [api, orderId]);
 
+  useEffect(() => {
+    if (order?.status === "delivered") {
+      navigate(`/consumer/order-receipt?orderId=${order.id}`, {
+        replace: true,
+      });
+    }
+  }, [order?.status, order?.id, navigate]);
+
   if (isLoading) {
-  return (
-    <main className="app-shell sm:px-6 sm:py-6">
-      <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
-        <Loader message="Loading order..." />
-      </section>
-    </main>
-  );
-}
+    return (
+      <main className="app-shell sm:px-6 sm:py-6">
+        <section className="relative flex h-dvh w-full items-center justify-center overflow-hidden sm:mx-auto sm:w-100">
+          <Loader message="Loading order..." />
+        </section>
+      </main>
+    );
+  }
 
   if (!order) {
     return (

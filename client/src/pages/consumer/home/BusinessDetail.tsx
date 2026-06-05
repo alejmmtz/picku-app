@@ -94,8 +94,8 @@ const BusinessDetail = () => {
         </div>
 
         <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-12 pt-8 pb-10 ">
-          <div className="flex flex-col items-start gap-3 mb-6">
-            <div className="flex items-center justify-between w-full">
+          <div className="flex flex-col items-start justify-start gap-3 mb-6">
+            <div className="flex flex-col items-start justify-start gap-2 w-full mb-4">
               <div className="flex items-center gap-1">
                 <h2 className="text-[21px] font-medium">{entrepreneur.name}</h2>
                 <CheckIcon className="w-6 h-6" />
@@ -108,7 +108,7 @@ const BusinessDetail = () => {
 
             <a
               href={`tel:${entrepreneur.contact_info}`}
-              className="flex items-center justify-center gap-2 w-full rounded-xl bg-orange   py-4 font-bold text-white cursor-pointer outline-none"
+              className="flex items-center justify-center gap-2 w-full rounded-xl bg-white focus:bg-orange focus:border-orange/0 focus:text-white transition-all duration-300 focus:scale-95 border-2 border-black/15 py-4 font-medium text-black cursor-pointer outline-none"
             >
               <PhoneIcon className="w-4 h-4 fill-current" />
               <span>{entrepreneur.contact_info}</span>
@@ -125,7 +125,6 @@ const BusinessDetail = () => {
           <div>
             <h2 className="text-lg  mb-4">Catalog</h2>
 
-            {/* products */}
             {products.length === 0 && (
               <div className="px-5 py-16 text-center">
                 <div className="mb-6 flex min-h-40 items-center justify-center">

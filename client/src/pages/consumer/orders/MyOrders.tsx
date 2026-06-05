@@ -150,7 +150,6 @@ const MyOrders = () => {
 
         <h2 className="mb-4 text-2xl font-semibold text-black">Your orders</h2>
 
-        {/* Tabs de navegación persistentes */}
         <div className="mb-6 flex w-full gap-2">
           <button
             className={`flex-1 border text-center rounded-full py-2 text-sm transition-all ${

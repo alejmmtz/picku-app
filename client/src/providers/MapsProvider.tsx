@@ -1,11 +1,6 @@
 /* eslint-disable react-refresh/only-export-components */
 
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useMemo,
-} from "react";
+import { createContext, useCallback, useContext, useMemo } from "react";
 import type { ReactNode } from "react";
 
 export type MapCenter = {
@@ -88,8 +83,7 @@ const LEAFLET_SCRIPT_ID = "picku-leaflet-script";
 const LEAFLET_STYLE_ID = "picku-leaflet-style";
 
 export const DEFAULT_MAP_TILE_STYLE: MapTileStyle = {
-  tileUrl:
-    "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+  tileUrl: "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
   attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
   subdomains: "abcd",
 };
@@ -136,14 +130,16 @@ export const MapsProvider = ({ children }: { children: ReactNode }) => {
 
       map.setView([center.lat, center.lng], zoom);
 
-      leaflet.tileLayer(tileStyle.tileUrl, {
-        attribution: tileStyle.attribution,
-        subdomains: tileStyle.subdomains,
-      }).addTo(map);
+      leaflet
+        .tileLayer(tileStyle.tileUrl, {
+          attribution: tileStyle.attribution,
+          subdomains: tileStyle.subdomains,
+        })
+        .addTo(map);
 
-      window.requestAnimationFrame(() => {
+      setTimeout(() => {
         map.invalidateSize();
-      });
+      }, 100);
 
       return map;
     },
@@ -158,9 +154,7 @@ export const MapsProvider = ({ children }: { children: ReactNode }) => {
   );
 
   return (
-    <MapsContext.Provider value={contextValue}>
-      {children}
-    </MapsContext.Provider>
+    <MapsContext.Provider value={contextValue}>{children}</MapsContext.Provider>
   );
 };
 
