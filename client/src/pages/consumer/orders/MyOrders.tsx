@@ -64,7 +64,7 @@ const MyOrders = () => {
   useEffect(() => {
     let isMounted = true;
 
-    const loadOrders = async () => {
+    const loadInitialOrders = async () => {
       try {
         const data = await getOrders(api);
 
@@ -84,7 +84,7 @@ const MyOrders = () => {
       }
     };
 
-    void loadOrders();
+    void loadInitialOrders();
 
     return () => {
       isMounted = false;
