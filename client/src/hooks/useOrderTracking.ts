@@ -13,7 +13,7 @@ import {
   toMapCenter,
 } from "../utils/geo";
 
-const TRACKING_THROTTLE_MS = 2000;
+const TRACKING_THROTTLE_MS = 1000;
 const MAX_SYNCED_ACCURACY_METERS = 500;
 
 const ACTIVE_TRACKING_STATUSES = new Set([
@@ -163,9 +163,7 @@ export function useOrderTracking({
         }
 
         void postOrderLocationTracking(api, orderId, {
-          updates: [
-            trackingUpdate,
-          ],
+          updates: [trackingUpdate],
         }).catch((error: unknown) => {
           console.warn("Failed to sync entrepreneur location:", error);
         });
@@ -175,7 +173,7 @@ export function useOrderTracking({
       },
       {
         enableHighAccuracy: true,
-        maximumAge: 2000,
+        maximumAge: 1000,
         timeout: 10000,
       },
     );
@@ -186,13 +184,7 @@ export function useOrderTracking({
         watchIdRef.current = undefined;
       }
     };
-  }, [
-    api,
-    applyEntrepreneurLocation,
-    isEntrepreneur,
-    orderId,
-    orderStatus,
-  ]);
+  }, [api, applyEntrepreneurLocation, isEntrepreneur, orderId, orderStatus]);
 
   return {
     entrepreneurLocation,
