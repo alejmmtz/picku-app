@@ -231,7 +231,7 @@ const EditProduct = () => {
 
             <label
               htmlFor="edit-product-image"
-              className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-[18px] border-2 border-dashed border-maroon/30 bg-maroon/5"
+              className="relative flex h-[170px] cursor-pointer items-center justify-center overflow-hidden rounded-2xl border-2 border-dashed border-maroon/30 bg-maroon/5"
             >
               {imagePreview ? (
                 <img

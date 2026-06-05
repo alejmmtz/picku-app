@@ -5,7 +5,9 @@ import { useAxios } from "../../../providers/AxiosProvider";
 import { getOrders } from "../../../services/order.service";
 import type { ConsumerOrder, OrderStatus } from "./orders.types";
 import BottomNav from "../../../components/common/BottomNav";
+import Loader from "../../../components/common/Loader";
 
+import ShoppingCartIcon from "../../../assets/shopping cart consumer.svg?react";
 import LogoConsumer from "../../../assets/logo consumer.png";
 import MapPinIcon from "../../../assets/map-pin.svg?react";
 
@@ -21,22 +23,18 @@ const statusLabelMap: Record<OrderStatus, string> = {
 
 const statusClassMap: Record<OrderStatus, string> = {
   requested:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#ecb100] bg-[#fff8da] px-3 text-[13px] text-[#ecb100]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-blue bg-blue/10 px-3 text-[13px] text-blue",
   accepted:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-yellow bg-yellow/10 px-3 text-[13px] text-yellow",
   declined:
     "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#b4202f] bg-[#fff3f3] px-3 text-[13px] text-[#b4202f]",
   delivering:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-[#fff0e8] px-3 text-[13px] text-orange",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
   delivered:
-    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-[#78aa38] bg-[#eef8df] px-3 text-[13px] text-[#78aa38]",
+    "inline-flex min-h-6 items-center justify-center rounded-full font-light border border-orange bg-orange/10 px-3 text-[13px] text-orange",
 };
 
-const emptyOrdersMessage =
-  "No orders yet. We're working on it!";
-
-const formatPrice = (price: number) =>
-  `$${price.toLocaleString("es-CO", { maximumFractionDigits: 0 })}`;
+const emptyOrdersMessage = "No orders yet. We're working on it!";
 
 const getOrderImage = (order: ConsumerOrder) =>
   order.items[0]?.img ||
@@ -50,7 +48,9 @@ const getOrderSubtitle = (order: ConsumerOrder) =>
   order.delivery_notes || order.entrepreneur.name || "PickU order";
 
 const getDistanceLabel = (order: ConsumerOrder) => {
-  return order.delivery_notes?.trim() ? "Pickup details added" : "Campus pickup";
+  return order.delivery_notes?.trim()
+    ? "Pickup details added"
+    : "Campus pickup";
 };
 
 const MyOrders = () => {
@@ -58,6 +58,7 @@ const MyOrders = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState<OrderTab>("ongoing");
   const [orders, setOrders] = useState<ConsumerOrder[]>([]);
+  const [loading, setLoading] = useState(true);
   const [feedbackMessage, setFeedbackMessage] = useState(emptyOrdersMessage);
 
   useEffect(() => {
@@ -76,6 +77,10 @@ const MyOrders = () => {
 
         setOrders([]);
         setFeedbackMessage(emptyOrdersMessage);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -87,41 +92,50 @@ const MyOrders = () => {
   }, [api]);
 
   const filteredOrders = useMemo(() => {
-  if (activeTab === "delivered") {
-    return orders.filter((order) => order.status === "delivered");
-  }
+    if (activeTab === "delivered") {
+      return orders.filter((order) => order.status === "delivered");
+    }
 
-  if (activeTab === "declined") {
-    return orders.filter((order) => order.status === "declined");
-  }
+    if (activeTab === "declined") {
+      return orders.filter((order) => order.status === "declined");
+    }
 
-  return orders.filter(
-    (order) =>
-      order.status === "requested" ||
-      order.status === "accepted" ||
-      order.status === "delivering",
-  );
-}, [activeTab, orders]);
+    return orders.filter(
+      (order) =>
+        order.status === "requested" ||
+        order.status === "accepted" ||
+        order.status === "delivering",
+    );
+  }, [activeTab, orders]);
 
   return (
     <main className="app-shell">
-      <section className="app-screen pb-[220px]">
-         <header className="flex items-center justify-between mb-10 mt-1.5">
-          <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
+      <section className="app-screen">
+        <header className="flex items-center justify-between mb-8 h-6">
+          <img
+            src={LogoConsumer}
+            onClick={() => navigate("/consumer/home")}
+            alt="PickU"
+            className="w-16 cursor-pointer"
+          />
+          <button
+            type="button"
+            onClick={() => navigate("/consumer/cart")}
+            className="flex items-center justify-center"
+          >
+            <ShoppingCartIcon className="w-6 h-6" />
+          </button>
         </header>
 
-        <h1 className="mb-[20px] !font-sofia text-[24px] font-semibold leading-[1.1] text-black">
-          Your orders
-        </h1>
+        <h2 className="mb-4 text-2xl font-semibold text-black">Your orders</h2>
 
-      {/*delivered or ongoing*/}
-
-        <div className="mb-8 flex gap-3 overflow-x-auto">
+        {/* Tabs de navegación persistentes */}
+        <div className="mb-6 flex w-full gap-2">
           <button
-            className={`rounded-full px-4 py-2 text-[15px] ${
+            className={`flex-1 border text-center rounded-full py-2 text-sm transition-all ${
               activeTab === "ongoing"
-                ? "bg-orange/11 font-medium text-orange"
-                : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
+                ? "bg-orange/5 font-medium text-orange border-orange"
+                : "bg-black/5 text-black/75 border-transparent"
             }`}
             type="button"
             onClick={() => setActiveTab("ongoing")}
@@ -130,10 +144,10 @@ const MyOrders = () => {
           </button>
 
           <button
-            className={`rounded-full px-4 py-2 text-[15px] ${
+            className={`flex-1 border text-center rounded-full py-2 text-sm transition-all ${
               activeTab === "delivered"
-                ? "bg-orange/11 font-medium text-orange"
-                : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
+                ? "bg-orange/5 font-medium text-orange border-orange"
+                : "bg-black/5 text-black/75 border-transparent"
             }`}
             type="button"
             onClick={() => setActiveTab("delivered")}
@@ -142,100 +156,108 @@ const MyOrders = () => {
           </button>
 
           <button
-          className={`rounded-full px-4 py-2 text-[15px] ${
-            activeTab === "declined"
-              ? "bg-orange/11 font-medium text-orange"
-              : "bg-[#f6ede7] text-[rgba(27,27,27,0.38)]"
-          }`}
-          type="button"
-          onClick={() => setActiveTab("declined")}
-        >
-          Cancelled
-        </button>
-        
+            className={`flex-1 border text-center rounded-full py-2 text-sm transition-all ${
+              activeTab === "declined"
+                ? "bg-orange/5 font-medium text-orange border-orange"
+                : "bg-black/5 text-black/75 border-transparent"
+            }`}
+            type="button"
+            onClick={() => setActiveTab("declined")}
+          >
+            Cancelled
+          </button>
         </div>
 
+        {loading && (
+          <div className="flex items-center justify-center ">
+            <Loader message="Loading your orders..." />
+          </div>
+        )}
 
-        {!feedbackMessage && filteredOrders.length === 0 ? (
-        <div className="mt-65 flex flex-col items-center justify-center text-center">
-          <p className="text-[18px] font-medium text-black">
-            No orders here yet
-          </p>
+        {!loading && !feedbackMessage && filteredOrders.length === 0 ? (
+          <div className="mt-24 flex flex-col items-center justify-center text-center">
+            <div className="mb-6 flex h-full items-center justify-center">
+              <img
+                className="block h-auto w-20"
+                src="/resources/img-2-onboarding.svg"
+                alt="No orders available"
+              />
+            </div>
+            <p className="text-[18px] font-medium text-black">No orders yet!</p>
+            <p className="mt-1 text-[15px] font-light text-black/50">
+              Your orders will appear here.
+            </p>
+          </div>
+        ) : null}
 
-          <p className="mt-2 max-w-[260px] text-[15px] font-light leading-[1.4] text-black/60">
-            Your orders will appear here.
-          </p>
-        </div>
-      ) : null}
+        {!loading && (
+          <div className="flex flex-col gap-5 bg-white">
+            {filteredOrders.map((order) => {
+              const item = order.items[0];
 
-        <div className="flex flex-col gap-5">
-          {filteredOrders.map((order) => {
-            const item = order.items[0];
+              return (
+                <article
+                  key={order.id}
+                  className="app-card p-4 cursor-pointer transition-all duration-300 active:scale-[0.99]"
+                  onClick={() => {
+                    if (
+                      order.status === "requested" ||
+                      order.status === "accepted" ||
+                      order.status === "delivering"
+                    ) {
+                      navigate(`/consumer/order?orderId=${order.id}`);
+                      return;
+                    }
 
-            {/*order card*/}
+                    navigate(`/consumer/orders/${order.id}`, {
+                      state: { order },
+                    });
+                  }}
+                >
+                  <div className="flex gap-4">
+                    <img
+                      className="h-30 w-30 rounded-xl object-cover shrink-0 bg-[#f2e7de]"
+                      src={getOrderImage(order)}
+                      alt={getOrderTitle(order)}
+                    />
 
-            return (
-              <article
-                key={order.id}
-                className="grid cursor-pointer grid-cols-[102px_1fr] gap-3 rounded-2xl border border-black/15 p-3"
-                onClick={() => {
-                  if (
-                    order.status === "requested" ||
-                    order.status === "accepted" ||
-                    order.status === "delivering" 
-                  ) {
-                    navigate(`/consumer/order?orderId=${order.id}`);
-                    return;
-                  }
+                    <div className="flex-1 min-w-0 flex flex-col justify-between">
+                      <div>
+                        <div className="flex items-end justify-between gap-2">
+                          <h3 className="text-lg font-medium text-black line-clamp-1 ">
+                            {getOrderTitle(order)}
+                          </h3>
+                          <span className="rounded-md border text-sm px-2 py-1 font-light bg-orange text-white  whitespace-nowrap shrink-0">
+                            x{item?.quantity ?? 1}
+                          </span>
+                        </div>
 
-                  navigate(`/consumer/orders/${order.id}`, {
-                    state: { order },
-                  });
-                }}
-              >
-                <img
-                  className="h-[94px] w-[102px] rounded-xl bg-[#f2e7de] object-cover"
-                  src={getOrderImage(order)}
-                  alt={getOrderTitle(order)}
-                />
+                        <p className="text-[15px] font-light text-black/60 line-clamp-1">
+                          {getOrderSubtitle(order)}
+                        </p>
 
-                <div className="flex min-w-0 flex-col">
-                  <div className="flex items-start justify-between gap-[10px]">
-                    <div>
-                      <h2 className="text-[16px] font-medium">{getOrderTitle(order)}</h2>
-                      <p className="mt-1 text-[13px] text-black font-light">
-                        {getOrderSubtitle(order)}
-                      </p>
+                        <div className="flex items-center gap-1 text-[13px] font-light text-black/40 mt-2">
+                          <MapPinIcon className="h-4 w-4 shrink-0 text-black/40" />
+                          <span className="line-clamp-1">
+                            {getDistanceLabel(order)}
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="mt-3 flex items-center justify-between gap-3">
+                        <span className={statusClassMap[order.status]}>
+                          {statusLabelMap[order.status]}
+                        </span>
+                      </div>
                     </div>
-
-                    <span className="inline-flex h-7 min-w-[30px] items-center justify-center rounded-lg bg-orange px-1.5 text-[14px] text-white">
-                      x{item?.quantity ?? 1}
-                    </span>
                   </div>
-
-                  <span className="inline-flex mb-2 items-center gap-1 text-[13px] font-light text-black">
-                    <MapPinIcon className="h-[17px] w-[17px] shrink-0" />
-                    {getDistanceLabel(order)}
-                  </span>
-
-                  <div className="mt-auto flex items-end justify-between gap-3">
-                    <span className={statusClassMap[order.status]}>
-                      {statusLabelMap[order.status]}
-                    </span>
-
-                    <strong className="text-[18px] font-semibold text-black">
-                      {formatPrice(order.total_price)}
-                    </strong>
-                  </div>
-                </div>
-              </article>
-            );
-          })}
-        </div>
+                </article>
+              );
+            })}
+          </div>
+        )}
       </section>
-      
-      {/*navbar*/}
-      
+
       <BottomNav variant="consumer" />
     </main>
   );

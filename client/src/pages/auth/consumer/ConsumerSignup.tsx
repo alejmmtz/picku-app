@@ -58,7 +58,7 @@ const ConsumerSignup = () => {
     <main className="app-shell">
       <section className="app-screen max-h-screen flex flex-col justify-center">
         <div
-          className={`flex min-h-40 right-10 transition-all duration-500 absolute z-50 m-0 ${errorMessage ? "top-11" : "top-14"} `}
+          className={`flex min-h-40 right-10 transition-all duration-500 absolute z-50 m-0 ${errorMessage ? "top-7.5" : "top-13.5"} `}
         >
           <img
             className="block h-auto w-35"

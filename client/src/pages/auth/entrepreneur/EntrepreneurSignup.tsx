@@ -184,7 +184,7 @@ const EntrepreneurSignup = () => {
           </button>
         </form>
 
-        <p className="mt-4 font-light text-center text-[16px]">
+        <p className="font-light text-center text-[16px]">
           Already have an account?{" "}
           <button
             className="bg-transparent p-0 font-medium text-maroon"

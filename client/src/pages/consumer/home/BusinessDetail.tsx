@@ -9,9 +9,9 @@ import { getProductsByEntrepreneurId } from "../../../services/product.service";
 import type { Entrepreneur } from "../../../types/entrepreneur.types";
 import type { Product } from "../../../types/product.types";
 import ArrowIcon from "../../../assets/arrow.svg?react";
+import PhoneIcon from "../../../assets/phone.svg?react";
 
 import CheckIcon from "../../../assets/check icon.svg?react";
-
 
 const BusinessDetail = () => {
   const axios = useAxios();
@@ -43,14 +43,14 @@ const BusinessDetail = () => {
   }, [axios, id]);
 
   if (loading) {
-  return (
-    <main className="app-shell">
-      <section className="app-screen flex items-center justify-center">
-        <Loader message="Loading business..." />
-      </section>
-    </main>
-  );
-}
+    return (
+      <main className="app-shell">
+        <section className="app-screen max-h-screen flex items-center justify-center ">
+          <Loader message="Loading business..." />
+        </section>
+      </main>
+    );
+  }
 
   if (!entrepreneur) {
     return (
@@ -68,12 +68,11 @@ const BusinessDetail = () => {
       </main>
     );
   }
-  
 
   return (
     <main className="app-shell">
-      <section className="relative min-h-screen w-full max-w-[430px] overflow-hidden">
-        <div className="relative h-[300px]">
+      <section className="relative min-h-screen w-full">
+        <div className="relative h-96">
           <img
             src={entrepreneur.img}
             alt={entrepreneur.name}
@@ -83,56 +82,61 @@ const BusinessDetail = () => {
           <div className="absolute inset-0 bg-white/30" />
 
           <div className="absolute left-8 top-14">
-
-          <button
-            type="button"
-            onClick={() => navigate("/consumer/home")}
-            className="flex items-center gap-1 rounded-full font-light bg-white/80 px-3 ml-4 py-1 text-[13px] shadow-sm"
-          >
-            <ArrowIcon className="w-3 h-3" />
-            <span>Home</span>
-          </button>
+            <button
+              type="button"
+              onClick={() => navigate("/consumer/home")}
+              className="flex items-center gap-1 rounded-lg font-light bg-white px-3  py-2 text-sm shadow-xs"
+            >
+              <ArrowIcon className="w-3 h-3" />
+              <span>Home</span>
+            </button>
           </div>
         </div>
 
-      {/* information card */}
         <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-12 pt-8 pb-10 ">
-          <div className="flex items-start justify-between gap-4 mb-7">
-            <div>
-              <div className="flex items-center gap-1 mb-5">
-                <h2 className="text-[21px] font-medium">
-                  {entrepreneur.name}
-                </h2>
+          <div className="flex flex-col items-start gap-3 mb-6">
+            <div className="flex items-center justify-between w-full">
+              <div className="flex items-center gap-1">
+                <h2 className="text-[21px] font-medium">{entrepreneur.name}</h2>
                 <CheckIcon className="w-6 h-6" />
               </div>
 
-              <span className="rounded-full  border border-orange bg-orange/6 font-light px-4 py-1 text-[15px] text-orange">
+              <span className="rounded-full border border-orange bg-orange/5 font-light px-4 py-1 text-sm text-orange whitespace-nowrap">
                 {entrepreneur.category}
               </span>
             </div>
 
-            <p className="text-[15px] font-light mt-1 text-[#85827F]">
-              {entrepreneur.contact_info}
-            </p>
+            <a
+              href={`tel:${entrepreneur.contact_info}`}
+              className="flex items-center justify-center gap-2 w-full rounded-xl bg-orange   py-4 font-bold text-white cursor-pointer outline-none"
+            >
+              <PhoneIcon className="w-4 h-4 fill-current" />
+              <span>{entrepreneur.contact_info}</span>
+            </a>
           </div>
 
           <div className="mb-7">
-            <h2 className="text-[17px] font-light mb-2">About</h2>
+            <h2 className="text-lg mb-2">About</h2>
             <p className="text-[16px] font-light leading-tight text-black/60">
               {entrepreneur.description}
             </p>
           </div>
 
           <div>
-            <h2 className="text-[17px] font-light mb-4">Catalog</h2>
+            <h2 className="text-lg  mb-4">Catalog</h2>
 
             {/* products */}
             {products.length === 0 && (
-              <div className="px-5 py-35 text-center">
-                <p className="text-[15px] font-medium">
-                  No products available :(
-                </p>
-                <p className="mt-1 text-[13px] text-black/60 font-light">
+              <div className="px-5 py-16 text-center">
+                <div className="mb-6 flex min-h-40 items-center justify-center">
+                  <img
+                    className="block h-auto w-50"
+                    src="/resources/Imagen-Login-Consumer.svg"
+                    alt="Ilustración de inicio de sesión"
+                  />
+                </div>
+                <p className="text-lg ">Ummm... this is awkward.</p>
+                <p className="mt-1 text-sm text-black/50 font-light">
                   This business has no products yet.
                 </p>
               </div>
@@ -141,46 +145,29 @@ const BusinessDetail = () => {
             <div className="flex flex-col gap-4">
               {products.map((product) => (
                 <article
-                key={product.id}
-                className={`flex items-center gap-3 rounded-xl border border-black/15 p-3 ${
-                  !product.is_available ? "opacity-60" : ""
-                }`}
->
+                  onClick={() => navigate(`/consumer/product/${product.id}`)}
+                  key={product.id}
+                  className={`flex cursor-pointer items-center gap-4 rounded-xl border border-black/15 bg-white p-4 ${
+                    !product.is_available ? "opacity-60" : ""
+                  }`}
+                >
                   <img
                     src={product.img}
                     alt={product.name}
-                    className="h-[78px] w-[78px] rounded-xl object-cover"
+                    className="h-20 w-20 rounded-xl object-cover"
                   />
 
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[15px] font-medium line-clamp-1">
-                      {product.name}
-                    </h3>
+                    <h3 className="font-medium line-clamp-1">{product.name}</h3>
 
-                    <p className="mt-1 text-[13px] leading-tight font-light text-black/60 line-clamp-2">
+                    <p className="text-sm leading-tight font-light text-black/60 line-clamp-1">
                       {product.description}
                     </p>
 
-                    <p className="mt-2 text-[15px] font-medium">
+                    <p className="mt-2 text-lg font-medium">
                       ${product.price.toLocaleString("es-CO")}
                     </p>
                   </div>
-
-                  
-                  {product.is_available ? (
-                  
-                  <button
-                    type="button"
-                    onClick={() => navigate(`/consumer/product/${product.id}`)}
-                    className="rounded-full bg-orange px-4 py-2 text-[12px] font-light text-white"
-                  >
-                    More info
-                  </button>
-                ) : (
-                  <span className="rounded-full border border-black/15 px-4 py-2 text-[11px] font-light text-[#85827F]">
-                    Not available
-                  </span>
-                )}
                 </article>
               ))}
             </div>

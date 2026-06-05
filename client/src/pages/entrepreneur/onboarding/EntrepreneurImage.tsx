@@ -21,7 +21,7 @@ const EntrepreneurImage = () => {
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setImage("");
       setFeedbackMessage(
-        "Image is too large to upload right now. Using default illustration instead."
+        "Image is too large to upload right now. Using default illustration instead.",
       );
       event.target.value = "";
       return;
@@ -44,31 +44,33 @@ const EntrepreneurImage = () => {
 
   return (
     <OnboardingShell progress={75} showBack>
-      <header>
-        <h1 className="m-0 !font-sofia text-[25px] font-bold leading-[1.12]">
+      <header className="flex flex-col gap-2">
+        <h2 className="text-[25px] font-semibold leading-[1.12]">
           Make it yours!
-        </h1>
-        <p className="mt-[8px] text-[15px] font-light leading-[1.2]">
+        </h2>
+        <p className="text-[15px] font-light leading-[1.2]">
           Add a logo or image for your shop.
         </p>
       </header>
 
       <button
-        className="mx-auto mt-[145px] flex h-[320px] w-[250px] items-center justify-center overflow-hidden rounded-[13px] border border-dashed border-maroon/36 bg-maroon/5"
+        className="flex min-h-72 m-auto w-full items-center justify-center overflow-hidden rounded-[13px] border border-dashed border-maroon/36 bg-maroon/5"
         type="button"
         onClick={() => inputRef.current?.click()}
       >
         {image ? (
-          <img className="h-full w-full object-cover" src={image} alt="Shop preview" />
+          <img
+            className="h-full w-full object-cover"
+            src={image}
+            alt="Shop preview"
+          />
         ) : (
-          <UploadImageIcon className="h-[60px] w-[60px]" />
+          <UploadImageIcon className="h-16 w-16" />
         )}
       </button>
 
       {feedbackMessage ? (
-        <p className="mx-auto mt-[16px] max-w-[250px] text-center text-[13px] leading-[1.25] text-[#a77966]">
-          {feedbackMessage}
-        </p>
+        <p className="mx-auto text-center text-[#a77966]">{feedbackMessage}</p>
       ) : null}
 
       <input
@@ -80,7 +82,7 @@ const EntrepreneurImage = () => {
       />
 
       <button
-        className="mt-auto min-h-[53px] rounded-xl font-light bg-maroon text-[16px] text-white"
+        className="mt-auto app-action bg-maroon text-white"
         type="button"
         onClick={continueToNext}
       >

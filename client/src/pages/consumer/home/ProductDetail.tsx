@@ -52,7 +52,6 @@ const ProductDetail = () => {
       <main className="app-shell">
         <section className="app-screen flex flex-col items-center justify-center text-center">
           <p className="text-[18px] font-medium">Product not found</p>
-
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -65,34 +64,28 @@ const ProductDetail = () => {
     );
   }
 
-  //cart :3
   const handleAddToCart = () => {
-  if (!product.is_available) return;
-
-  addToCart(product);
-
-  navigate("/consumer/cart");
-};
-
+    if (!product.is_available) return;
+    addToCart(product);
+    navigate("/consumer/cart");
+  };
 
   return (
     <main className="app-shell">
-      <section className="relative min-h-screen w-full max-w-[430px] overflow-hidden">
-        <div className="relative h-[330px]">
+      <section className="relative min-h-screen w-full  flex flex-col bg-background overflow-y-auto">
+        <div className="relative h-96 w-full ">
           <img
             src={product.img}
             alt={product.name}
             className="h-full w-full object-cover"
           />
-
-          <div className="absolute inset-0 bg-white/20" />
+          <div className="absolute inset-0 bg-white/10" />
 
           <div className="absolute left-8 top-14">
-
             <button
               type="button"
               onClick={() => navigate(-1)}
-              className="flex items-center gap-1 font-light rounded-full bg-white/80 ml-4 px-3 py-1 text-[13px] shadow-sm"
+              className="flex items-center gap-1 rounded-lg font-light bg-white px-3  py-2 text-sm shadow-xs"
             >
               <ArrowIcon className="w-3 h-3" />
               <span>Back</span>
@@ -100,50 +93,49 @@ const ProductDetail = () => {
           </div>
         </div>
 
-         {/*product information*/}
-         
-        <section className="-mt-10 relative z-10 min-h-[calc(100vh-290px)] rounded-t-[28px] bg-background px-12 pt-8 pb-10">
-          <div className="flex items-start justify-between gap-4 mb-8">
-            <div>
-              <h2 className="text-[21px] font-medium">{product.name}</h2>
+        <div className="-mt-10 relative z-10 flex-1 rounded-t-[28px] bg-background px-12 pt-8 pb-10 flex flex-col justify-between gap-8">
+          <div>
+            <div className="flex items-start justify-between gap-4 mb-6">
+              <div className="min-w-0 flex-1">
+                <h2 className="text-[22px] font-medium text-black leading-tight ">
+                  {product.name}
+                </h2>
+                <p className="mt-2 text-3xl font-semibold text-orange">
+                  ${product.price.toLocaleString("es-CO")}
+                </p>
+              </div>
 
-              <p className="mt-1 text-[32px] leading-none font-light text-orange">
-                ${product.price.toLocaleString("es-CO")}
-              </p>
+              <span
+                className={`rounded-full border px-4 py-1 text-[13px] font-light whitespace-nowrap ${
+                  product.is_available
+                    ? "bg-[#3D7B00]/5 border-[#3D7B00] text-[#3D7B00]"
+                    : "bg-black/5 border-black/15 text-black/55"
+                }`}
+              >
+                {product.is_available ? "Available" : "Not available"}
+              </span>
             </div>
 
-            <span
-              className={`rounded-full bg-[#B1EE9F]/20 border px-4 py-1 text-[15px] font-light ${
-                product.is_available
-                  ? "border-[#3D7B00] text-[#3D7B00]"
-                  : "border-black/15 text-[#85827F]"
-              }`}
-            >
-              {product.is_available ? "Available" : "Not available"}
-            </span>
+            <div>
+              <h3 className="text-[17px] font-medium mb-2 text-black">
+                Description
+              </h3>
+              <p className="text-[15px] font-light leading-relaxed text-black/60">
+                {product.description}
+              </p>
+            </div>
           </div>
 
-          <div className="mb-32">
-            <h2 className="text-[17px] font-light mb-3">Description</h2>
-
-            <p className="text-[16px] leading-tight font-light text-black/60">
-              {product.description}
-            </p>
-          </div>
-
-          <div className="absolute left-10 right-10 bottom-10 flex flex-col gap-4">
-
-            {/*add to cart button*/}
+          <div className="w-full flex flex-col justify-center text-sm font-medium mt-auto">
             <Button
               disabled={!product.is_available}
               onClick={handleAddToCart}
-              icon={<ShoppingCartWhiteIcon className="w-5 h-5" />}
+              icon={<ShoppingCartWhiteIcon className="w-4 h-4" />}
             >
               Add to cart
             </Button>
-
           </div>
-        </section>
+        </div>
       </section>
     </main>
   );

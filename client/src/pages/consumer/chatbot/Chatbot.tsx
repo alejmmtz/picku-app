@@ -4,9 +4,11 @@ import axios from "axios";
 import axiosConfig from "../../../config/axiosConfig";
 import { getStoredAuth } from "../../../utils/storage";
 import BottomNav from "../../../components/common/BottomNav";
+import ShoppingCartIcon from "../../../assets/shopping cart consumer.svg?react";
 
 import LogoConsumer from "../../../assets/logo consumer.png";
 import SendIcon from "../../../assets/send.svg?react";
+import { useNavigate } from "react-router-dom";
 
 type ChatMessage = {
   id: string;
@@ -25,7 +27,7 @@ type SendMessageResponse = {
 const initialMessages: ChatMessage[] = [
   {
     id: "hello",
-    content: "Hello!",
+    content: "Hi!, Welcome to PickU",
     role: "assistant",
     user_id: "preview",
     parent_id: null,
@@ -33,7 +35,7 @@ const initialMessages: ChatMessage[] = [
   },
   {
     id: "mood",
-    content: "What are you in the mood for today?",
+    content: "What are you going to have today?",
     role: "assistant",
     user_id: "preview",
     parent_id: null,
@@ -62,20 +64,25 @@ const isRetryableChatError = (error: unknown) =>
 
 const Chatbot = () => {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [loading, setLoading] = useState(true);
   const [question, setQuestion] = useState("");
   const [isSending, setIsSending] = useState(false);
   const [feedbackMessage, setFeedbackMessage] = useState("");
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
   const hasSubmittedRef = useRef(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
 
     const loadMessages = async () => {
       try {
-        const { data } = await axiosConfig.get<ChatMessage[]>("/picku/api/chatbot", {
-          headers: getAuthHeaders(),
-        });
+        const { data } = await axiosConfig.get<ChatMessage[]>(
+          "/picku/api/chatbot",
+          {
+            headers: getAuthHeaders(),
+          },
+        );
 
         if (!isMounted) return;
 
@@ -94,9 +101,13 @@ const Chatbot = () => {
           axios.isAxiosError(error) &&
           typeof error.response?.data?.message === "string"
             ? error.response.data.message
-            : "No pudimos cargar tu chat en este momento, pero ya lo estamos revisando.";
+            : "No pudimos cargar tu chat en este momento.";
 
         setFeedbackMessage(message);
+      } finally {
+        if (isMounted) {
+          setLoading(false);
+        }
       }
     };
 
@@ -109,7 +120,7 @@ const Chatbot = () => {
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  }, [messages, loading]);
 
   const displayMessages = useMemo(
     () => (messages.length > 0 ? messages : initialMessages),
@@ -178,7 +189,7 @@ const Chatbot = () => {
         axios.isAxiosError(error) &&
         typeof error.response?.data?.message === "string"
           ? error.response.data.message
-          : "No pudimos enviar tu mensaje por ahora. Inténtalo de nuevo en un momento.";
+          : "No pudimos enviar tu mensaje por ahora.";
 
       setFeedbackMessage(message);
     } finally {
@@ -187,44 +198,72 @@ const Chatbot = () => {
   };
 
   return (
-    <main className="app-shell">
-      <section className="app-screen pb-[220px]">
-         <header className="flex items-center justify-between mb-8 mt-1.5">
-          <img src={LogoConsumer} alt="PickU" className="w-[72px] " />
-        </header>
+    <main className="app-shell mb-24">
+      <header className="fixed w-full px-12 pt-16 top-0 z-50 bg-white pb-8 shadow-sm">
+        <div className="flex items-center justify-between ">
+          <img
+            src={LogoConsumer}
+            onClick={() => navigate("/consumer/home")}
+            alt="PickU"
+            className="w-16 cursor-pointer"
+          />
 
-        <div className="flex flex-col gap-[18px]">
-          {displayMessages.map((message) => {
-            const isUser = message.role === "user";
+          <button
+            type="button"
+            onClick={() => navigate("/consumer/cart")}
+            className="flex items-center justify-center"
+          >
+            <ShoppingCartIcon className="w-6 h-6 text-white" />
+          </button>
+        </div>
+      </header>
 
-            return (
-              <div
-                key={message.id}
-                className={`flex ${isUser ? "justify-end" : "justify-start"}`}
-              >
+      <section className="app-screen">
+        <div className="flex flex-col mt-22 gap-4 transition-all duration-500">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-48 w-full gap-3">
+              <img
+                src="/resources/muffy.svg"
+                alt="Loading chat..."
+                className="w-30 h-auto animate-bounce duration-1000"
+              />
+              <p className="font-light text-black/50 animate-pulse">
+                Looking for Muffy...
+              </p>
+            </div>
+          ) : (
+            displayMessages.map((message) => {
+              const isUser = message.role === "user";
+
+              return (
                 <div
-                  className={`max-w-[296px] rounded-[18px] px-4 py-3 text-[16px] leading-[1.05] shadow-none ${
-                    isUser
-                      ? "rounded-br-[2px] bg-orange text-white"
-                      : "rounded-bl-[2px] border border-black/15 text-black"
-                  }`}
+                  key={message.id}
+                  className={`flex ${isUser ? "justify-end" : "justify-start"}`}
                 >
-                  {message.content}
+                  <div
+                    className={`max-w-64 rounded-2xl p-4 text-[16px] leading-[1.05] shadow-none transition-all duration-500 ${
+                      isUser
+                        ? "rounded-br-none border border-black/15 bg-orange text-white"
+                        : "rounded-bl-none border border-black/15 text-black bg-white"
+                    }`}
+                  >
+                    {message.content}
+                  </div>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })
+          )}
 
           {isSending ? (
             <div className="flex justify-start">
-              <div className="max-w-[296px] rounded-[18px] rounded-bl-[2px] border border-[#ddd2ca] bg-[rgba(255,255,255,0.62)] px-4 py-3 text-[15px] text-[rgba(27,27,27,0.68)]">
+              <div className="max-w-64 rounded-2xl transition-all duration-500 animate-pulse rounded-bl-none border border-black/15 bg-white p-4 text-[16px] text-black">
                 Muffy is thinking...
               </div>
             </div>
           ) : null}
 
           {feedbackMessage ? (
-            <p className="pt-2 text-[13px] text-[rgba(27,27,27,0.58)]">
+            <p className="text-[16px] text-center text-black/50 mt-4">
               {feedbackMessage}
             </p>
           ) : null}
@@ -232,28 +271,30 @@ const Chatbot = () => {
           <div ref={messagesEndRef} />
         </div>
 
-        <div className="fixed bottom-[85px] left-1/2 z-200 w-full max-w-[430px] border-y border-[#EBEBEB] -translate-x-1/2 bg-white px-[18px] py-6">
+        <div className="fixed bottom-20 left-1/2 z-200 w-full -translate-x-1/2 px-12 ">
           <form
-            className="flex min-h-[56px] items-center gap-3 rounded-xl border border-[#e3d9d1] bg-white px-4"
+            className="flex items-center gap-3 rounded-lg border border-black/15 bg-white px-4 transition-all duration-500 "
             onSubmit={handleSubmit}
           >
             <input
-              className="w-full bg-transparent text-[16px] text-black outline-none placeholder:text-[rgba(27,27,27,0.28)]"
+              className="w-full bg-transparent text-[16px] font-light py-4 text-black outline-none placeholder:text-black/50"
               type="text"
               placeholder="Ask muffy..."
               value={question}
               onChange={(event) => setQuestion(event.target.value)}
+              disabled={loading}
             />
 
             <button
               className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent disabled:opacity-50"
               type="submit"
-              disabled={isSending || !question.trim()}
+              disabled={isSending || !question.trim() || loading}
               aria-label="Send message"
             >
               <SendIcon className="h-6 w-6" />
             </button>
           </form>
+          <div className="h-4.75 backdrop-blur-xs"></div>
         </div>
       </section>
 

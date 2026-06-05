@@ -171,7 +171,7 @@ export default function RequestedOrderDetails({
       </section>
       {showDeclineModal && (
   <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-8 backdrop-blur-[2px]">
-    <div className="w-full max-w-[340px] rounded-[24px] bg-background p-6 shadow-xl">
+    <div className="w-full max-w-[340px] rounded-2xl bg-background p-6 shadow-xl">
       <h2 className="text-[22px] font-semibold text-black">
         Decline order?
       </h2>
@@ -187,7 +187,7 @@ export default function RequestedOrderDetails({
           setDeclineError("");
         }}
         placeholder="Write a short reason..."
-        className="mt-5 h-[110px] w-full resize-none rounded-xl border border-maroon bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-[#9B928E]"
+        className="mt-5 h-[110px] w-full resize-none rounded-xl border border-maroon bg-transparent px-4 py-3 text-[14px] font-light outline-none placeholder:text-black/50"
       />
 
       {declineError && (
